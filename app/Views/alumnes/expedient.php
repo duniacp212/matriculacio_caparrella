@@ -1,5 +1,7 @@
 <?= view('layouts/header', ['title' => $title]) ?>
 <?= view('layouts/topbar') ?>
+<?= view('layouts/footer') ?>
+
 
 <main class="container-fluid p-4 overflow-auto">
   <div class="row justify-content-center">

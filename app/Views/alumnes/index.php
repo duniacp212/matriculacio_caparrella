@@ -1,5 +1,7 @@
 <?= view('layouts/header', ['title' => $title]) ?>
 <?= view('layouts/topbar') ?>
+<?= view('layouts/footer') ?>
+
 
 <div class="container-fluid vh-100 d-flex flex-column">
 
