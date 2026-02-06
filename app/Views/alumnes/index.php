@@ -1,9 +1,8 @@
 <?= view('layouts/header', ['title' => $title]) ?>
 <?= view('layouts/topbar') ?>
-<?= view('layouts/footer') ?>
 
+<div class="container-fluid d-flex flex-column min-vh-100">
 
-<div class="container-fluid vh-100 d-flex flex-column">
 
   <form method="get" action="<?= base_url('alumnes') ?>">
     <div class="px-3 pt-2 pb-1 border-bottom-lila bg-white">
