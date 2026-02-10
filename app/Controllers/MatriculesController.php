@@ -6,53 +6,44 @@ use App\Models\MatriculaModel;
 
 class MatriculesController extends BaseController
 {
-    public function torn1()
-    {
-        $request = service('request');
+   private function carregarTorn(string $torn, string $titol)
+{
+    $request = service('request');
 
-        $filtres = [
-            'any_matricula' => $request->getGet('any'),
-            'estudi'        => $request->getGet('estudi'),
-            'curs'          => $request->getGet('curs'),
-            'familia'       => $request->getGet('familia'),
-            'cicle'         => $request->getGet('cicle'),
-            'estat'         => $request->getGet('estat'),
-            'pagament'      => $request->getGet('pagament'),
-        ];
+    $filtres = [
+        'any_matricula' => $request->getGet('any'),
+        'estudi'        => $request->getGet('estudi'),
+        'curs'          => $request->getGet('curs'),
+        'familia'       => $request->getGet('familia'),
+        'cicle'         => $request->getGet('cicle'),
+        'estat'         => $request->getGet('estat'),
+        'pagament'      => $request->getGet('pagament'),
+    ];
 
-        $model = new MatriculaModel();
-        $alumnes = $model->obtenirAlumnesAmbFiltres($filtres);
+    $model = new MatriculaModel();
+    $alumnes = $model->obtenirAlumnesAmbFiltres($filtres);
 
-        return view('matricules/torn1', [
-            'title'   => 'Matrícules - 1r Torn',
-            'alumnes' => $alumnes,
-            'filtres' => $filtres
-        ]);
-        
-    }
+    return view('matricules/' . $torn, [
+        'title'   => $titol,
+        'alumnes' => $alumnes,
+        'filtres' => $filtres
+    ]);
+}
 
-    public function torn2()
-    {
-        $request = service('request');
+public function torn1()
+{
+    return $this->carregarTorn('torn1', 'Matrícules - 1r Torn');
+}
 
-        $filtres = [
-            'any_matricula' => $request->getGet('any'),
-            'estudi'        => $request->getGet('estudi'),
-            'curs'          => $request->getGet('curs'),
-            'familia'       => $request->getGet('familia'),
-            'cicle'         => $request->getGet('cicle'),
-            'estat'         => $request->getGet('estat'),
-            'pagament'      => $request->getGet('pagament'),
-        ];
+public function torn2()
+{
+    return $this->carregarTorn('torn2', 'Matrícules - 2n Torn');
+}
 
-        $model = new MatriculaModel();
-        $alumnes = $model->obtenirAlumnesAmbFiltres($filtres);
+public function torn3()
+{
+    return $this->carregarTorn('torn3', 'Matrícules - 3r Torn');
+}
 
-        return view('matricules/torn2', [
-            'title'   => 'Matrícules - 2n Torn',
-            'alumnes' => $alumnes,
-            'filtres' => $filtres
-        ]);
-        
-    }
+
 }
