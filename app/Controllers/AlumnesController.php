@@ -146,6 +146,7 @@ public function expedient(int $id)
         'alumne' => $alumne
     ]);
 }
+   
 
 
 }
