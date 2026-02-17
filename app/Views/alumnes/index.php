@@ -83,12 +83,28 @@
             </div>
 
             <div class="col-12 col-md-3 col-xl-2">
-              <label class="form-label mb-1">Pagament</label>
+              <label class="form-label mb-1">Pagament / Bonificació</label>
               <select name="pagament" class="form-select">
                 <option value="">Tots</option>
-                <option value="Pagat" <?= ($filtres['pagament'] ?? '') === 'Pagat' ? 'selected' : '' ?>>Pagat</option>
-                <option value="No pagat" <?= ($filtres['pagament'] ?? '') === 'No pagat' ? 'selected' : '' ?>>No pagat</option>
+
+                <option value="Pagat" <?= ($filtres['pagament'] ?? '') === 'Pagat' ? 'selected' : '' ?>>
+                 Pagat
+                </option>
+
+                <option value="No pagat" <?= ($filtres['pagament'] ?? '') === 'No pagat' ? 'selected' : '' ?>>
+                 No pagat
+                </option>
+
+                <option value="50" <?= ($filtres['pagament'] ?? '') == '50' ? 'selected' : '' ?>>
+                 50%
+                </option>
+
+                <option value="100" <?= ($filtres['pagament'] ?? '') == '100' ? 'selected' : '' ?>>
+                 100%
+                </option>
               </select>
+
+
             </div>
 
           </div>
@@ -121,7 +137,7 @@
             <th>DNI</th>
             <th>Estudi / Curs / Cicle</th>
             <th>Estat</th>
-            <th>Pagament</th>
+            <th>Pagament / Bonificació</th>
           </tr>
         </thead>
 
@@ -135,7 +151,7 @@
               <td><?= esc($alumne['estudi']) ?> / <?= esc($alumne['curs']) ?></td>
               <td><?= esc($alumne['estat']) ?></td>
               <td class="<?= $alumne['pagament'] === 'Pagat' ? 'text-success' : 'text-danger' ?>">
-              <?= esc($alumne['pagament']) ?>
+              <?= esc($alumne['pagament']) ?> / <?= esc($alumne['bonificats']) ?>
               </td>
             </tr>
           <?php endforeach; ?>

@@ -18,6 +18,7 @@ class MatriculesController extends BaseController
         'cicle'         => $request->getGet('cicle'),
         'estat'         => $request->getGet('estat'),
         'pagament'      => $request->getGet('pagament'),
+        'bonificats'    => $request->getGet('bonificats'),
     ];
 
     $model = new MatriculaModel();

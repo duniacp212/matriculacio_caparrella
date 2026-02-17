@@ -33,7 +33,7 @@ $routes->get('alumnes/contacte', 'AlumnesController::contacte');
 // MATRÍCULA VIVA
 $routes->get('matricula-viva', 'MatriculesController::viva');
 
-// PAGAMENTS
+// PAGAMENTS --> DE MOMENT NO
 $routes->get('pagaments/pagats', 'PagamentsController::pagats');
 $routes->get('pagaments/no-pagats', 'PagamentsController::noPagats');
 $routes->get('pagaments/bonificats', 'PagamentsController::bonificats');

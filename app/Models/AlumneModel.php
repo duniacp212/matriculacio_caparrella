@@ -25,7 +25,8 @@ class AlumnesModel extends Model
                 m.familia,
                 m.cicle,
                 m.estat,
-                m.pagament
+                m.pagament,
+                m.bonificats
             ')
             ->join('matricules m', 'm.id_alumne = a.id_alumne', 'left');
 
@@ -55,6 +56,10 @@ class AlumnesModel extends Model
 
         if (!empty($filtres['pagament'])) {
             $builder->where('m.pagament', $filtres['pagament']);
+        }
+
+        if (!empty($filtres['bonificats'])) {
+            $builder->where('m.bonificats', $filtres['bonificats']);
         }
 
         return $builder->get()->getResultArray();
