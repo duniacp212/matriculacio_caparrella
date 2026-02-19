@@ -40,28 +40,10 @@
         </li>
       </ul>
     </li>
-     <!-- Codi menú pagats, no pagats, bonificats (per ara ho deixem als filtres) -->
-
-    
-    <!--<li class="py-2 mt-3"> 
-      <a
-        class="fw-semibold text-dark d-flex justify-content-between align-items-center text-decoration-none"
-        data-bs-toggle="collapse"
-        href="#menuPagaments"
-      >
-        Pagaments / Bonificacions <span>▾</span>
-      </a>
-
-      <ul class="list-unstyled ps-3 collapse" id="menuPagaments">
-        <li><a class="text-dark text-decoration-none py-1 d-block" href=" ?= base_url('pagaments/pagats') ?>">Pagats</a></li>
-        <li><a class="text-dark text-decoration-none py-1 d-block" href=" ?= base_url('pagaments/no-pagats') ?>">No pagats</a></li>
-        <li><a class="text-dark text-decoration-none py-1 d-block" href=" ?= base_url('pagaments/bonificats') ?>">Bonificats</a></li>
-      </ul>
-    </li>-->
 
     <li class="mt-2">
       <a class="fw-semibold text-dark text-decoration-none py-1 d-block"
-         href="<?= base_url('pagaments/resum') ?>">
+         href="<?= base_url('alumnes/resum_matriculats') ?>">
         Alumnes matriculats
       </a>
     </li>

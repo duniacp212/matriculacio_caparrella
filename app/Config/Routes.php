@@ -20,6 +20,8 @@ $routes->get('matricules/torn1', 'MatriculesController::torn1');
 $routes->get('matricules/torn2', 'MatriculesController::torn2');
 $routes->get('matricules/torn3', 'MatriculesController::torn3');
 //$routes->get('matricules/nova', 'MatriculesController::nova');
+$routes->get('alumnes/resum_matriculats', 'AlumnesController::resumMatriculats');
+
 
 
 

@@ -80,6 +80,51 @@ class AlumnesController extends BaseController
             'filtres' => $filtres
         ]);
     }
+
+    public function resumMatriculats()
+    {
+        $request = service('request');
+        $anySeleccionat = $request->getGet('any');
+
+        $db = db_connect();
+        $builder = $db->table('matricules');
+
+        $builder->select("
+        estudi,
+        cicle,
+        curs,
+        SUM(CASE WHEN estat = 'Validat' THEN 1 ELSE 0 END) as total
+    ");
+
+
+        if (!empty($anySeleccionat)) {
+            $builder->where('any_matricula', $anySeleccionat);
+        }
+
+        $builder->groupBy(['estudi', 'cicle', 'curs']);
+        $builder->orderBy('estudi');
+        $builder->orderBy('cicle');
+        $builder->orderBy('curs');
+
+        $files = $builder->get()->getResultArray();
+
+        $organitzat = [];
+        $totalGeneral = 0;
+
+        foreach ($files as $fila) {
+            $organitzat[$fila['estudi']][] = $fila;
+            $totalGeneral += $fila['total'];
+        }
+
+        return view('alumnes/resum_matriculats', [
+            'title'        => 'Resum d’alumnes matriculats',
+            'dades'        => $organitzat,
+            'totalGeneral' => $totalGeneral,
+            'anyActual'    => $anySeleccionat
+        ]);
+    }
+
+
     public function contacte(int $id)
     {
         $db = db_connect();
