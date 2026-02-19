@@ -12,32 +12,34 @@ class AlumnesController extends BaseController
         $request = service('request');
 
         $filtres = [
-            'any'      => $request->getGet('any'),
-            'estudi'   => $request->getGet('estudi'),
-            'curs'     => $request->getGet('curs'),
-            'familia'  => $request->getGet('familia'),
-            'cicle'    => $request->getGet('cicle'),
-            'estat'    => $request->getGet('estat'),
-            'pagament' => $request->getGet('pagament'),
+            'any'          => $request->getGet('any'),
+            'estudi'       => $request->getGet('estudi'),
+            'curs'         => $request->getGet('curs'),
+            'familia'      => $request->getGet('familia'),
+            'cicle'        => $request->getGet('cicle'),
+            'estat'        => $request->getGet('estat'),
+            'pagament'     => $request->getGet('pagament'),
+            'bonificats'  => $request->getGet('bonificacio'),
         ];
+
 
         $db = db_connect();
 
         $builder = $db->table('alumnes');
         $builder->select([
-         'alumnes.id_alumne',
-         'alumnes.nom',
-         'alumnes.cognoms',
-         'alumnes.dni',
-         'matricules.any_matricula',
-         'matricules.estudi',
-         'matricules.curs',
-         'matricules.familia',
-         'matricules.cicle',
-         'matricules.estat',
-         'matricules.pagament',
-         'matricules.bonificats'
-]);
+            'alumnes.id_alumne',
+            'alumnes.nom',
+            'alumnes.cognoms',
+            'alumnes.dni',
+            'matricules.any_matricula',
+            'matricules.estudi',
+            'matricules.curs',
+            'matricules.familia',
+            'matricules.cicle',
+            'matricules.estat',
+            'matricules.pagament',
+            'matricules.bonificats'
+        ]);
 
         $builder->join(
             'matricules',
@@ -64,17 +66,11 @@ class AlumnesController extends BaseController
             $builder->where('matricules.estat', $filtres['estat']);
         }
         if (!empty($filtres['pagament'])) {
-
-        if ($filtres['pagament'] === 'Pagat' || 
-            $filtres['pagament'] === 'No pagat') {
-
             $builder->where('matricules.pagament', $filtres['pagament']);
-
-         } else {
-            $builder->where('matricules.bonificats', $filtres['pagament']);
-       } 
-   }
-        
+        }
+        if ($filtres['bonificats'] !== null && $filtres['bonificats'] !== '') {
+            $builder->where('matricules.bonificats', $filtres['bonificats']);
+        }
 
         $alumnes = $builder->get()->getResultArray();
 
@@ -85,11 +81,11 @@ class AlumnesController extends BaseController
         ]);
     }
     public function contacte(int $id)
-{
-    $db = db_connect();
+    {
+        $db = db_connect();
 
-    $builder = $db->table('alumnes');
-    $builder->select('
+        $builder = $db->table('alumnes');
+        $builder->select('
         alumnes.id_alumne,
         alumnes.nom,
         alumnes.cognoms,
@@ -99,31 +95,31 @@ class AlumnesController extends BaseController
         matricules.estudi,
         matricules.curs
     ');
-    $builder->join(
-        'matricules',
-        'matricules.id_alumne = alumnes.id_alumne',
-        'left'
-    );
-    $builder->where('alumnes.id_alumne', $id);
+        $builder->join(
+            'matricules',
+            'matricules.id_alumne = alumnes.id_alumne',
+            'left'
+        );
+        $builder->where('alumnes.id_alumne', $id);
 
-    $alumne = $builder->get()->getRowArray();
+        $alumne = $builder->get()->getRowArray();
 
-    if (!$alumne) {
-        throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
+        if (!$alumne) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
+        }
+
+        return view('alumnes/contacte', [
+            'title'  => 'Contacte alumne',
+            'alumne' => $alumne
+        ]);
     }
 
-    return view('alumnes/contacte', [
-        'title'  => 'Contacte alumne',
-        'alumne' => $alumne
-    ]);
-}
+    public function expedient(int $id)
+    {
+        $db = db_connect();
 
-public function expedient(int $id)
-{
-    $db = db_connect();
-
-    $builder = $db->table('alumnes');
-    $builder->select('
+        $builder = $db->table('alumnes');
+        $builder->select('
         alumnes.id_alumne,
         alumnes.nom,
         alumnes.cognoms,
@@ -139,25 +135,22 @@ public function expedient(int $id)
         matricules.estat,
         matricules.pagament
     ');
-    $builder->join(
-        'matricules',
-        'matricules.id_alumne = alumnes.id_alumne',
-        'left'
-    );
-    $builder->where('alumnes.id_alumne', $id);
+        $builder->join(
+            'matricules',
+            'matricules.id_alumne = alumnes.id_alumne',
+            'left'
+        );
+        $builder->where('alumnes.id_alumne', $id);
 
-    $alumne = $builder->get()->getRowArray();
+        $alumne = $builder->get()->getRowArray();
 
-    if (!$alumne) {
-        throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
+        if (!$alumne) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
+        }
+
+        return view('alumnes/expedient', [
+            'title'  => 'Expedient de l’alumne',
+            'alumne' => $alumne
+        ]);
     }
-
-    return view('alumnes/expedient', [
-        'title'  => 'Expedient de l’alumne',
-        'alumne' => $alumne
-    ]);
-}
-   
-
-
 }

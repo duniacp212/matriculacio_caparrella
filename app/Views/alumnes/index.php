@@ -83,28 +83,37 @@
             </div>
 
             <div class="col-12 col-md-3 col-xl-2">
-              <label class="form-label mb-1">Pagament / Bonificació</label>
+              <label class="form-label mb-1">Pagament</label>
               <select name="pagament" class="form-select">
                 <option value="">Tots</option>
 
                 <option value="Pagat" <?= ($filtres['pagament'] ?? '') === 'Pagat' ? 'selected' : '' ?>>
-                 Pagat
+                  Pagat
                 </option>
 
                 <option value="No pagat" <?= ($filtres['pagament'] ?? '') === 'No pagat' ? 'selected' : '' ?>>
-                 No pagat
-                </option>
-
-                <option value="50" <?= ($filtres['pagament'] ?? '') == '50' ? 'selected' : '' ?>>
-                 50%
-                </option>
-
-                <option value="100" <?= ($filtres['pagament'] ?? '') == '100' ? 'selected' : '' ?>>
-                 100%
+                  No pagat
                 </option>
               </select>
+            </div>
 
+            <div class="col-12 col-md-3 col-xl-2">
+              <label class="form-label mb-1">Bonificació</label>
+              <select name="bonificacio" class="form-select">
+                <option value="">Totes</option>
 
+                <option value="0" <?= ($filtres['bonificacio'] ?? '') == '0' ? 'selected' : '' ?>>
+                  Sense bonificació
+                </option>
+
+                <option value="50" <?= ($filtres['bonificacio'] ?? '') == '50' ? 'selected' : '' ?>>
+                  50%
+                </option>
+
+                <option value="100" <?= ($filtres['bonificacio'] ?? '') == '100' ? 'selected' : '' ?>>
+                  100%
+                </option>
+              </select>
             </div>
 
           </div>
@@ -137,7 +146,8 @@
             <th>DNI</th>
             <th>Estudi / Curs / Cicle</th>
             <th>Estat</th>
-            <th>Pagament / Bonificació</th>
+            <th>Pagament</th>
+            <th>Bonificació</th>
           </tr>
         </thead>
 
@@ -151,8 +161,19 @@
               <td><?= esc($alumne['estudi']) ?> / <?= esc($alumne['curs']) ?></td>
               <td><?= esc($alumne['estat']) ?></td>
               <td class="<?= $alumne['pagament'] === 'Pagat' ? 'text-success' : 'text-danger' ?>">
-              <?= esc($alumne['pagament']) ?> / <?= esc($alumne['bonificats']) ?>
+                <?= esc($alumne['pagament']) ?>
               </td>
+
+              <td>
+                <?php if ($alumne['bonificats'] == 50): ?>
+                  <span class="badge bg-warning text-dark">50%</span>
+                <?php elseif ($alumne['bonificats'] == 100): ?>
+                  <span class="badge bg-success">100%</span>
+                <?php else: ?>
+                  <span class="badge bg-secondary">X</span>
+                <?php endif; ?>
+              </td>
+
             </tr>
           <?php endforeach; ?>
         </tbody>
@@ -163,25 +184,25 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function() {
 
-  function seleccionat() {
-    return document.querySelector('input[name="alumne_id"]:checked');
-  }
+    function seleccionat() {
+      return document.querySelector('input[name="alumne_id"]:checked');
+    }
 
-  document.getElementById('btnVeureExpedient').onclick = function () {
-    const s = seleccionat();
-    if (!s) return alert('Selecciona un alumne primer');
-    window.location.href = "<?= base_url('alumnes/expedient') ?>/" + s.value;
-  };
+    document.getElementById('btnVeureExpedient').onclick = function() {
+      const s = seleccionat();
+      if (!s) return alert('Selecciona un alumne primer');
+      window.location.href = "<?= base_url('alumnes/expedient') ?>/" + s.value;
+    };
 
-  document.getElementById('btnContactar').onclick = function () {
-    const s = seleccionat();
-    if (!s) return alert('Selecciona un alumne primer');
-    window.location.href = "<?= base_url('alumnes/contacte') ?>/" + s.value;
-  };
+    document.getElementById('btnContactar').onclick = function() {
+      const s = seleccionat();
+      if (!s) return alert('Selecciona un alumne primer');
+      window.location.href = "<?= base_url('alumnes/contacte') ?>/" + s.value;
+    };
 
-});
+  });
 </script>
 
 <?= view('layouts/footer') ?>
