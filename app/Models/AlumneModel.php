@@ -4,11 +4,12 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class AlumnesModel extends Model
+class AlumneModel extends Model
 {
     protected $table = 'alumnes';
     protected $primaryKey = 'id_alumne';
     protected $returnType = 'array';
+
 
     public function getAlumnesAmbMatricula(array $filtres = [])
     {
@@ -58,10 +59,62 @@ class AlumnesModel extends Model
             $builder->where('m.pagament', $filtres['pagament']);
         }
 
-        if (!empty($filtres['bonificats'])) {
+        if (isset($filtres['bonificats']) && $filtres['bonificats'] !== '') {
             $builder->where('m.bonificats', $filtres['bonificats']);
         }
 
+        if (!empty($filtres['torn'])) {
+            $builder->where('m.torn', (int)$filtres['torn']);
+        }
+
         return $builder->get()->getResultArray();
+
+    }
+
+
+    public function getContactePerId(int $id)
+    {
+        return $this->db->table('alumnes a')
+            ->select('
+                a.id_alumne,
+                a.nom,
+                a.cognoms,
+                a.dni,
+                a.email,
+                a.telefon,
+                m.estudi,
+                m.curs
+            ')
+            ->join('matricules m', 'm.id_alumne = a.id_alumne', 'left')
+            ->where('a.id_alumne', $id)
+            ->get()
+            ->getRowArray();
+    }
+
+
+    public function getExpedientPerId(int $id)
+    {
+        return $this->db->table('alumnes a')
+            ->select('
+                a.id_alumne,
+                a.nom,
+                a.cognoms,
+                a.dni,
+                a.data_naixement,
+                a.email,
+                a.telefon,
+                m.any_matricula,
+                m.estudi,
+                m.curs,
+                m.familia,
+                m.cicle,
+                m.estat,
+                m.pagament,
+                m.bonificats
+            ')
+            ->join('matricules m', 'm.id_alumne = a.id_alumne', 'left')
+            ->where('a.id_alumne', $id)
+            ->get()
+            ->getRowArray();
     }
 }
