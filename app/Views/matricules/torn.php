@@ -2,9 +2,13 @@
 <?= view('layouts/topbar') ?>
 
 <div class="container-fluid d-flex flex-column min-vh-100">
+  <div class="px-3 pt-3">
+    <h5 class="fw-semibold">Matrícules - <?= esc($torn) ?>r Torn</h5>
+  </div>
 
 
-  <form method="get" action="<?= base_url('alumnes') ?>">
+
+  <form method="get" action="<?= base_url('matricules/torn' . $torn) ?>">
     <div class="px-3 pt-2 pb-1 border-bottom-lila bg-white">
       <div class="row align-items-end">
 
@@ -96,7 +100,7 @@
 
         <div class="col-12 col-xl-3 d-flex gap-2 justify-content-xl-end mt-3 mt-xl-0">
           <button type="submit" class="btn btn-outline-primary">Filtrar</button>
-          <a href="<?= base_url('alumnes') ?>" class="btn btn-outline-secondary">Netejar</a>
+          <a href="<?= base_url('matricules/torn' . $torn) ?>" class="btn btn-outline-secondary">Netejar</a>
           <button type="button" id="btnVeureExpedient" class="btn btn-outline-primary">Veure expedient</button>
           <button type="button" id="btnContactar" class="btn btn-outline-secondary">Contactar</button>
         </div>
@@ -135,7 +139,7 @@
               <td><?= esc($alumne['estudi']) ?> / <?= esc($alumne['curs']) ?></td>
               <td><?= esc($alumne['estat']) ?></td>
               <td class="<?= $alumne['pagament'] === 'Pagat' ? 'text-success' : 'text-danger' ?>">
-              <?= esc($alumne['pagament']) ?>
+                <?= esc($alumne['pagament']) ?>
               </td>
             </tr>
           <?php endforeach; ?>
@@ -147,25 +151,25 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function() {
 
-  function seleccionat() {
-    return document.querySelector('input[name="alumne_id"]:checked');
-  }
+    function seleccionat() {
+      return document.querySelector('input[name="alumne_id"]:checked');
+    }
 
-  document.getElementById('btnVeureExpedient').onclick = function () {
-    const s = seleccionat();
-    if (!s) return alert('Selecciona un alumne primer');
-    window.location.href = "<?= base_url('alumnes/expedient') ?>/" + s.value;
-  };
+    document.getElementById('btnVeureExpedient').onclick = function() {
+      const s = seleccionat();
+      if (!s) return alert('Selecciona un alumne primer');
+      window.location.href = "<?= base_url('alumnes/expedient') ?>/" + s.value;
+    };
 
-  document.getElementById('btnContactar').onclick = function () {
-    const s = seleccionat();
-    if (!s) return alert('Selecciona un alumne primer');
-    window.location.href = "<?= base_url('alumnes/contacte') ?>/" + s.value;
-  };
+    document.getElementById('btnContactar').onclick = function() {
+      const s = seleccionat();
+      if (!s) return alert('Selecciona un alumne primer');
+      window.location.href = "<?= base_url('alumnes/contacte') ?>/" + s.value;
+    };
 
-});
+  });
 </script>
 
 <?= view('layouts/footer') ?>

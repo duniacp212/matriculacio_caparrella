@@ -6,7 +6,7 @@ use App\Models\AlumneModel;
 
 class MatriculesController extends BaseController
 {
-    private function carregarTorn(int $torn, string $titol)
+    private function carregarTorn(int $torn)
     {
         $request = service('request');
 
@@ -25,25 +25,26 @@ class MatriculesController extends BaseController
         $model = new AlumneModel();
         $alumnes = $model->getAlumnesAmbMatricula($filtres);
 
-        return view('matricules/torn' . $torn, [
-            'title'   => $titol,
+        return view('matricules/torn', [
+            'title'   => 'Matrícules - ' . $torn . 'r Torn',
             'alumnes' => $alumnes,
-            'filtres' => $filtres
+            'filtres' => $filtres,
+            'torn'    => $torn
         ]);
     }
 
     public function torn1()
     {
-        return $this->carregarTorn(1, 'Matrícules - 1r Torn');
+        return $this->carregarTorn(1);
     }
 
     public function torn2()
     {
-        return $this->carregarTorn(2, 'Matrícules - 2n Torn');
+        return $this->carregarTorn(2);
     }
 
     public function torn3()
     {
-        return $this->carregarTorn(3, 'Matrícules - 3r Torn');
+        return $this->carregarTorn(3);
     }
 }
