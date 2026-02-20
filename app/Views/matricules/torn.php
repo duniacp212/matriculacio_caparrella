@@ -3,7 +3,7 @@
 
 <div class="container-fluid d-flex flex-column min-vh-100">
   <div class="px-3 pt-3">
-    <h5 class="fw-semibold">Matrícules - <?= esc($torn) ?>r Torn</h5>
+    <h5 class="fw-semibold">Matrícules - Torn <?= esc($torn) ?></h5>
   </div>
 
 

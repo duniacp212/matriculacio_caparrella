@@ -20,6 +20,8 @@ class AlumnesController extends BaseController
             'estat'       => $request->getGet('estat'),
             'pagament'    => $request->getGet('pagament'),
             'bonificats'  => $request->getGet('bonificacio'),
+            'cerca' => $request->getGet('cerca'),
+
         ];
 
         $model = new AlumneModel();
@@ -55,6 +57,27 @@ class AlumnesController extends BaseController
             'anyActual'    => $anySeleccionat
         ]);
     }
+
+    public function cercaGlobal()
+    {
+        $request = service('request');
+        $q = $request->getGet('q');
+
+        $model = new \App\Models\AlumneModel();
+
+        $resultats = [];
+
+        if (!empty($q)) {
+            $resultats = $model->cercaGlobal($q);
+        }
+
+        return view('alumnes/cerca', [
+            'title'     => 'Resultats de la cerca',
+            'resultats' => $resultats,
+            'q'         => $q
+        ]);
+    }
+
 
     public function contacte(int $id)
     {

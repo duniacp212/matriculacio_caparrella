@@ -19,6 +19,7 @@ class MatriculesController extends BaseController
             'estat'       => $request->getGet('estat'),
             'pagament'    => $request->getGet('pagament'),
             'bonificats'  => $request->getGet('bonificacio'),
+            'cerca'       => $request->getGet('cerca'),
             'torn'        => $torn,
         ];
 

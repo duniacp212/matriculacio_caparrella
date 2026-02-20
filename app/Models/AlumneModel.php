@@ -10,7 +10,6 @@ class AlumneModel extends Model
     protected $primaryKey = 'id_alumne';
     protected $returnType = 'array';
 
-
     public function getAlumnesAmbMatricula(array $filtres = [])
     {
         $builder = $this->db->table('alumnes a')
@@ -64,13 +63,19 @@ class AlumneModel extends Model
         }
 
         if (!empty($filtres['torn'])) {
-            $builder->where('m.torn', (int)$filtres['torn']);
+            $builder->where('m.torn', (int) $filtres['torn']);
+        }
+
+        if (!empty($filtres['cerca'])) {
+            $builder->groupStart()
+                ->like('a.nom', $filtres['cerca'])
+                ->orLike('a.cognoms', $filtres['cerca'])
+                ->orLike('a.dni', $filtres['cerca'])
+                ->groupEnd();
         }
 
         return $builder->get()->getResultArray();
-
     }
-
 
     public function getContactePerId(int $id)
     {
@@ -90,7 +95,6 @@ class AlumneModel extends Model
             ->get()
             ->getRowArray();
     }
-
 
     public function getExpedientPerId(int $id)
     {
@@ -116,5 +120,27 @@ class AlumneModel extends Model
             ->where('a.id_alumne', $id)
             ->get()
             ->getRowArray();
+    }
+
+    public function cercaGlobal($q)
+    {
+        return $this->db->table('alumnes a')
+            ->select('
+                a.id_alumne,
+                a.nom,
+                a.cognoms,
+                a.dni,
+                m.estudi,
+                m.curs,
+                m.torn
+            ')
+            ->join('matricules m', 'm.id_alumne = a.id_alumne', 'left')
+            ->groupStart()
+                ->like('a.nom', $q)
+                ->orLike('a.cognoms', $q)
+                ->orLike('a.dni', $q)
+            ->groupEnd()
+            ->get()
+            ->getResultArray();
     }
 }

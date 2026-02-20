@@ -23,6 +23,11 @@ $routes->get('matricules/torn3', 'MatriculesController::torn3');
 $routes->get('alumnes/resum_matriculats', 'AlumnesController::resumMatriculats');
 
 
+//CERCA
+$routes->get('cerca', 'AlumnesController::cercaGlobal');
+
+
+
 
 
 /* ALUMNES / EXPEDIENTS

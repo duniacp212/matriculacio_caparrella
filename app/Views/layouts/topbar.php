@@ -7,11 +7,19 @@
   </div>
 
   <div class="flex-grow-1 text-center">
-    <input
-      class="form-control d-inline-block"
-      style="width: 360px"
-      placeholder="Cerca per nom, cognoms o DNI..."
-    />
+    <form method="get" action="<?= current_url() ?>" class="d-inline-flex gap-2">
+      <input
+        type="text"
+        name="cerca"
+        class="form-control"
+        style="width: 360px"
+        placeholder="Cerca per nom, cognoms o DNI..."
+        value="<?= esc($_GET['cerca'] ?? '') ?>"
+      />
+      <button type="submit" class="btn btn-outline-primary">
+        Cercar
+      </button>
+    </form>
   </div>
 
   <div>
