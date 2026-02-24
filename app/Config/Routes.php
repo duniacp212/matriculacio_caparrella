@@ -22,6 +22,10 @@ $routes->get('matricules/torn3', 'MatriculesController::torn3');
 //$routes->get('matricules/nova', 'MatriculesController::nova');
 $routes->get('alumnes/resum_matriculats', 'AlumnesController::resumMatriculats');
 
+// MATRÍCULA VIVA
+$routes->get('matricula-viva', 'MatriculaVivaController::index');
+$routes->post('matricula-viva/guardar', 'MatriculaVivaController::guardar');
+
 
 //CERCA
 $routes->get('cerca', 'AlumnesController::cercaGlobal');
@@ -36,9 +40,6 @@ $routes->get('alumnes/expedient/(:num)', 'AlumnesController::expedient/$1');
 $routes->get('alumnes/contacte', 'AlumnesController::contacte');
 
 
-
-// MATRÍCULA VIVA
-$routes->get('matricula-viva', 'MatriculesController::viva');
 
 // PAGAMENTS --> DE MOMENT NO
 $routes->get('pagaments/pagats', 'PagamentsController::pagats');
