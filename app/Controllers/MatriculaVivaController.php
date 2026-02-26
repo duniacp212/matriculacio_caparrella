@@ -20,9 +20,13 @@ class MatriculaVivaController extends BaseController
     {
         $model = new EstudiModel();
 
-        $estudisSeleccionats = $this->request->getPost('estudis') ?? [];
+        $estats = $this->request->getPost('estat') ?? [];
 
-        $model->actualitzarMatriculaViva($estudisSeleccionats);
+        foreach ($estats as $id => $valor) {
+            $model->update($id, [
+                'matricula_viva' => $valor
+            ]);
+        }
 
         return redirect()->to(base_url('matricula-viva'))
             ->with('missatge', 'Canvis guardats correctament.');

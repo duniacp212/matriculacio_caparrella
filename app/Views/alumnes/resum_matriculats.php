@@ -10,18 +10,27 @@
 
                 <form method="get" class="mb-3 d-flex align-items-end gap-3">
 
-                    <div>
+                    <div class="w-auto">
                         <label class="form-label mb-1">Any acadèmic</label>
+
+                        <?php
+                        $anyActual = date('Y');
+                        $anyInici = 2000;
+                        ?>
+
                         <select name="any" class="form-select">
                             <option value="">Tots</option>
 
-                            <?php for ($i = 2017; $i <= 2030; $i++): ?>
-                                <option value="<?= $i ?>" <?= ($anyActual == $i) ? 'selected' : '' ?>>
+                            <?php for ($i = $anyInici; $i <= $anyActual; $i++): ?>
+                                <option value="<?= $i ?>"
+                                    <?= ($filtres['any'] ?? $anyActual) == $i ? 'selected' : '' ?>>
                                     <?= $i ?>
                                 </option>
                             <?php endfor; ?>
+
                         </select>
                     </div>
+
 
                     <div>
                         <button type="submit" class="btn btn-outline-primary">

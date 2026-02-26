@@ -52,10 +52,13 @@
                         }
                         ?>
 
+                        <?php $primer = true; ?>
+
                         <?php foreach ($blocs as $titolBloc => $llistaEstudis): ?>
                             <?php if (!empty($llistaEstudis)): ?>
 
-                                <details open>
+                                <details <?= $primer ? 'open' : '' ?>>
+                                    <?php $primer = false; ?>
                                     <summary class="resum-lila"><?= esc($titolBloc) ?></summary>
 
                                     <table class="table mb-0">
@@ -67,6 +70,10 @@
                                                         <input type="checkbox"
                                                             name="estudis[]"
                                                             value="<?= esc($estudi['id_estudi']) ?>">
+
+                                                        <input type="hidden"
+                                                            name="estat[<?= esc($estudi['id_estudi']) ?>]"
+                                                            value="<?= $estudi['matricula_viva'] ?>">
                                                     </td>
 
                                                     <td><?= esc($estudi['nom']) ?></td>
@@ -92,12 +99,9 @@
                             Tornar
                         </a>
 
-                        <button type="submit"
+                        <button type="button"
                             id="btnAlternar"
-                            name="accio"
-                            value="alternar"
-                            class="btn btn-outline-primary"
-                            disabled>
+                            class="btn btn-outline-primary">
                             Activar / Desactivar
                         </button>
 
@@ -138,16 +142,65 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
+        let canvisPendents = false;
+
         const botoAlternar = document.getElementById('btnAlternar');
+        const botoGuardar = document.querySelector('button[value="guardar"]');
+        const botoTornar = document.querySelector('a.btn-outline-secondary');
 
-        botoAlternar.addEventListener('click', function(e) {
-            e.preventDefault();
+        const files = document.querySelectorAll('tbody tr');
 
-            const caselles = document.querySelectorAll('input[name="estudis[]"]');
+        botoAlternar.addEventListener('click', function() {
 
-            caselles.forEach(casella => {
-                casella.checked = !casella.checked;
+            files.forEach(fila => {
+
+                const checkbox = fila.querySelector('input[type="checkbox"]');
+
+                if (checkbox && checkbox.checked) {
+
+                    const estatHidden = fila.querySelector('input[type="hidden"]');
+                    const celEstat = fila.querySelector('td:last-child');
+
+                    let estatActual = parseInt(estatHidden.value);
+                    let nouEstat = estatActual === 1 ? 0 : 1;
+
+                    estatHidden.value = nouEstat;
+
+                    if (nouEstat === 1) {
+                        celEstat.textContent = 'Activada';
+                        celEstat.classList.remove('text-danger');
+                        celEstat.classList.add('text-success');
+                    } else {
+                        celEstat.textContent = 'Desactivada';
+                        celEstat.classList.remove('text-success');
+                        celEstat.classList.add('text-danger');
+                    }
+
+                    checkbox.checked = false;
+                    canvisPendents = true;
+                }
+
             });
+
+        });
+
+        botoGuardar.addEventListener('click', function() {
+            canvisPendents = false;
+        });
+
+        botoTornar.addEventListener('click', function(e) {
+            if (canvisPendents) {
+                if (!confirm('Tens canvis sense guardar. Vols sortir igualment?')) {
+                    e.preventDefault();
+                }
+            }
+        });
+
+        window.addEventListener('beforeunload', function(e) {
+            if (canvisPendents) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
         });
 
     });

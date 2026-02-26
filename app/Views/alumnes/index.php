@@ -13,13 +13,23 @@
 
             <div class="col-12 col-md-6 col-xl-3">
               <label class="form-label mb-1">Any</label>
+
+              <?php
+              $anyActual = date('Y');
+              $anyInici = 2000;
+              $anySeleccionat = $filtres['any'] ?? '';
+              ?>
+
               <select name="any" class="form-select">
                 <option value="">Tots</option>
-                <?php for ($i = 2017; $i <= 2026; $i++): ?>
-                  <option value="<?= $i ?>" <?= ($filtres['any'] ?? '') == $i ? 'selected' : '' ?>>
+
+                <?php for ($i = $anyInici; $i <= $anyActual; $i++): ?>
+                  <option value="<?= $i ?>"
+                    <?= $anySeleccionat == $i ? 'selected' : '' ?>>
                     <?= $i ?>
                   </option>
                 <?php endfor; ?>
+
               </select>
             </div>
 
