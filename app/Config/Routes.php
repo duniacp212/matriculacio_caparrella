@@ -33,8 +33,9 @@ $routes->get('cerca', 'AlumnesController::cercaGlobal');
 
 
 
-
+$routes->get('expedients', 'ExpedientsController::index');
 /* ALUMNES / EXPEDIENTS
+
 $routes->get('alumnes', 'AlumnesController::index');
 $routes->get('alumnes/expedient/(:num)', 'AlumnesController::expedient/$1');
 $routes->get('alumnes/contacte', 'AlumnesController::contacte');

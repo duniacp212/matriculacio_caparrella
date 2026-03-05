@@ -1,23 +1,26 @@
 <aside class="col-2 bg-secondary-subtle p-3 border-end">
   <ul class="list-unstyled">
 
-    <li>
-      <a
-        class="text-dark d-flex justify-content-between align-items-center text-decoration-none py-1 fw-semibold"
-        href="<?= base_url('/') ?>"
-      >
-        Alumnes / Expedients
-      </a>
-    </li>
-
     <li class="py-2">
-      <a
-        class="fw-semibold text-dark d-flex justify-content-between align-items-center text-decoration-none"
-        data-bs-toggle="collapse"
-        href="#menuMatricules"
-      >
-        Matrícules <span>▾</span>
-      </a>
+      <div class="d-flex justify-content-between align-items-center">
+
+        <a
+          class="fw-semibold text-dark text-decoration-none"
+          href="<?= base_url('/') ?>"
+        >
+          Alumnes / Matrícules
+        </a>
+
+        <a
+          class="text-dark text-decoration-none"
+          data-bs-toggle="collapse"
+          href="#menuMatricules"
+          role="button"
+        >
+          ▾
+        </a>
+
+      </div>
 
       <ul class="list-unstyled ps-3 collapse" id="menuMatricules">
         <li>
@@ -41,6 +44,15 @@
       </ul>
     </li>
 
+    <li class="py-2">
+      <a
+        class="fw-semibold text-dark text-decoration-none d-block"
+        href="<?= base_url('expedients') ?>"
+      >
+        Expedients
+      </a>
+    </li>
+
     <li class="mt-2">
       <a class="fw-semibold text-dark text-decoration-none py-1 d-block"
          href="<?= base_url('alumnes/resum_matriculats') ?>">
@@ -49,13 +61,23 @@
     </li>
 
     <li class="py-2 mt-3">
-      <a
-        class="fw-semibold text-dark d-flex justify-content-between align-items-center text-decoration-none"
-        data-bs-toggle="collapse"
-        href="#menuGestioCursos"
-      >
-        Gestió de cursos <span>▾</span>
-      </a>
+      <div class="d-flex justify-content-between align-items-center">
+        <a
+          class="fw-semibold text-dark text-decoration-none"
+          href="#"
+        >
+          Gestió de cursos
+        </a>
+
+        <a
+          class="text-dark text-decoration-none"
+          data-bs-toggle="collapse"
+          href="#menuGestioCursos"
+          role="button"
+        >
+          ▾
+        </a>
+      </div>
 
       <ul class="list-unstyled ps-3 collapse" id="menuGestioCursos">
         <li><a class="text-dark text-decoration-none py-1 d-block" href="<?= base_url('gestio/eso') ?>">ESO</a></li>
@@ -87,6 +109,7 @@
         Configuració
       </a>
     </li>
+
   </ul>
 
   <div class="mt-4">

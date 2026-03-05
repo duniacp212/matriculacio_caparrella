@@ -6,48 +6,58 @@ use CodeIgniter\Model;
 
 class AlumneModel extends Model
 {
-    protected $table = 'alumnes';
+    protected $table = 'alumne';
     protected $primaryKey = 'id_alumne';
     protected $returnType = 'array';
 
+    protected $allowedFields = [
+        'nom',
+        'cognom1',
+        'cognom2',
+        'data_naixement',
+        'telefon',
+        'dni',
+        'direccio',
+        'email',
+        'expedient'
+    ];
+
     public function getAlumnesAmbMatricula(array $filtres = [])
     {
-        $builder = $this->db->table('alumnes a')
+        $builder = $this->db->table('alumne a')
             ->select('
-                a.id_alumne,
-                a.nom,
-                a.cognoms,
-                a.dni,
-                a.data_naixement,
-                m.any_matricula,
-                m.estudi,
-                m.curs,
-                m.familia,
-                m.cicle,
-                m.estat,
-                m.pagament,
-                m.bonificats
-            ')
-            ->join('matricules m', 'm.id_alumne = a.id_alumne', 'left');
+            a.id_alumne,
+            a.nom,
+            a.cognom1,
+            a.cognom2,
+            a.dni,
+            a.data_naixement,
+            YEAR(m.data) as any_matricula,
+            e.tipus as estudi,
+            e.nivell as curs,
+            f.nom as familia,
+            m.estat,
+            m.data_pagament,
+            m.torn
+        ')
+            ->join('matricula m', 'm.id_alumne = a.id_alumne', 'left')
+            ->join('estudi e', 'e.id_estudi = m.id_estudi', 'left')
+            ->join('familia f', 'f.id_familia = e.id_familia', 'left');
 
         if (!empty($filtres['any'])) {
-            $builder->where('m.any_matricula', $filtres['any']);
+            $builder->where('YEAR(m.data)', $filtres['any']);
         }
 
         if (!empty($filtres['estudi'])) {
-            $builder->where('m.estudi', $filtres['estudi']);
+            $builder->where('e.tipus', $filtres['estudi']);
         }
 
         if (!empty($filtres['curs'])) {
-            $builder->where('m.curs', $filtres['curs']);
+            $builder->where('e.nivell', $filtres['curs']);
         }
 
         if (!empty($filtres['familia'])) {
-            $builder->where('m.familia', $filtres['familia']);
-        }
-
-        if (!empty($filtres['cicle'])) {
-            $builder->where('m.cicle', $filtres['cicle']);
+            $builder->where('f.nom', $filtres['familia']);
         }
 
         if (!empty($filtres['estat'])) {
@@ -55,42 +65,49 @@ class AlumneModel extends Model
         }
 
         if (!empty($filtres['pagament'])) {
-            $builder->where('m.pagament', $filtres['pagament']);
+            if ($filtres['pagament'] === 'pagat') {
+                $builder->where('m.data_pagament IS NOT NULL', null, false);
+            }
+
+            if ($filtres['pagament'] === 'pendent') {
+                $builder->where('m.data_pagament IS NULL', null, false);
+            }
         }
 
-        if (isset($filtres['bonificats']) && $filtres['bonificats'] !== '') {
-            $builder->where('m.bonificats', $filtres['bonificats']);
-        }
-
-        if (!empty($filtres['torn'])) {
-            $builder->where('m.torn', (int) $filtres['torn']);
+        if (isset($filtres['torn'])) {
+            $builder->where('m.torn', $filtres['torn']);
         }
 
         if (!empty($filtres['cerca'])) {
             $builder->groupStart()
                 ->like('a.nom', $filtres['cerca'])
-                ->orLike('a.cognoms', $filtres['cerca'])
+                ->orLike('a.cognom1', $filtres['cerca'])
+                ->orLike('a.cognom2', $filtres['cerca'])
                 ->orLike('a.dni', $filtres['cerca'])
                 ->groupEnd();
         }
+
+        $builder->orderBy('a.cognom1', 'ASC');
 
         return $builder->get()->getResultArray();
     }
 
     public function getContactePerId(int $id)
     {
-        return $this->db->table('alumnes a')
+        return $this->db->table('alumne a')
             ->select('
                 a.id_alumne,
                 a.nom,
-                a.cognoms,
+                a.cognom1,
+                a.cognom2,
                 a.dni,
                 a.email,
                 a.telefon,
-                m.estudi,
-                m.curs
+                e.tipus,
+                e.nivell
             ')
-            ->join('matricules m', 'm.id_alumne = a.id_alumne', 'left')
+            ->join('matricula m', 'm.id_alumne = a.id_alumne', 'left')
+            ->join('estudi e', 'e.id_estudi = m.id_estudi', 'left')
             ->where('a.id_alumne', $id)
             ->get()
             ->getRowArray();
@@ -98,25 +115,24 @@ class AlumneModel extends Model
 
     public function getExpedientPerId(int $id)
     {
-        return $this->db->table('alumnes a')
+        return $this->db->table('alumne a')
             ->select('
                 a.id_alumne,
                 a.nom,
-                a.cognoms,
+                a.cognom1,
+                a.cognom2,
                 a.dni,
                 a.data_naixement,
                 a.email,
                 a.telefon,
-                m.any_matricula,
-                m.estudi,
-                m.curs,
-                m.familia,
-                m.cicle,
+                YEAR(m.data) as any_matricula,
+                e.tipus,
+                e.nivell,
                 m.estat,
-                m.pagament,
-                m.bonificats
+                m.torn
             ')
-            ->join('matricules m', 'm.id_alumne = a.id_alumne', 'left')
+            ->join('matricula m', 'm.id_alumne = a.id_alumne', 'left')
+            ->join('estudi e', 'e.id_estudi = m.id_estudi', 'left')
             ->where('a.id_alumne', $id)
             ->get()
             ->getRowArray();
@@ -124,21 +140,24 @@ class AlumneModel extends Model
 
     public function cercaGlobal($q)
     {
-        return $this->db->table('alumnes a')
+        return $this->db->table('alumne a')
             ->select('
                 a.id_alumne,
                 a.nom,
-                a.cognoms,
+                a.cognom1,
+                a.cognom2,
                 a.dni,
-                m.estudi,
-                m.curs,
+                e.tipus,
+                e.nivell,
                 m.torn
             ')
-            ->join('matricules m', 'm.id_alumne = a.id_alumne', 'left')
+            ->join('matricula m', 'm.id_alumne = a.id_alumne', 'left')
+            ->join('estudi e', 'e.id_estudi = m.id_estudi', 'left')
             ->groupStart()
-                ->like('a.nom', $q)
-                ->orLike('a.cognoms', $q)
-                ->orLike('a.dni', $q)
+            ->like('a.nom', $q)
+            ->orLike('a.cognom1', $q)
+            ->orLike('a.cognom2', $q)
+            ->orLike('a.dni', $q)
             ->groupEnd()
             ->get()
             ->getResultArray();

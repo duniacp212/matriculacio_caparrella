@@ -34,7 +34,7 @@
 
                         foreach ($estudis as $estudi) {
 
-                            $nomEstudi = $estudi['nom'];
+                            $nomEstudi = $estudi['tipus'] . ' ' . $estudi['nivell'];
 
                             if (str_contains($nomEstudi, 'ESO')) {
                                 $blocs['ESO'][] = $estudi;
@@ -76,7 +76,7 @@
                                                             value="<?= $estudi['matricula_viva'] ?>">
                                                     </td>
 
-                                                    <td><?= esc($estudi['nom']) ?></td>
+                                                    <td><?= esc($estudi['tipus']) ?> <?= esc($estudi['nivell']) ?></td>
 
                                                     <td class="text-end <?= $estudi['matricula_viva'] ? 'text-success' : 'text-danger' ?>">
                                                         <?= $estudi['matricula_viva'] ? 'Activada' : 'Desactivada' ?>
@@ -123,87 +123,87 @@
 </div>
 
 <script>
-    function alternarSeleccio() {
-        const caselles = document.querySelectorAll('input[name="estudis[]"]');
-        let hiHaDesmarcats = false;
+function alternarSeleccio() {
+const caselles = document.querySelectorAll('input[name="estudis[]"]');
+let hiHaDesmarcats = false;
 
-        caselles.forEach(casella => {
-            if (!casella.checked) {
-                hiHaDesmarcats = true;
-            }
-        });
+caselles.forEach(casella => {
+if (!casella.checked) {
+hiHaDesmarcats = true;
+}
+});
 
-        caselles.forEach(casella => {
-            casella.checked = hiHaDesmarcats;
-        });
-    }
+caselles.forEach(casella => {
+casella.checked = hiHaDesmarcats;
+});
+}
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
 
-        let canvisPendents = false;
+let canvisPendents = false;
 
-        const botoAlternar = document.getElementById('btnAlternar');
-        const botoGuardar = document.querySelector('button[value="guardar"]');
-        const botoTornar = document.querySelector('a.btn-outline-secondary');
+const botoAlternar = document.getElementById('btnAlternar');
+const botoGuardar = document.querySelector('button[value="guardar"]');
+const botoTornar = document.querySelector('a.btn-outline-secondary');
 
-        const files = document.querySelectorAll('tbody tr');
+const files = document.querySelectorAll('tbody tr');
 
-        botoAlternar.addEventListener('click', function() {
+botoAlternar.addEventListener('click', function() {
 
-            files.forEach(fila => {
+files.forEach(fila => {
 
-                const checkbox = fila.querySelector('input[type="checkbox"]');
+const checkbox = fila.querySelector('input[type="checkbox"]');
 
-                if (checkbox && checkbox.checked) {
+if (checkbox && checkbox.checked) {
 
-                    const estatHidden = fila.querySelector('input[type="hidden"]');
-                    const celEstat = fila.querySelector('td:last-child');
+const estatHidden = fila.querySelector('input[type="hidden"]');
+const celEstat = fila.querySelector('td:last-child');
 
-                    let estatActual = parseInt(estatHidden.value);
-                    let nouEstat = estatActual === 1 ? 0 : 1;
+let estatActual = parseInt(estatHidden.value);
+let nouEstat = estatActual === 1 ? 0 : 1;
 
-                    estatHidden.value = nouEstat;
+estatHidden.value = nouEstat;
 
-                    if (nouEstat === 1) {
-                        celEstat.textContent = 'Activada';
-                        celEstat.classList.remove('text-danger');
-                        celEstat.classList.add('text-success');
-                    } else {
-                        celEstat.textContent = 'Desactivada';
-                        celEstat.classList.remove('text-success');
-                        celEstat.classList.add('text-danger');
-                    }
+if (nouEstat === 1) {
+celEstat.textContent = 'Activada';
+celEstat.classList.remove('text-danger');
+celEstat.classList.add('text-success');
+} else {
+celEstat.textContent = 'Desactivada';
+celEstat.classList.remove('text-success');
+celEstat.classList.add('text-danger');
+}
 
-                    checkbox.checked = false;
-                    canvisPendents = true;
-                }
+checkbox.checked = false;
+canvisPendents = true;
+}
 
-            });
+});
 
-        });
+});
 
-        botoGuardar.addEventListener('click', function() {
-            canvisPendents = false;
-        });
+botoGuardar.addEventListener('click', function() {
+canvisPendents = false;
+});
 
-        botoTornar.addEventListener('click', function(e) {
-            if (canvisPendents) {
-                if (!confirm('Tens canvis sense guardar. Vols sortir igualment?')) {
-                    e.preventDefault();
-                }
-            }
-        });
+botoTornar.addEventListener('click', function(e) {
+if (canvisPendents) {
+if (!confirm('Tens canvis sense guardar. Vols sortir igualment?')) {
+e.preventDefault();
+}
+}
+});
 
-        window.addEventListener('beforeunload', function(e) {
-            if (canvisPendents) {
-                e.preventDefault();
-                e.returnValue = '';
-            }
-        });
+window.addEventListener('beforeunload', function(e) {
+if (canvisPendents) {
+e.preventDefault();
+e.returnValue = '';
+}
+});
 
-    });
+});
 </script>
 
 <?= view('layouts/footer') ?>

@@ -1,15 +1,14 @@
 <?= view('layouts/header', ['title' => $title]) ?>
 <?= view('layouts/topbar') ?>
 
-
-
 <main class="container-fluid p-4 overflow-auto">
   <div class="row justify-content-center">
     <div class="col-xl-8 col-lg-10">
 
       <h5 class="mb-4 fw-semibold text-center">
         <?= esc($alumne['nom']) ?>
-        <?= esc($alumne['cognoms']) ?>
+        <?= esc($alumne['cognom1']) ?>
+        <?= esc($alumne['cognom2']) ?>
         · DNI <?= esc($alumne['dni']) ?>
       </h5>
 
@@ -30,7 +29,7 @@
                 </div>
                 <div class="col-md-5">
                   <label class="form-label">Cognoms</label>
-                  <input class="form-control" value="<?= esc($alumne['cognoms']) ?>" disabled>
+                  <input class="form-control" value="<?= esc($alumne['cognom1']) ?> <?= esc($alumne['cognom2']) ?>" disabled>
                 </div>
                 <div class="col-md-3">
                   <label class="form-label">DNI</label>
@@ -66,10 +65,10 @@
             <div class="accordion-body">
               <ul class="mb-0">
                 <li><strong>Any matrícula:</strong> <?= esc($alumne['any_matricula']) ?></li>
-                <li><strong>Estudi:</strong> <?= esc($alumne['estudi']) ?></li>
-                <li><strong>Curs:</strong> <?= esc($alumne['curs']) ?></li>
+                <li><strong>Estudi:</strong> <?= esc($alumne['tipus']) ?></li>
+                <li><strong>Curs:</strong> <?= esc($alumne['nivell']) ?></li>
                 <li><strong>Estat:</strong> <?= esc($alumne['estat']) ?></li>
-                <li><strong>Pagament:</strong> <?= esc($alumne['pagament']) ?></li>
+                <li><strong>Torn:</strong> <?= esc($alumne['torn']) ?></li>
               </ul>
             </div>
           </div>

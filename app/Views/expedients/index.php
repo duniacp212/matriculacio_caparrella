@@ -2,11 +2,9 @@
 <?= view('layouts/topbar') ?>
 
 <div class="container-fluid d-flex flex-column min-vh-100">
-  <div class="px-3 pt-3">
-    <h5 class="fw-semibold">Matrícules - Torn <?= esc($torn) ?></h5>
-  </div>
 
-  <form method="get" action="<?= base_url('matricules/torn' . $torn) ?>">
+
+  <form method="get" action="<?= base_url('alumnes') ?>">
     <div class="px-3 pt-2 pb-1 border-bottom-lila bg-white">
       <div class="row align-items-end">
 
@@ -15,18 +13,23 @@
 
             <div class="col-12 col-md-6 col-xl-3">
               <label class="form-label mb-1">Any</label>
+
               <?php
               $anyActual = date('Y');
               $anyInici = 2000;
               $anySeleccionat = $filtres['any'] ?? '';
               ?>
+
               <select name="any" class="form-select">
                 <option value="">Tots</option>
+
                 <?php for ($i = $anyInici; $i <= $anyActual; $i++): ?>
-                  <option value="<?= $i ?>" <?= $anySeleccionat == $i ? 'selected' : '' ?>>
+                  <option value="<?= $i ?>"
+                    <?= $anySeleccionat == $i ? 'selected' : '' ?>>
                     <?= $i ?>
                   </option>
                 <?php endfor; ?>
+
               </select>
             </div>
 
@@ -57,9 +60,15 @@
               <label class="form-label mb-1">Família</label>
               <select name="familia" class="form-select">
                 <option value="">Totes</option>
-                <option value="Informàtica" <?= ($filtres['familia'] ?? '') === 'Informàtica' ? 'selected' : '' ?>>Informàtica i Comunicacions</option>
-                <option value="Transport" <?= ($filtres['familia'] ?? '') === 'Transport' ? 'selected' : '' ?>>Transport i Manteniment de Vehicles</option>
-                <option value="Arts" <?= ($filtres['familia'] ?? '') === 'Arts' ? 'selected' : '' ?>>Arts Gràfiques i Continguts Multimèdia</option>
+                <option value="Informàtica" <?= ($filtres['familia'] ?? '') === 'Informàtica' ? 'selected' : '' ?>>
+                  Informàtica i Comunicacions
+                </option>
+                <option value="Transport" <?= ($filtres['familia'] ?? '') === 'Transport' ? 'selected' : '' ?>>
+                  Transport i Manteniment de Vehicles
+                </option>
+                <option value="Arts" <?= ($filtres['familia'] ?? '') === 'Arts' ? 'selected' : '' ?>>
+                  Arts Gràfiques i Continguts Multimèdia
+                </option>
               </select>
             </div>
 
@@ -87,8 +96,33 @@
               <label class="form-label mb-1">Pagament</label>
               <select name="pagament" class="form-select">
                 <option value="">Tots</option>
-                <option value="pagat" <?= ($filtres['pagament'] ?? '') === 'pagat' ? 'selected' : '' ?>>Pagat</option>
-                <option value="pendent" <?= ($filtres['pagament'] ?? '') === 'pendent' ? 'selected' : '' ?>>No pagat</option>
+
+                <option value="Pagat" <?= ($filtres['pagament'] ?? '') === 'Pagat' ? 'selected' : '' ?>>
+                  Pagat
+                </option>
+
+                <option value="No pagat" <?= ($filtres['pagament'] ?? '') === 'No pagat' ? 'selected' : '' ?>>
+                  No pagat
+                </option>
+              </select>
+            </div>
+
+            <div class="col-12 col-md-3 col-xl-2">
+              <label class="form-label mb-1">Bonificació</label>
+              <select name="bonificacio" class="form-select">
+                <option value="">Totes</option>
+
+                <option value="0" <?= ($filtres['bonificacio'] ?? '') == '0' ? 'selected' : '' ?>>
+                  Sense bonificació
+                </option>
+
+                <option value="50" <?= ($filtres['bonificacio'] ?? '') == '50' ? 'selected' : '' ?>>
+                  50%
+                </option>
+
+                <option value="100" <?= ($filtres['bonificacio'] ?? '') == '100' ? 'selected' : '' ?>>
+                  100%
+                </option>
               </select>
             </div>
 
@@ -97,7 +131,7 @@
 
         <div class="col-12 col-xl-3 d-flex gap-2 justify-content-xl-end mt-3 mt-xl-0">
           <button type="submit" class="btn btn-outline-primary">Filtrar</button>
-          <a href="<?= base_url('matricules/torn' . $torn) ?>" class="btn btn-outline-secondary">Netejar</a>
+          <a href="<?= base_url('alumnes') ?>" class="btn btn-outline-secondary">Netejar</a>
           <button type="button" id="btnVeureExpedient" class="btn btn-outline-primary">Veure expedient</button>
           <button type="button" id="btnContactar" class="btn btn-outline-secondary">Contactar</button>
         </div>
@@ -107,6 +141,7 @@
   </form>
 
   <div class="row flex-grow-1 g-0 mt-3">
+
 
     <?= view('layouts/aside') ?>
 
@@ -119,9 +154,10 @@
             <th>Nom</th>
             <th>Cognoms</th>
             <th>DNI</th>
-            <th>Estudi / Curs</th>
+            <th>Estudi / Curs / Cicle</th>
             <th>Estat</th>
             <th>Pagament</th>
+            <th>Bonificació</th>
           </tr>
         </thead>
 
@@ -130,13 +166,24 @@
             <tr>
               <td><input type="radio" name="alumne_id" value="<?= esc($alumne['id_alumne']) ?>"></td>
               <td><?= esc($alumne['nom']) ?></td>
-              <td><?= esc($alumne['cognom1']) ?> <?= esc($alumne['cognom2']) ?></td>
+              <td><?= esc($alumne['cognoms']) ?></td>
               <td><?= esc($alumne['dni']) ?></td>
               <td><?= esc($alumne['estudi']) ?> / <?= esc($alumne['curs']) ?></td>
               <td><?= esc($alumne['estat']) ?></td>
-              <td class="<?= !empty($alumne['data_pagament']) ? 'text-success' : 'text-danger' ?>">
-                <?= !empty($alumne['data_pagament']) ? 'Pagat' : 'No pagat' ?>
+              <td class="<?= $alumne['pagament'] === 'Pagat' ? 'text-success' : 'text-danger' ?>">
+                <?= esc($alumne['pagament']) ?>
               </td>
+
+              <td>
+                <?php if ($alumne['bonificats'] == 50): ?>
+                  <span class="badge bg-warning text-dark">50%</span>
+                <?php elseif ($alumne['bonificats'] == 100): ?>
+                  <span class="badge bg-success">100%</span>
+                <?php else: ?>
+                  <span class="badge bg-secondary">X</span>
+                <?php endif; ?>
+              </td>
+
             </tr>
           <?php endforeach; ?>
         </tbody>
@@ -147,25 +194,25 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
 
-function seleccionat() {
-return document.querySelector('input[name="alumne_id"]:checked');
-}
+    function seleccionat() {
+      return document.querySelector('input[name="alumne_id"]:checked');
+    }
 
-document.getElementById('btnVeureExpedient').onclick = function() {
-const s = seleccionat();
-if (!s) return alert('Selecciona un alumne primer');
-window.location.href = "<?= base_url('alumnes/expedient') ?>/" + s.value;
-};
+    document.getElementById('btnVeureExpedient').onclick = function() {
+      const s = seleccionat();
+      if (!s) return alert('Selecciona un alumne primer');
+      window.location.href = "<?= base_url('alumnes/expedient') ?>/" + s.value;
+    };
 
-document.getElementById('btnContactar').onclick = function() {
-const s = seleccionat();
-if (!s) return alert('Selecciona un alumne primer');
-window.location.href = "<?= base_url('alumnes/contacte') ?>/" + s.value;
-};
+    document.getElementById('btnContactar').onclick = function() {
+      const s = seleccionat();
+      if (!s) return alert('Selecciona un alumne primer');
+      window.location.href = "<?= base_url('alumnes/contacte') ?>/" + s.value;
+    };
 
-});
+  });
 </script>
 
 <?= view('layouts/footer') ?>

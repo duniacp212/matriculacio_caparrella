@@ -1,8 +1,5 @@
 <?= view('layouts/header', ['title' => $title]) ?>
 
-
-
-
 <div class="container-fluid vh-100 d-flex flex-column">
 
   <div class="d-flex align-items-center px-3 py-2 border-bottom bg-light">
@@ -28,7 +25,7 @@
           <div class="col-md-4">
             <label class="form-label">Cognoms</label>
             <input type="text" class="form-control"
-                   value="<?= esc($alumne['cognoms']) ?>" readonly>
+                   value="<?= esc($alumne['cognom1']) ?> <?= esc($alumne['cognom2']) ?>" readonly>
           </div>
 
           <div class="col-md-4">
@@ -40,7 +37,7 @@
           <div class="col-md-6">
             <label class="form-label">Estudi / Curs / Cicle</label>
             <input type="text" class="form-control"
-                   value="<?= esc($alumne['estudi']) ?>" readonly>
+                   value="<?= esc($alumne['tipus']) ?> <?= esc($alumne['nivell']) ?>" readonly>
           </div>
 
           <div class="col-md-6">
