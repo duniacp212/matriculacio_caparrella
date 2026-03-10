@@ -126,11 +126,11 @@
 
                 <!-- Botons -->
                 <div class="form-actions">
-                    <a href="dadesPersonals.php" class="btn btn-anterior">Anterior</a>
+                    <a href="<?= base_url('forms/dadesPersonals') ?>" class="btn btn-anterior btn-lg">Anterior</a>
                     <button type="reset" class="btn btn-outline-secondary btn-lg">Desar</button>
                     <!-- logicca per guardar com un esborrany -->
                     <!-- <button type="submit" class="btn btn-primary btn-lg">Següent</button> -->
-                    <a href="dadesCicle.php" class="btn btn-primary btn-lg">Següent</a>
+                    <a href="<?= base_url('forms/dadesCicle') ?>" class="btn btn-primary btn-lg">Següent</a>
                 </div>
 
             </form>

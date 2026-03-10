@@ -14,17 +14,16 @@
 <body>
     <div class="login-container">
         <h2 class="login-title">Iniciar Sessió</h2>
-        <form>
+        <form method="POST" action="<?= base_url('/auth/dologin') ?>">
             <div class="mb-3">
                 <label for="dniInput" class="form-label">DNI</label>
-                <input type="text" class="form-control DNIuser" id="dniInput" placeholder="Introdueix el teu DNI">
+                <input type="text" name="dni" class="form-control DNIuser" id="dniInput" placeholder="Introdueix el teu DNI">
             </div>
             <div class="mb-3">
-                <label for="codiInput" class="form-label">Codi</label>
+                <label for="codiInput" name="codi" class="form-label">Codi</label>
                 <input type="password" class="form-control CODIuser" id="codiInput" placeholder="Introdueix el codi">
             </div>
-            <!-- <button type="submit" class="btn btn-primary w-100">Enviar</button> -->
-            <a href="formsvies/dadesPersonals.php" class="btn btn-primary w-100">Enviar</a>
+            <button type="submit" class="btn btn-primary w-100">Enviar</button>
         </form>
     </div>
 

@@ -104,12 +104,22 @@
                 </div>
 
                 <!-- Botons -->
-                <div class="form-actions">
-                    <a href="dadesTutors.php" class="btn btn-anterior btn-lg">Anterior</a>
-                    <button type="button" class="btn btn-outline-secondary btn-lg">Guardar</button>
-                    <a href="documentacio.php" class="btn btn-primary btn-lg">Següent</a>
-                </div>
+                    <div class="form-actions">
+                        <!-- Botó Anterior -->
+                        <a href="<?= base_url('forms/dadesTutors') ?>" class="btn btn-anterior btn-lg">
+                            Anterior
+                        </a>
 
+                        <!-- Botó Guardar (temporal, tipus button perquè puguis afegir funcionalitat JS després) -->
+                        <button type="button" class="btn btn-outline-secondary btn-lg" id="btnGuardar">
+                            Guardar
+                        </button>
+
+                        <!-- Botó Següent -->
+                        <a href="<?= base_url('forms/documentacio') ?>" class="btn btn-primary btn-lg">
+                            Següent
+                        </a>
+                    </div>
             </form>
         </div>
     </div>

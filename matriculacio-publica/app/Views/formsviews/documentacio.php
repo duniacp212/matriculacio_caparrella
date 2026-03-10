@@ -149,9 +149,9 @@
 
                 <!-- Botons -->
                 <div class="form-actions">
-                    <a href="dadesCicle.php" class="btn btn-anterior btn-lg">Anterior</a>
-                    <button type="button" class="btn btn-outline-secondary btn-lg">Guardar</button>
-                    <a href="#" class="btn btn-primary btn-lg">Següent</a>
+                <a href="<?= base_url('forms/documentacio') ?>" class="btn btn-anterior btn-lg">Anterior</a>
+                <button type="button" class="btn btn-outline-secondary btn-lg">Guardar</button>
+                    <a href="<?= base_url('forms/confirmacio') ?>" class="btn btn-primary btn-lg">Següent</a>
                 </div>
 
             </form>

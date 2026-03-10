@@ -64,7 +64,7 @@ class Forms extends BaseController
                 ->with('success', 'Dades guardades com a esborrany');
         }
 
-        return redirect()->to('/forms/dadesTutors');
+        return redirect()->to('/formsviews/dadesTutors');
     }
 
     /**
@@ -104,7 +104,7 @@ class Forms extends BaseController
                 ->with('success', 'Dades guardades com a esborrany');
         }
 
-        return redirect()->to('/forms/dadesCicle');
+        return redirect()->to('/formsviews/dadesCicle');
     }
 
     /**
@@ -158,7 +158,7 @@ class Forms extends BaseController
                 ->with('success', 'Dades guardades com a esborrany');
         }
 
-        return redirect()->to('/forms/documentacio');
+        return redirect()->to('/formsviews/documentacio');
     }
 
     /**
@@ -215,7 +215,7 @@ class Forms extends BaseController
                 ->with('success', 'Dades guardades com a esborrany');
         }
 
-        return redirect()->to('/forms/confirmacio')
+        return redirect()->to('/formsviews/confirmacio')
             ->with('success', 'Inscripció completada amb èxit!');
     }
 

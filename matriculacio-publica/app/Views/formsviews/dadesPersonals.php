@@ -120,8 +120,8 @@
                 <div class="form-actions">
                     <button type="reset" class="btn btn-outline-secondary btn-lg">Desar</button>
                     <!-- logicca per guardar com un esborrany -->
-                    <!-- <button type="submit" class="btn btn-primary btn-lg">Següent</button> -->
-                    <a href="dadesTutors.php" class="btn btn-primary btn-lg">Següent</a>
+                     <!-- Botó Següent -->
+                    <a href="<?= base_url('forms/dadesTutors') ?>" class="btn btn-primary btn-lg">Següent</a>
                 </div>
 
             </form>

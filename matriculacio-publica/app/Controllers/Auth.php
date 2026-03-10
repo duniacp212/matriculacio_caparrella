@@ -28,23 +28,37 @@ class Auth extends BaseController
     }
 
     public function register()
-    {
-        $rules = [
-            'dni' => 'required|min_length[9]|max_length[9]',
-            'codi' => 'required|min_length[4]'
-        ];
+{
+    $rules = [
+        'dni' => [
+            'label' => 'DNI',
+            'rules' => 'required|exact_length[9]',
+            'errors' => [
+                'required' => 'El DNI és obligatori',
+                'exact_length' => 'El DNI ha de tenir 9 caràcters'
+            ]
+        ],
+        'email' => [
+            'label' => 'Correu electrònic',
+            'rules' => 'required|valid_email',
+            'errors' => [
+                'required' => 'El correu és obligatori',
+                'valid_email' => 'El correu no és vàlid'
+            ]
+        ]
+    ];
 
-        if (!$this->validate($rules)) {
-            return redirect()->back()
-                ->withInput()
-                ->with('errors', $this->validator->getErrors());
-        }
-
-        // TODO: Guardar usuari a base de dades
-
-        return redirect()->to('/auth/login')
-            ->with('success', 'Usuari registrat correctament');
+    if (!$this->validate($rules)) {
+        return redirect()->back()
+            ->withInput()
+            ->with('errors', $this->validator->getErrors());
     }
+
+    // Aquí podries guardar a la BD si vols
+
+    return redirect()->to('/auth/login')
+        ->with('success', 'Usuari registrat correctament');
+}
 
     /**
      * =========================
@@ -59,43 +73,35 @@ class Auth extends BaseController
         ]);
     }
 
-    public function doLogin()
-    {
-        $rules = [
-            'dni' => [
-                'label' => 'DNI',
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'El DNI és obligatori'
-                ]
-            ],
-            'codi' => [
-                'label' => 'Codi',
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'El codi és obligatori'
-                ]
+  public function doLogin()
+{
+    $rules = [
+        'dni' => [
+            'label' => 'DNI',
+            'rules' => 'required|exact_length[9]',
+            'errors' => [
+                'required' => 'El DNI és obligatori',
+                'exact_length' => 'El DNI ha de tenir 9 caràcters'
             ]
-        ];
+        ]
+    ];
 
-        if (!$this->validate($rules)) {
-            return redirect()->back()
-                ->withInput()
-                ->with('errors', $this->validator->getErrors());
-        }
-
-        $dni = $this->request->getPost('dni');
-        $codi = $this->request->getPost('codi');
-
-        // TODO: Validar realment contra BD
-        // Exemple temporal:
-        $this->session->set([
-            'dni' => $dni,
-            'logged_in' => true
-        ]);
-
-        return redirect()->to('/forms/dadesPersonals');
+    if (!$this->validate($rules)) {
+        return redirect()->back()
+            ->withInput()
+            ->with('errors', $this->validator->getErrors());
     }
+
+    $dni = $this->request->getPost('dni');
+
+    // Simulació d'inici de sessió temporal sense codi
+    $this->session->set([
+        'dni' => $dni,
+        'logged_in' => true
+    ]);
+
+    return redirect()->to('/forms/dadesPersonals');
+}
 
     /**
      * =========================

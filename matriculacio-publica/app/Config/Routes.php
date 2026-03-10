@@ -41,7 +41,7 @@ $routes->group('auth', function($routes) {
 
     // Login
     $routes->get('login', 'Auth::login');
-    $routes->post('login', 'Auth::doLogin');
+    $routes->post('dologin', 'Auth::doLogin');
 
     // Logout
     $routes->get('logout', 'Auth::logout');
