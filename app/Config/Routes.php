@@ -30,7 +30,11 @@ $routes->post('matricula-viva/guardar', 'MatriculaVivaController::guardar');
 //CERCA
 $routes->get('cerca', 'AlumnesController::cercaGlobal');
 
+//LOGIN
 
+$routes->get('/login', 'AuthController::login');
+$routes->post('/login', 'AuthController::authenticate');
+$routes->get('/logout', 'AuthController::logout');
 
 
 $routes->get('expedients', 'ExpedientsController::index');

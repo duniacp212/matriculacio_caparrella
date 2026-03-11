@@ -18,7 +18,8 @@ class MatriculesController extends BaseController
             'estat'    => $request->getGet('estat'),
             'pagament' => $request->getGet('pagament'),
             'cerca'    => $request->getGet('cerca'),
-            'torn'     => $torn
+            'torn'     => $torn,
+            'cicle' => $request->getGet('cicle'),
         ];
 
         $alumneModel = new \App\Models\AlumneModel();

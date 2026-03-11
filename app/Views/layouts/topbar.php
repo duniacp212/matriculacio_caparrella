@@ -14,8 +14,7 @@
         class="form-control"
         style="width: 360px"
         placeholder="Cerca per nom, cognoms o DNI..."
-        value="<?= esc($_GET['cerca'] ?? '') ?>"
-      />
+        value="<?= esc($_GET['cerca'] ?? '') ?>" />
       <button type="submit" class="btn btn-outline-primary">
         Cercar
       </button>
@@ -24,7 +23,9 @@
 
   <div>
     <span class="me-2 fw-semibold">Nom i Cognoms</span>
-    <button class="btn btn-sm btn-outline-secondary">Sortir</button>
+    <a href="<?= base_url('logout') ?>" class="btn btn-sm btn-outline-secondary">
+      Sortir
+    </a>
   </div>
 
 </div>

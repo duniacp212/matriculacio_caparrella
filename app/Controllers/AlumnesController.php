@@ -7,6 +7,17 @@ use App\Models\MatriculaModel;
 
 class AlumnesController extends BaseController
 {
+
+    public function __construct()
+    {
+        $session = session();
+
+        if (!$session->get('logged_in')) {
+            redirect()->to('/login')->send();
+            exit;
+        }
+    }
+
     public function index()
     {
         $request = service('request');

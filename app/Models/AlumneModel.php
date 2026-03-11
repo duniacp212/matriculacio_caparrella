@@ -64,6 +64,10 @@ class AlumneModel extends Model
             $builder->where('m.estat', $filtres['estat']);
         }
 
+        if (!empty($filtres['cicle'])) {
+            $builder->where('e.tipus', $filtres['cicle']);
+        }
+
         if (!empty($filtres['pagament'])) {
             if ($filtres['pagament'] === 'pagat') {
                 $builder->where('m.data_pagament IS NOT NULL', null, false);

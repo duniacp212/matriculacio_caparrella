@@ -10,14 +10,14 @@ class EstudiModel extends Model
     protected $primaryKey = 'id_estudi';
     protected $returnType = 'array';
     protected $allowedFields = [
-        'nom',
+        'tipus',
         'id_familia',
         'matricula_viva'
     ];
 
     public function obtenirTots()
     {
-        return $this->orderBy('nom')->findAll();
+        return $this->orderBy('tipus')->findAll();
     }
 
     public function actualitzarMatriculaViva(array $estudisActius)

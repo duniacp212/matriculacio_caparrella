@@ -98,7 +98,7 @@ $anySeleccionat = $filtres['any'] ?? '';
 
 <div class="col-12 col-xl-3 d-flex gap-2 justify-content-xl-end mt-3 mt-xl-0">
 <button type="submit" class="btn btn-outline-primary">Filtrar</button>
-<a href="<?= current_url() ?>" class="btn btn-outline-secondary">Netejar</a>
+<a href="<?= current_url() ?>" class="btn btn-outline-secondary">Netejar Filtres</a>
 <button type="button" id="btnVeureExpedient" class="btn btn-outline-primary">Veure expedient</button>
 <button type="button" id="btnContactar" class="btn btn-outline-secondary">Contactar</button>
 </div>
