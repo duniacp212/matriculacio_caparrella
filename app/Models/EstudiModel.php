@@ -20,6 +20,39 @@ class EstudiModel extends Model
         return $this->orderBy('tipus')->findAll();
     }
 
+    public function obtenirCicles()
+    {
+        return $this->select('tipus')
+            ->distinct()
+            ->orderBy('tipus')
+            ->findAll();
+    }
+
+    public function obtenirCursos()
+    {
+        return $this->select('nivell')
+            ->distinct()
+            ->orderBy('nivell')
+            ->findAll();
+    }
+
+    public function obtenirEstudis()
+    {
+        return $this->select('tipus')
+            ->distinct()
+            ->orderBy('tipus')
+            ->findAll();
+    }
+
+    public function obtenirFamilies()
+    {
+        return $this->db->table('familia')
+            ->select('id_familia, nom')
+            ->orderBy('nom')
+            ->get()
+            ->getResultArray();
+    }
+
     public function actualitzarMatriculaViva(array $estudisActius)
     {
         $tots = $this->findAll();

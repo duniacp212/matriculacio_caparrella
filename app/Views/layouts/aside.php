@@ -2,57 +2,15 @@
   <ul class="list-unstyled">
 
     <li class="py-2">
-      <div class="d-flex justify-content-between align-items-center">
-
-        <a
-          class="fw-semibold text-dark text-decoration-none"
-          href="<?= base_url('/') ?>"
-        >
-          Alumnes / Matrícules
-        </a>
-
-        <a
-          class="text-dark text-decoration-none"
-          data-bs-toggle="collapse"
-          href="#menuMatricules"
-          role="button"
-        >
-          ▾
-        </a>
-
-      </div>
-
-      <ul class="list-unstyled ps-3 collapse" id="menuMatricules">
-        <li>
-          <a class="text-dark text-decoration-none py-1 d-block"
-             href="<?= base_url('matricules/torn1') ?>">
-            Torn 1
-          </a>
-        </li>
-        <li>
-          <a class="text-dark text-decoration-none py-1 d-block"
-             href="<?= base_url('matricules/torn2') ?>">
-            Torn 2
-          </a>
-        </li>
-        <li>
-          <a class="text-dark text-decoration-none py-1 d-block"
-             href="<?= base_url('matricules/torn3') ?>">
-            Torn 3
-          </a>
-        </li>
-      </ul>
-    </li>
-
-    <li class="py-2">
       <a
         class="fw-semibold text-dark text-decoration-none d-block"
-        href="<?= base_url('expedients') ?>"
+        href="<?= base_url('/') ?>"
       >
-        Expedients
+        Alumnes / Matrícules
       </a>
     </li>
 
+   
     <li class="mt-2">
       <a class="fw-semibold text-dark text-decoration-none py-1 d-block"
          href="<?= base_url('alumnes/resum_matriculats') ?>">

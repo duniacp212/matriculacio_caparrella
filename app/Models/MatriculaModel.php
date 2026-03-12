@@ -23,7 +23,7 @@ class MatriculaModel extends Model
 
     public function getResumMatriculats()
     {
-        $builder = $this->db->table('matricula m')
+        return $this->db->table('matricula m')
             ->select('
                 e.tipus,
                 e.nivell,
@@ -33,14 +33,33 @@ class MatriculaModel extends Model
             ->join('estudi e', 'e.id_estudi = m.id_estudi')
             ->groupBy(['e.tipus', 'e.nivell', 'm.torn'])
             ->orderBy('e.tipus')
-            ->orderBy('e.nivell');
-
-        return $builder->get()->getResultArray();
+            ->orderBy('e.nivell')
+            ->get()
+            ->getResultArray();
     }
 
     public function getMatriculaPerAlumne($idAlumne)
     {
-        return $this->where('id_alumne', $idAlumne)->findAll();
+        return $this->db->table('matricula m')
+            ->select('
+                m.id_matricula,
+                m.data,
+                m.data_pagament,
+                m.estat,
+                m.torn,
+                m.observacions,
+                e.tipus,
+                e.nivell,
+                a.nom,
+                a.cognom1,
+                a.cognom2,
+                a.dni
+            ')
+            ->join('alumne a', 'a.id_alumne = m.id_alumne')
+            ->join('estudi e', 'e.id_estudi = m.id_estudi')
+            ->where('m.id_alumne', $idAlumne)
+            ->get()
+            ->getRowArray();
     }
 
     public function getTorns()

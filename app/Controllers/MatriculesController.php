@@ -2,57 +2,43 @@
 
 namespace App\Controllers;
 
-use App\Models\AlumneModel;
+use App\Models\MatriculaModel;
 
 class MatriculesController extends BaseController
 {
-    private function carregarTorn(int $torn)
+
+    public function matricula_alumne($id)
     {
-        $request = service('request');
+        $model = new MatriculaModel();
 
-        $filtres = [
-            'any'      => $request->getGet('any'),
-            'estudi'   => $request->getGet('estudi'),
-            'curs'     => $request->getGet('curs'),
-            'familia'  => $request->getGet('familia'),
-            'estat'    => $request->getGet('estat'),
-            'pagament' => $request->getGet('pagament'),
-            'cerca'    => $request->getGet('cerca'),
-            'torn'     => $torn,
-            'cicle' => $request->getGet('cicle'),
-        ];
+        $matricula = $model->select('
+            m.id_matricula,
+            m.data,
+            m.data_pagament,
+            m.estat,
+            m.torn,
+            m.observacions,
+            a.nom,
+            a.cognom1,
+            a.cognom2,
+            a.dni,
+            e.tipus,
+            e.nivell
+        ')
+        ->from('matricula m')
+        ->join('alumne a', 'a.id_alumne = m.id_alumne')
+        ->join('estudi e', 'e.id_estudi = m.id_estudi')
+        ->where('m.id_matricula', $id)
+        ->first();
 
-        $alumneModel = new \App\Models\AlumneModel();
-        $alumnes = $alumneModel->getAlumnesAmbMatricula($filtres);
+        if (!$matricula) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Matrícula no trobada');
+        }
 
-        $matriculaModel = new \App\Models\MatriculaModel();
-        $anys = $matriculaModel
-            ->select('YEAR(data) as any')
-            ->distinct()
-            ->orderBy('any', 'DESC')
-            ->findAll();
-
-        return view('matricules/torn', [
-            'title'   => 'Matrícules - ' . $torn . 'r Torn',
-            'alumnes' => $alumnes,
-            'filtres' => $filtres,
-            'torn'    => $torn,
-            'anys'    => $anys
+        return view('matricules/matricula_alumne', [
+            'title' => 'Dades de la matrícula',
+            'matricula' => $matricula
         ]);
     }
 
-    public function torn1()
-    {
-        return $this->carregarTorn(1);
-    }
-
-    public function torn2()
-    {
-        return $this->carregarTorn(2);
-    }
-
-    public function torn3()
-    {
-        return $this->carregarTorn(3);
-    }
 }

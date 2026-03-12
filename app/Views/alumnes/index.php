@@ -7,10 +7,10 @@
 <div class="px-3 pt-2 pb-1 border-bottom-lila bg-white">
 <div class="row align-items-end">
 
-<div class="col-12 col-xl-9">
-<div class="row g-3">
+<div class="col-12">
+<div class="row g-2">
 
-<div class="col-12 col-md-6 col-xl-3">
+<div class="col-md-2">
 <label class="form-label mb-1">Any</label>
 
 <?php
@@ -19,7 +19,7 @@ $anyInici = 2000;
 $anySeleccionat = $filtres['any'] ?? '';
 ?>
 
-<select name="any" class="form-select">
+<select name="any" class="form-select form-select-sm">
 <option value="">Tots</option>
 
 <?php for ($i = $anyInici; $i <= $anyActual; $i++): ?>
@@ -31,62 +31,60 @@ $anySeleccionat = $filtres['any'] ?? '';
 </select>
 </div>
 
-<div class="col-12 col-md-6 col-xl-3">
+<div class="col-md-2">
 <label class="form-label mb-1">Estudi</label>
-<select name="estudi" class="form-select">
+<select name="estudi" class="form-select form-select-sm">
+
 <option value="">Tots</option>
-<option value="ESO" <?= ($filtres['estudi'] ?? '') === 'ESO' ? 'selected' : '' ?>>ESO</option>
-<option value="BAT" <?= ($filtres['estudi'] ?? '') === 'BAT' ? 'selected' : '' ?>>Batxillerat</option>
-<option value="FP" <?= ($filtres['estudi'] ?? '') === 'FP' ? 'selected' : '' ?>>FP</option>
-<option value="PFI" <?= ($filtres['estudi'] ?? '') === 'PFI' ? 'selected' : '' ?>>PFI</option>
-<option value="FPB" <?= ($filtres['estudi'] ?? '') === 'FPB' ? 'selected' : '' ?>>FP Bàsica</option>
+
+<?php foreach ($estudis as $e): ?>
+<option value="<?= esc($e['tipus']) ?>" <?= ($filtres['estudi'] ?? '') === $e['tipus'] ? 'selected' : '' ?>>
+<?= esc($e['tipus']) ?>
+</option>
+<?php endforeach; ?>
+
 </select>
 </div>
 
-<div class="col-12 col-md-3 col-xl-2">
+<div class="col-md-2">
 <label class="form-label mb-1">Curs</label>
-<select name="curs" class="form-select">
+<select name="curs" class="form-select form-select-sm">
+
 <option value="">Tots</option>
-<option value="1" <?= ($filtres['curs'] ?? '') === '1' ? 'selected' : '' ?>>1r</option>
-<option value="2" <?= ($filtres['curs'] ?? '') === '2' ? 'selected' : '' ?>>2n</option>
-<option value="3" <?= ($filtres['curs'] ?? '') === '3' ? 'selected' : '' ?>>3r</option>
-<option value="4" <?= ($filtres['curs'] ?? '') === '4' ? 'selected' : '' ?>>4t</option>
+
+<?php foreach ($cursos as $c): ?>
+<option value="<?= esc($c['nivell']) ?>" <?= ($filtres['curs'] ?? '') == $c['nivell'] ? 'selected' : '' ?>>
+<?= esc($c['nivell']) ?>
+</option>
+<?php endforeach; ?>
+
 </select>
 </div>
 
-<div class="col-12 col-md-6 col-xl-3">
-<label class="form-label mb-1">Família</label>
-<select name="familia" class="form-select">
-<option value="">Totes</option>
-<option value="Informàtica" <?= ($filtres['familia'] ?? '') === 'Informàtica' ? 'selected' : '' ?>>Informàtica i Comunicacions</option>
-<option value="Transport" <?= ($filtres['familia'] ?? '') === 'Transport' ? 'selected' : '' ?>>Transport i Manteniment de Vehicles</option>
-<option value="Arts" <?= ($filtres['familia'] ?? '') === 'Arts' ? 'selected' : '' ?>>Arts Gràfiques i Continguts Multimèdia</option>
-</select>
-</div>
+<div class="col-md-2">
+<label class="form-label mb-1">Torn</label>
+<select name="torn" class="form-select form-select-sm">
 
-<div class="col-12 col-md-6 col-xl-4">
-<label class="form-label mb-1">Cicle</label>
-<select name="cicle" class="form-select">
 <option value="">Tots</option>
-<option value="SMX" <?= ($filtres['cicle'] ?? '') === 'SMX' ? 'selected' : '' ?>>SMX</option>
-<option value="DAM" <?= ($filtres['cicle'] ?? '') === 'DAM' ? 'selected' : '' ?>>DAM</option>
-<option value="DAW" <?= ($filtres['cicle'] ?? '') === 'DAW' ? 'selected' : '' ?>>DAW</option>
-<option value="Automocio" <?= ($filtres['cicle'] ?? '') === 'Automocio' ? 'selected' : '' ?>>Automoció</option>
+<option value="1" <?= ($filtres['torn'] ?? '') == 1 ? 'selected' : '' ?>>Torn 1</option>
+<option value="2" <?= ($filtres['torn'] ?? '') == 2 ? 'selected' : '' ?>>Torn 2</option>
+<option value="3" <?= ($filtres['torn'] ?? '') == 3 ? 'selected' : '' ?>>Torn 3</option>
+
 </select>
 </div>
 
-<div class="col-12 col-md-3 col-xl-2">
+<div class="col-md-2">
 <label class="form-label mb-1">Estat</label>
-<select name="estat" class="form-select">
+<select name="estat" class="form-select form-select-sm">
 <option value="">Tots</option>
 <option value="Validat" <?= ($filtres['estat'] ?? '') === 'Validat' ? 'selected' : '' ?>>Validat</option>
 <option value="Pendent" <?= ($filtres['estat'] ?? '') === 'Pendent' ? 'selected' : '' ?>>Pendent</option>
 </select>
 </div>
 
-<div class="col-12 col-md-3 col-xl-2">
+<div class="col-md-2">
 <label class="form-label mb-1">Pagament</label>
-<select name="pagament" class="form-select">
+<select name="pagament" class="form-select form-select-sm">
 <option value="">Tots</option>
 <option value="pagat" <?= ($filtres['pagament'] ?? '') === 'pagat' ? 'selected' : '' ?>>Pagat</option>
 <option value="pendent" <?= ($filtres['pagament'] ?? '') === 'pendent' ? 'selected' : '' ?>>No pagat</option>
@@ -96,11 +94,12 @@ $anySeleccionat = $filtres['any'] ?? '';
 </div>
 </div>
 
-<div class="col-12 col-xl-3 d-flex gap-2 justify-content-xl-end mt-3 mt-xl-0">
-<button type="submit" class="btn btn-outline-primary">Filtrar</button>
-<a href="<?= current_url() ?>" class="btn btn-outline-secondary">Netejar Filtres</a>
-<button type="button" id="btnVeureExpedient" class="btn btn-outline-primary">Veure expedient</button>
-<button type="button" id="btnContactar" class="btn btn-outline-secondary">Contactar</button>
+<div class="col-12 mt-2 d-flex justify-content-end gap-2">
+<button type="submit" class="btn btn-outline-primary btn-sm">Filtrar</button>
+<a href="<?= current_url() ?>" class="btn btn-outline-secondary btn-sm">Netejar Filtres</a>
+<button type="button" id="btnVeureExpedient" class="btn btn-outline-primary btn-sm">Veure expedient</button>
+<button type="button" id="btnVeureMatricula" class="btn btn-outline-primary btn-sm">Veure matrícula</button>
+<button type="button" id="btnContactar" class="btn btn-outline-secondary btn-sm">Contactar</button>
 </div>
 
 </div>
@@ -121,7 +120,9 @@ $anySeleccionat = $filtres['any'] ?? '';
 <th>Nom</th>
 <th>Cognoms</th>
 <th>DNI</th>
-<th>Estudi / Curs</th>
+<th>Estudi</th>
+<th>Curs</th>
+<th>Torn</th>
 <th>Estat</th>
 <th>Pagament</th>
 </tr>
@@ -133,7 +134,7 @@ $anySeleccionat = $filtres['any'] ?? '';
 <tr>
 
 <td>
-<input type="radio" name="alumne_id" value="<?= esc($alumne['id_alumne']) ?>">
+<input type="radio" name="matricula_id" value="<?= esc($alumne['id_matricula']) ?>">
 </td>
 
 <td><?= esc($alumne['nom']) ?></td>
@@ -145,11 +146,11 @@ $anySeleccionat = $filtres['any'] ?? '';
 
 <td><?= esc($alumne['dni']) ?></td>
 
-<td>
-<?= esc($alumne['estudi'] ?? '') ?>
-/
-<?= esc($alumne['curs'] ?? '') ?>
-</td>
+<td><?= esc($alumne['estudi'] ?? '') ?></td>
+
+<td><?= esc($alumne['curs'] ?? '') ?></td>
+
+<td><?= esc($alumne['torn'] ?? '') ?></td>
 
 <td><?= esc($alumne['estat']) ?></td>
 
@@ -169,27 +170,31 @@ $anySeleccionat = $filtres['any'] ?? '';
 </div>
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function() {
 
 function seleccionat() {
-return document.querySelector('input[name="alumne_id"]:checked');
+return document.querySelector('input[name="matricula_id"]:checked');
 }
 
 document.getElementById('btnVeureExpedient').onclick = function() {
 const s = seleccionat();
-if (!s) return alert('Selecciona un alumne primer');
+if (!s) return alert('Selecciona una matrícula primer');
 window.location.href = "<?= base_url('alumnes/expedient') ?>/" + s.value;
+};
+
+document.getElementById('btnVeureMatricula').onclick = function() {
+const s = seleccionat();
+if (!s) return alert('Selecciona una matrícula primer');
+window.location.href = "<?= base_url('matricules/matricula_alumne') ?>/" + s.value;
 };
 
 document.getElementById('btnContactar').onclick = function() {
 const s = seleccionat();
-if (!s) return alert('Selecciona un alumne primer');
+if (!s) return alert('Selecciona una matrícula primer');
 window.location.href = "<?= base_url('alumnes/contacte') ?>/" + s.value;
 };
 
 });
-
 </script>
 
 <?= view('layouts/footer') ?>

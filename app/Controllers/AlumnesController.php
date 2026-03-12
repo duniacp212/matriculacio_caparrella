@@ -4,10 +4,10 @@ namespace App\Controllers;
 
 use App\Models\AlumneModel;
 use App\Models\MatriculaModel;
+use App\Models\EstudiModel;
 
 class AlumnesController extends BaseController
 {
-
     public function __construct()
     {
         $session = session();
@@ -26,22 +26,32 @@ class AlumnesController extends BaseController
             'any'         => $request->getGet('any'),
             'estudi'      => $request->getGet('estudi'),
             'curs'        => $request->getGet('curs'),
+            'torn'        => $request->getGet('torn'),
             'familia'     => $request->getGet('familia'),
             'cicle'       => $request->getGet('cicle'),
             'estat'       => $request->getGet('estat'),
             'pagament'    => $request->getGet('pagament'),
             'bonificats'  => $request->getGet('bonificacio'),
-            'cerca' => $request->getGet('cerca'),
-
+            'cerca'       => $request->getGet('cerca'),
         ];
 
         $model = new AlumneModel();
         $alumnes = $model->getAlumnesAmbMatricula($filtres);
 
+        $estudiModel = new EstudiModel();
+        $cicles = $estudiModel->obtenirCicles();
+        $cursos = $estudiModel->obtenirCursos();
+        $estudis = $estudiModel->obtenirEstudis();
+        $families = $estudiModel->obtenirFamilies();
+
         return view('alumnes/index', [
-            'title'   => 'Alumnes / Expedients',
-            'alumnes' => $alumnes,
-            'filtres' => $filtres
+            'title'    => 'Alumnes / Expedients',
+            'alumnes'  => $alumnes,
+            'filtres'  => $filtres,
+            'cicles'   => $cicles,
+            'cursos'   => $cursos,
+            'estudis'  => $estudis,
+            'families' => $families
         ]);
     }
 
@@ -88,7 +98,6 @@ class AlumnesController extends BaseController
             'q'         => $q
         ]);
     }
-
 
     public function contacte(int $id)
     {

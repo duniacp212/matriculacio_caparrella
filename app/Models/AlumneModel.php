@@ -26,20 +26,21 @@ class AlumneModel extends Model
     {
         $builder = $this->db->table('alumne a')
             ->select('
-            a.id_alumne,
-            a.nom,
-            a.cognom1,
-            a.cognom2,
-            a.dni,
-            a.data_naixement,
-            YEAR(m.data) as any_matricula,
-            e.tipus as estudi,
-            e.nivell as curs,
-            f.nom as familia,
-            m.estat,
-            m.data_pagament,
-            m.torn
-        ')
+                m.id_matricula,
+                a.id_alumne,
+                a.nom,
+                a.cognom1,
+                a.cognom2,
+                a.dni,
+                a.data_naixement,
+                YEAR(m.data) as any_matricula,
+                e.tipus as estudi,
+                e.nivell as curs,
+                f.nom as familia,
+                m.estat,
+                m.data_pagament,
+                m.torn
+               ')
             ->join('matricula m', 'm.id_alumne = a.id_alumne', 'left')
             ->join('estudi e', 'e.id_estudi = m.id_estudi', 'left')
             ->join('familia f', 'f.id_familia = e.id_familia', 'left');
@@ -57,7 +58,7 @@ class AlumneModel extends Model
         }
 
         if (!empty($filtres['familia'])) {
-            $builder->where('f.nom', $filtres['familia']);
+            $builder->where('f.id_familia', $filtres['familia']);
         }
 
         if (!empty($filtres['estat'])) {
@@ -68,6 +69,10 @@ class AlumneModel extends Model
             $builder->where('e.tipus', $filtres['cicle']);
         }
 
+        if (!empty($filtres['torn'])) {
+            $builder->where('m.torn', $filtres['torn']);
+        }
+
         if (!empty($filtres['pagament'])) {
             if ($filtres['pagament'] === 'pagat') {
                 $builder->where('m.data_pagament IS NOT NULL', null, false);
@@ -76,10 +81,6 @@ class AlumneModel extends Model
             if ($filtres['pagament'] === 'pendent') {
                 $builder->where('m.data_pagament IS NULL', null, false);
             }
-        }
-
-        if (isset($filtres['torn'])) {
-            $builder->where('m.torn', $filtres['torn']);
         }
 
         if (!empty($filtres['cerca'])) {
