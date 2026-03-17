@@ -134,13 +134,14 @@ $anySeleccionat = $filtres['any'] ?? '';
 <tr>
 
 <td>
-<input type="radio" name="matricula_id" value="<?= esc($alumne['id_matricula']) ?>">
+<input type="radio" name="matricula_id" value="<?= esc($alumne['id_matricula']) ?>" data-alumne-id="<?= esc($alumne['id_alumne']) ?>">
 </td>
 
 <td><?= esc($alumne['nom']) ?></td>
 
 <td>
 <?= esc($alumne['cognom1']) ?>
+
 <?= esc($alumne['cognom2']) ?>
 </td>
 
@@ -179,7 +180,7 @@ return document.querySelector('input[name="matricula_id"]:checked');
 document.getElementById('btnVeureExpedient').onclick = function() {
 const s = seleccionat();
 if (!s) return alert('Selecciona una matrícula primer');
-window.location.href = "<?= base_url('alumnes/expedient') ?>/" + s.value;
+window.location.href = "<?= base_url('alumnes/expedient') ?>/" + s.dataset.alumneId;
 };
 
 document.getElementById('btnVeureMatricula').onclick = function() {
@@ -191,7 +192,7 @@ window.location.href = "<?= base_url('matricules/matricula_alumne') ?>/" + s.val
 document.getElementById('btnContactar').onclick = function() {
 const s = seleccionat();
 if (!s) return alert('Selecciona una matrícula primer');
-window.location.href = "<?= base_url('alumnes/contacte') ?>/" + s.value;
+window.location.href = "<?= base_url('alumnes/contacte') ?>/" + s.dataset.alumneId;
 };
 
 });

@@ -21,21 +21,26 @@ class MatriculaModel extends Model
         'observacions'
     ];
 
-    public function getResumMatriculats()
+    public function getResumMatriculats($any = null)
     {
-        return $this->db->table('matricula m')
+        $builder = $this->db->table('matricula m')
             ->select('
-                e.tipus,
-                e.nivell,
+                e.tipus as estudi,
+                e.tipus as cicle,
+                e.nivell as curs,
                 m.torn,
                 COUNT(*) as total
             ')
             ->join('estudi e', 'e.id_estudi = m.id_estudi')
             ->groupBy(['e.tipus', 'e.nivell', 'm.torn'])
             ->orderBy('e.tipus')
-            ->orderBy('e.nivell')
-            ->get()
-            ->getResultArray();
+            ->orderBy('e.nivell');
+
+        if (!empty($any)) {
+            $builder->where('YEAR(m.data)', $any);
+        }
+
+        return $builder->get()->getResultArray();
     }
 
     public function getMatriculaPerAlumne($idAlumne)

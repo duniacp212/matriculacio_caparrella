@@ -23,7 +23,7 @@
 
                             <?php for ($i = $anyInici; $i <= $anyActual; $i++): ?>
                                 <option value="<?= $i ?>"
-                                    <?= ($filtres['any'] ?? $anyActual) == $i ? 'selected' : '' ?>>
+                                    <?= ($anySeleccionat == $i) ? 'selected' : '' ?>>
                                     <?= $i ?>
                                 </option>
                             <?php endfor; ?>

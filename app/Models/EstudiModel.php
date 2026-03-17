@@ -17,7 +17,9 @@ class EstudiModel extends Model
 
     public function obtenirTots()
     {
-        return $this->orderBy('tipus')->findAll();
+        return $this->orderBy('tipus', 'ASC')
+                    ->orderBy('nivell', 'ASC')
+                    ->findAll();
     }
 
     public function obtenirCicles()

@@ -23,33 +23,36 @@
                     <div class="card-body p-0">
 
                         <?php
-                        $blocs = [
-                            'ESO' => [],
-                            'Batxillerat' => [],
-                            'FP Grau Mitjà' => [],
-                            'FP Grau Superior' => [],
-                            'FP Bàsica' => [],
-                            'PFI' => []
-                        ];
+                        $blocs = [];
 
                         foreach ($estudis as $estudi) {
+                            $tipusLlarg = trim($estudi['tipus']);
+                            $bloc = '';
 
-                            $nomEstudi = $estudi['tipus'] . ' ' . $estudi['nivell'];
-
-                            if (str_contains($nomEstudi, 'ESO')) {
-                                $blocs['ESO'][] = $estudi;
-                            } elseif (str_contains($nomEstudi, 'Batxillerat')) {
-                                $blocs['Batxillerat'][] = $estudi;
-                            } elseif (str_contains($nomEstudi, 'SMX') || str_contains($nomEstudi, 'Electromec')) {
-                                $blocs['FP Grau Mitjà'][] = $estudi;
-                            } elseif (str_contains($nomEstudi, 'DAW') || str_contains($nomEstudi, 'DAM')) {
-                                $blocs['FP Grau Superior'][] = $estudi;
-                            } elseif (str_contains($nomEstudi, 'FP B')) {
-                                $blocs['FP Bàsica'][] = $estudi;
-                            } elseif (str_contains($nomEstudi, 'PFI')) {
-                                $blocs['PFI'][] = $estudi;
+                            if (str_starts_with($tipusLlarg, 'CFGM')) {
+                                $bloc = 'FP Grau Mitjà';
+                            } elseif (str_starts_with($tipusLlarg, 'CFGS')) {
+                                $bloc = 'FP Grau Superior';
+                            } elseif (str_starts_with($tipusLlarg, 'Batxillerat')) {
+                                $bloc = 'Batxillerat';
+                            } elseif (str_starts_with($tipusLlarg, 'ESO')) {
+                                $bloc = 'ESO';
+                            } elseif (str_starts_with($tipusLlarg, 'FP Bàsica')) {
+                                $bloc = 'FP Bàsica';
+                            } elseif (str_starts_with($tipusLlarg, 'PFI')) {
+                                $bloc = 'PFI';
+                            } else {
+                                $bloc = 'Altres';
                             }
+
+                            if (!isset($blocs[$bloc])) {
+                                $blocs[$bloc] = [];
+                            }
+
+                            $blocs[$bloc][] = $estudi;
                         }
+
+                        ksort($blocs);
                         ?>
 
                         <?php $primer = true; ?>
@@ -95,7 +98,7 @@
                     </div>
 
                     <div class="card-footer d-flex justify-content-end gap-2">
-                        <a href="<?= base_url('/') ?>" class="btn btn-outline-secondary">
+                        <a href="<?= base_url('/') ?>" id="btnTornar" class="btn btn-outline-secondary">
                             Tornar
                         </a>
 
@@ -146,7 +149,7 @@ let canvisPendents = false;
 
 const botoAlternar = document.getElementById('btnAlternar');
 const botoGuardar = document.querySelector('button[value="guardar"]');
-const botoTornar = document.querySelector('a.btn-outline-secondary');
+const botoTornar = document.getElementById('btnTornar');
 
 const files = document.querySelectorAll('tbody tr');
 
@@ -192,14 +195,9 @@ botoTornar.addEventListener('click', function(e) {
 if (canvisPendents) {
 if (!confirm('Tens canvis sense guardar. Vols sortir igualment?')) {
 e.preventDefault();
+} else {
+canvisPendents = false;
 }
-}
-});
-
-window.addEventListener('beforeunload', function(e) {
-if (canvisPendents) {
-e.preventDefault();
-e.returnValue = '';
 }
 });
 

@@ -49,6 +49,7 @@ $routes->get('pagaments/pagats', 'PagamentsController::pagats');
 $routes->get('pagaments/no-pagats', 'PagamentsController::noPagats');
 $routes->get('pagaments/bonificats', 'PagamentsController::bonificats');
 $routes->get('pagaments/resum', 'PagamentsController::resum');
+*/
 
 // GESTIÓ DE CURSOS
 $routes->get('gestio/eso', 'GestioCursosController::eso');
@@ -59,7 +60,7 @@ $routes->get('gestio/fp-basica', 'GestioCursosController::fpBasica');
 $routes->get('gestio/pfi', 'GestioCursosController::pfi');
 
 // USUARIS ADMINISTRATIUS
-$routes->get('usuaris', 'UsuarisController::index');
+/*$routes->get('usuaris', 'UsuarisController::index');
 
 // CONFIGURACIÓ
 $routes->get('configuracio', 'ConfiguracioController::index');*/

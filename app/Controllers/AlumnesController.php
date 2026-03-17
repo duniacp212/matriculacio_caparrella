@@ -72,10 +72,10 @@ class AlumnesController extends BaseController
         }
 
         return view('alumnes/resum_matriculats', [
-            'title'        => 'Resum d’alumnes matriculats',
-            'dades'        => $organitzat,
-            'totalGeneral' => $totalGeneral,
-            'anyActual'    => $anySeleccionat
+            'title'          => 'Resum d’alumnes matriculats',
+            'dades'          => $organitzat,
+            'totalGeneral'   => $totalGeneral,
+            'anySeleccionat' => $anySeleccionat
         ]);
     }
 
