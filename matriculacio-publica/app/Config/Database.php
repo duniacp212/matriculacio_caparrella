@@ -29,7 +29,7 @@ class Database extends Config
         'hostname'     => 'localhost',
         'username'     => 'xavi',
         'password'     => '1234',
-        'database'     => 'Projecte',
+        'database'     => 'matriculacio_caparrella',
         'DBDriver'     => 'MySQLi',
         'DBPrefix'     => '',
         'pConnect'     => false,

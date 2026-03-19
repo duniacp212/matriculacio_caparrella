@@ -3,14 +3,17 @@
 namespace App\Controllers;
 
 use CodeIgniter\Controller;
+use App\Models\AlumneModel;
 
 class Auth extends BaseController
 {
     protected $session;
+    protected $alumneModel;
 
     public function __construct()
     {
         $this->session = session();
+        $this->alumneModel = new AlumneModel();
         helper(['form', 'url']);
     }
 
@@ -28,37 +31,52 @@ class Auth extends BaseController
     }
 
     public function register()
-{
-    $rules = [
-        'dni' => [
-            'label' => 'DNI',
-            'rules' => 'required|exact_length[9]',
-            'errors' => [
-                'required' => 'El DNI és obligatori',
-                'exact_length' => 'El DNI ha de tenir 9 caràcters'
+    {
+        $rules = [
+            'dni' => [
+                'label' => 'DNI',
+                'rules' => 'required|exact_length[9]|is_unique[alumne.dni]',
+                'errors' => [
+                    'required' => 'El DNI és obligatori',
+                    'exact_length' => 'El DNI ha de tenir 9 caràcters',
+                    'is_unique' => 'Aquest DNI ja està registrat'
+                ]
+            ],
+            'email' => [
+                'label' => 'Correu electrònic',
+                'rules' => 'required|valid_email|is_unique[alumne.email]',
+                'errors' => [
+                    'required' => 'El correu és obligatori',
+                    'valid_email' => 'El correu no és vàlid',
+                    'is_unique' => 'Aquest correu ja està registrat'
+                ]
             ]
-        ],
-        'email' => [
-            'label' => 'Correu electrònic',
-            'rules' => 'required|valid_email',
-            'errors' => [
-                'required' => 'El correu és obligatori',
-                'valid_email' => 'El correu no és vàlid'
-            ]
-        ]
-    ];
+        ];
 
-    if (!$this->validate($rules)) {
-        return redirect()->back()
-            ->withInput()
-            ->with('errors', $this->validator->getErrors());
+        if (!$this->validate($rules)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors());
+        }
+
+        // Generar codi de 6 dígits
+        $codi = $this->alumneModel->generarCodi();
+        
+        // Guardar a la base de dades
+        $this->alumneModel->insert([
+            'dni' => strtoupper($this->request->getPost('dni')),
+            'email' => $this->request->getPost('email'),
+            'codi' => $codi,
+            'codi_expiracio' => date('Y-m-d H:i:s', strtotime('+24 hours')),
+            'estat' => 'pendent'
+        ]);
+
+        // TODO: Enviar email amb el codi
+        // Per ara, mostrem el codi a la pàgina
+        
+        return redirect()->to('/auth/login')
+            ->with('success', 'Registre completat! El teu codi és: ' . $codi . ' (comprova el teu correu)');
     }
-
-    // Aquí podries guardar a la BD si vols
-
-    return redirect()->to('/auth/login')
-        ->with('success', 'Usuari registrat correctament');
-}
 
     /**
      * =========================
@@ -74,34 +92,56 @@ class Auth extends BaseController
     }
 
   public function doLogin()
-{
-    $rules = [
-        'dni' => [
-            'label' => 'DNI',
-            'rules' => 'required|exact_length[9]',
-            'errors' => [
-                'required' => 'El DNI és obligatori',
-                'exact_length' => 'El DNI ha de tenir 9 caràcters'
+    {
+        $rules = [
+            'dni' => [
+                'label' => 'DNI',
+                'rules' => 'required|exact_length[9]',
+                'errors' => [
+                    'required' => 'El DNI és obligatori',
+                    'exact_length' => 'El DNI ha de tenir 9 caràcters'
+                ]
+            ],
+            'codi' => [
+                'label' => 'Codi',
+                'rules' => 'required|exact_length[6]',
+                'errors' => [
+                    'required' => 'El codi és obligatori',
+                    'exact_length' => 'El codi ha de tenir 6 dígits'
+                ]
             ]
-        ]
-    ];
+        ];
 
-    if (!$this->validate($rules)) {
-        return redirect()->back()
-            ->withInput()
-            ->with('errors', $this->validator->getErrors());
+        if (!$this->validate($rules)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors());
+        }
+
+        $dni = strtoupper($this->request->getPost('dni'));
+        $codi = $this->request->getPost('codi');
+
+        // Verificar credencials a la base de dades
+        $alumne = $this->alumneModel->verificarCredencials($dni, $codi);
+
+        if (!$alumne) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'DNI o codi incorrectes, o el codi ha expirat');
+        }
+
+        // Actualitzar estat a verificat
+        $this->alumneModel->update($alumne['id'], ['estat' => 'verificat']);
+
+        // Guardar a sessió
+        $this->session->set([
+            'alumne_id' => $alumne['id'],
+            'dni' => $alumne['dni'],
+            'logged_in' => true
+        ]);
+
+        return redirect()->to('/forms/dadesPersonals');
     }
-
-    $dni = $this->request->getPost('dni');
-
-    // Simulació d'inici de sessió temporal sense codi
-    $this->session->set([
-        'dni' => $dni,
-        'logged_in' => true
-    ]);
-
-    return redirect()->to('/forms/dadesPersonals');
-}
 
     /**
      * =========================
