@@ -36,6 +36,11 @@ class CreateEstudiTable extends Migration
                 'constraint' => 20,
                 'default'    => 'actiu',
             ],
+            'matricula_viva' => [
+                'type'       => 'TINYINT',
+                'constraint' => 1,
+                'default'    => 1,
+            ],
         ]);
 
         $this->forge->addKey('id_estudi', true);

@@ -10,10 +10,20 @@ class EstudiSeeder extends Seeder
     {
         $table = $this->db->table('estudi');
 
-       
-        $table->where('tipus !=', 'ESO')->delete();
+        $this->db->query('SET FOREIGN_KEY_CHECKS=0');
+        $table->truncate();
+        $this->db->query('SET FOREIGN_KEY_CHECKS=1');
 
-       
+        for ($i = 1; $i <= 4; $i++) {
+            $table->insert([
+                'id_familia' => 1,
+                'tipus' => 'ESO',
+                'nivell' => $i,
+                'estat' => 'actiu',
+                'matricula_viva' => 0
+            ]);
+        }
+
         $cfgm = [
             'CFGM Carrosseria',
             'CFGM Electromecànica de vehicles adaptat a vehicles industrials (camions)',
@@ -26,7 +36,9 @@ class EstudiSeeder extends Seeder
         ];
 
         foreach ($cfgm as $cicle) {
-            for ($i=1; $i<=2; $i++) {
+            $max = ($cicle === 'CFGM Electromecànica de vehicles adaptat a vehicles industrials (camions)') ? 3 : 2;
+
+            for ($i = 1; $i <= $max; $i++) {
                 $table->insert([
                     'id_familia' => 3,
                     'tipus' => $cicle,
@@ -37,7 +49,6 @@ class EstudiSeeder extends Seeder
             }
         }
 
-      
         $cfgs = [
             'CFGS Administració de sistemes informàtics en xarxa',
             'CFGS Administració de sistemes informàtics en xarxa – perfil ciberseguretat',
@@ -50,7 +61,7 @@ class EstudiSeeder extends Seeder
         ];
 
         foreach ($cfgs as $cicle) {
-            for ($i=1; $i<=2; $i++) {
+            for ($i = 1; $i <= 2; $i++) {
                 $table->insert([
                     'id_familia' => 4,
                     'tipus' => $cicle,
@@ -61,7 +72,6 @@ class EstudiSeeder extends Seeder
             }
         }
 
-       
         $pfi = [
             'PFI Auxiliar de muntatges d’instal·lacions electrotècniques en edifici',
             'PFI Auxiliar de muntatges d’instal·lacions elèctriques, d\'aigua i gas'
@@ -77,23 +87,23 @@ class EstudiSeeder extends Seeder
             ]);
         }
 
-       
-        $table->insert([
-            'id_familia' => 6,
-            'tipus' => 'FP Bàsica Informàtica d’Oficina',
-            'nivell' => 1,
-            'estat' => 'actiu',
-            'matricula_viva' => 0
-        ]);
+        for ($i = 1; $i <= 2; $i++) {
+            $table->insert([
+                'id_familia' => 6,
+                'tipus' => 'FP Bàsica Informàtica d’Oficina',
+                'nivell' => $i,
+                'estat' => 'actiu',
+                'matricula_viva' => 0
+            ]);
+        }
 
-        
         $bat = [
             'Batxillerat Humanitats i ciències socials',
             'Batxillerat Ciències i tecnologia'
         ];
 
         foreach ($bat as $cicle) {
-            for ($i=1; $i<=2; $i++) {
+            for ($i = 1; $i <= 2; $i++) {
                 $table->insert([
                     'id_familia' => 2,
                     'tipus' => $cicle,
