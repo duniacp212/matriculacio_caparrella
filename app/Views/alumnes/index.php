@@ -91,6 +91,16 @@ $anySeleccionat = $filtres['any'] ?? '';
 </select>
 </div>
 
+<div class="col-md-2">
+<label class="form-label mb-1">Bonificació</label>
+<select name="bonificacio" class="form-select form-select-sm">
+<option value="">Totes</option>
+<option value="0" <?= ($filtres['bonificats'] ?? '') === '0' ? 'selected' : '' ?>>Sense bonificació (0%)</option>
+<option value="50" <?= ($filtres['bonificats'] ?? '') === '50' ? 'selected' : '' ?>>50%</option>
+<option value="100" <?= ($filtres['bonificats'] ?? '') === '100' ? 'selected' : '' ?>>100%</option>
+</select>
+</div>
+
 </div>
 </div>
 
@@ -125,6 +135,7 @@ $anySeleccionat = $filtres['any'] ?? '';
 <th>Torn</th>
 <th>Estat</th>
 <th>Pagament</th>
+<th>Bonificació</th>
 </tr>
 </thead>
 
@@ -157,6 +168,16 @@ $anySeleccionat = $filtres['any'] ?? '';
 
 <td class="<?= !empty($alumne['data_pagament']) ? 'text-success' : 'text-danger' ?>">
 <?= !empty($alumne['data_pagament']) ? 'Pagat' : 'No pagat' ?>
+</td>
+
+<td>
+<?php if ($alumne['bonificats'] == 50): ?>
+<span class="badge bg-warning text-dark">50%</span>
+<?php elseif ($alumne['bonificats'] == 100): ?>
+<span class="badge bg-success">100%</span>
+<?php else: ?>
+<span class="badge bg-secondary">0%</span>
+<?php endif; ?>
 </td>
 
 </tr>

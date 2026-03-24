@@ -11,7 +11,7 @@
 
 <div class="card shadow-sm">
 
-<div class="card-header bg-white border-bottom">
+<div class="card-header bg-white" style="border-bottom: 1px solid #dee2e6;">
 <h5 class="mb-0">Dades de la matrícula</h5>
 </div>
 
@@ -108,9 +108,17 @@
 
 <div class="border rounded p-3 bg-light">
 
+<?php if(!empty($matricula['bonificacio_nom'])): ?>
+<div>
+<strong>Bonificació:</strong> <?= esc($matricula['bonificacio_nom']) ?> (<?= esc($matricula['bonificacio_percentatge']) ?>%)
+</div>
+<?php endif; ?>
+
 <?php if(!empty($matricula['observacions'])): ?>
+<div class="mt-2">
 <?= esc($matricula['observacions']) ?>
-<?php else: ?>
+</div>
+<?php elseif(empty($matricula['bonificacio_nom'])): ?>
 <span class="text-muted">Sense observacions</span>
 <?php endif; ?>
 

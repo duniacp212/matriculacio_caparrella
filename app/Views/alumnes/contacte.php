@@ -9,9 +9,21 @@
   </div>
 
   <main class="container p-4 overflow-auto">
-    <form class="card shadow-sm card-lila p-0">
+    <form action="<?= base_url('alumnes/enviar_correu/' . $alumne['id_alumne']) ?>" method="post" class="card shadow-sm card-lila p-0">
 
       <div class="card-header fw-semibold">Dades de l’alumne</div>
+
+      <?php if (session()->getFlashdata('exit')): ?>
+          <div class="alert alert-success m-3">
+              <?= session()->getFlashdata('exit') ?>
+          </div>
+      <?php endif; ?>
+
+      <?php if (session()->getFlashdata('error')): ?>
+          <div class="alert alert-danger m-3">
+              <?= session()->getFlashdata('error') ?>
+          </div>
+      <?php endif; ?>
 
       <div class="card-body">
         <div class="row g-3 mb-4">
@@ -56,7 +68,7 @@
 
           <div class="col-md-6">
             <label class="form-label">Motiu del contacte</label>
-            <select class="form-select">
+            <select name="motiu" class="form-select">
               <option>Informació general</option>
               <option>Matrícula</option>
               <option>Pagament</option>
@@ -68,13 +80,13 @@
 
           <div class="col-md-6">
             <label class="form-label">Telèfon de contacte</label>
-            <input type="tel" class="form-control"
+            <input type="tel" name="telefon" class="form-control"
                    placeholder="600 000 000">
           </div>
 
           <div class="col-12">
             <label class="form-label">Missatge</label>
-            <textarea class="form-control" rows="5"
+            <textarea name="missatge" class="form-control" rows="5"
               placeholder="Escriu aquí el missatge que vols enviar..."></textarea>
           </div>
 

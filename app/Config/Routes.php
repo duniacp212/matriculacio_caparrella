@@ -12,6 +12,7 @@ $routes->get('alumnes', 'AlumnesController::index');
 
 $routes->get('alumnes/expedient/(:num)', 'AlumnesController::expedient/$1');
 $routes->get('alumnes/contacte/(:num)', 'AlumnesController::contacte/$1');
+$routes->post('alumnes/enviar_correu/(:num)', 'AlumnesController::enviar_correu/$1');
 
 $routes->get('inici', 'IniciController::index');
 

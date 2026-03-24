@@ -39,11 +39,14 @@ class AlumneModel extends Model
                 f.nom as familia,
                 m.estat,
                 m.data_pagament,
-                m.torn
+                m.torn,
+                COALESCE(b.percentatge, 0) as bonificats
                ')
             ->join('matricula m', 'm.id_alumne = a.id_alumne', 'left')
             ->join('estudi e', 'e.id_estudi = m.id_estudi', 'left')
-            ->join('familia f', 'f.id_familia = e.id_familia', 'left');
+            ->join('familia f', 'f.id_familia = e.id_familia', 'left')
+            ->join('matricula_bonificacio mb', 'mb.id_matricula = m.id_matricula', 'left')
+            ->join('bonificacio b', 'b.id_bonificacio = mb.id_bonificacio', 'left');
 
         if (!empty($filtres['any'])) {
             $builder->where('YEAR(m.data)', $filtres['any']);
@@ -80,6 +83,17 @@ class AlumneModel extends Model
 
             if ($filtres['pagament'] === 'pendent') {
                 $builder->where('m.data_pagament IS NULL', null, false);
+            }
+        }
+
+        if (isset($filtres['bonificats']) && $filtres['bonificats'] !== '') {
+            if ($filtres['bonificats'] === '0') {
+                $builder->groupStart()
+                        ->where('b.percentatge', 0)
+                        ->orWhere('b.percentatge IS NULL', null, false)
+                        ->groupEnd();
+            } else {
+                $builder->where('b.percentatge', $filtres['bonificats']);
             }
         }
 
@@ -134,10 +148,13 @@ class AlumneModel extends Model
                 e.tipus,
                 e.nivell,
                 m.estat,
-                m.torn
+                m.torn,
+                COALESCE(b.percentatge, 0) as bonificats
             ')
             ->join('matricula m', 'm.id_alumne = a.id_alumne', 'left')
             ->join('estudi e', 'e.id_estudi = m.id_estudi', 'left')
+            ->join('matricula_bonificacio mb', 'mb.id_matricula = m.id_matricula', 'left')
+            ->join('bonificacio b', 'b.id_bonificacio = mb.id_bonificacio', 'left')
             ->where('a.id_alumne', $id)
             ->get()
             ->getRowArray();

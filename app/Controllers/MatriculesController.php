@@ -23,11 +23,15 @@ class MatriculesController extends BaseController
             a.cognom2,
             a.dni,
             e.tipus,
-            e.nivell
+            e.nivell,
+            b.tipus as bonificacio_nom,
+            b.percentatge as bonificacio_percentatge
         ')
         ->from('matricula m')
         ->join('alumne a', 'a.id_alumne = m.id_alumne')
         ->join('estudi e', 'e.id_estudi = m.id_estudi')
+        ->join('matricula_bonificacio mb', 'mb.id_matricula = m.id_matricula', 'left')
+        ->join('bonificacio b', 'b.id_bonificacio = mb.id_bonificacio', 'left')
         ->where('m.id_matricula', $id)
         ->first();
 

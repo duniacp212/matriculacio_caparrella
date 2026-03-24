@@ -23,16 +23,16 @@ class AlumnesController extends BaseController
         $request = service('request');
 
         $filtres = [
-            'any'         => $request->getGet('any'),
-            'estudi'      => $request->getGet('estudi'),
-            'curs'        => $request->getGet('curs'),
-            'torn'        => $request->getGet('torn'),
-            'familia'     => $request->getGet('familia'),
-            'cicle'       => $request->getGet('cicle'),
-            'estat'       => $request->getGet('estat'),
-            'pagament'    => $request->getGet('pagament'),
-            'bonificats'  => $request->getGet('bonificacio'),
-            'cerca'       => $request->getGet('cerca'),
+            'any' => $request->getGet('any'),
+            'estudi' => $request->getGet('estudi'),
+            'curs' => $request->getGet('curs'),
+            'torn' => $request->getGet('torn'),
+            'familia' => $request->getGet('familia'),
+            'cicle' => $request->getGet('cicle'),
+            'estat' => $request->getGet('estat'),
+            'pagament' => $request->getGet('pagament'),
+            'bonificats' => $request->getGet('bonificacio'),
+            'cerca' => $request->getGet('cerca'),
         ];
 
         $model = new AlumneModel();
@@ -45,12 +45,12 @@ class AlumnesController extends BaseController
         $families = $estudiModel->obtenirFamilies();
 
         return view('alumnes/index', [
-            'title'    => 'Alumnes / Expedients',
-            'alumnes'  => $alumnes,
-            'filtres'  => $filtres,
-            'cicles'   => $cicles,
-            'cursos'   => $cursos,
-            'estudis'  => $estudis,
+            'title' => 'Alumnes / Expedients',
+            'alumnes' => $alumnes,
+            'filtres' => $filtres,
+            'cicles' => $cicles,
+            'cursos' => $cursos,
+            'estudis' => $estudis,
             'families' => $families
         ]);
     }
@@ -72,9 +72,9 @@ class AlumnesController extends BaseController
         }
 
         return view('alumnes/resum_matriculats', [
-            'title'          => 'Resum d’alumnes matriculats',
-            'dades'          => $organitzat,
-            'totalGeneral'   => $totalGeneral,
+            'title' => 'Resum d’alumnes matriculats',
+            'dades' => $organitzat,
+            'totalGeneral' => $totalGeneral,
             'anySeleccionat' => $anySeleccionat
         ]);
     }
@@ -84,7 +84,7 @@ class AlumnesController extends BaseController
         $request = service('request');
         $q = $request->getGet('q');
 
-        $model = new \App\Models\AlumneModel();
+        $model = new AlumneModel();
 
         $resultats = [];
 
@@ -93,9 +93,9 @@ class AlumnesController extends BaseController
         }
 
         return view('alumnes/cerca', [
-            'title'     => 'Resultats de la cerca',
+            'title' => 'Resultats de la cerca',
             'resultats' => $resultats,
-            'q'         => $q
+            'q' => $q
         ]);
     }
 
@@ -109,7 +109,7 @@ class AlumnesController extends BaseController
         }
 
         return view('alumnes/contacte', [
-            'title'  => 'Contacte alumne',
+            'title' => 'Contacte alumne',
             'alumne' => $alumne
         ]);
     }
@@ -124,8 +124,59 @@ class AlumnesController extends BaseController
         }
 
         return view('alumnes/expedient', [
-            'title'  => 'Expedient de l’alumne',
+            'title' => 'Expedient de l’alumne',
             'alumne' => $alumne
         ]);
+    }
+
+    public function enviar_correu(int $id)
+    {
+        $model = new AlumneModel();
+        $alumne = $model->getContactePerId($id);
+
+        if (!$alumne) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
+        }
+
+        $request = service('request');
+        $motiu = $request->getPost('motiu');
+        $telefon = $request->getPost('telefon');
+        $missatge = $request->getPost('missatge');
+
+        $dades = [
+            'alumne' => $alumne,
+            'motiu' => $motiu,
+            'telefon' => $telefon,
+            'missatge' => $missatge,
+        ];
+
+        $email = \Config\Services::email();
+
+        $config['protocol'] = 'smtp';
+        $config['SMTPHost'] = 'smtp.gmail.com';
+        $config['SMTPUser'] = getenv('email.SMTPUser');
+        $config['SMTPPass'] = getenv('email.SMTPPass');
+        $config['SMTPCrypto'] = 'tls';
+        $config['SMTPPort'] = 587;
+        $config['mailType'] = 'html';
+        $config['newline'] = "\r\n";
+        $config['CRLF'] = "\r\n";
+        $config['charset'] = "utf-8";
+
+        $email->initialize($config);
+
+        $emailUser = getenv('email.SMTPUser') ?: 'noreply@caparrella.cat';
+        $email->setFrom($emailUser, 'Secretaria La Caparrella');
+        $email->setTo($alumne['email']);
+        $email->setSubject('Avís de Secretaria (La Caparrella): ' . $motiu);
+
+        $contingutHtml = view('emails/contacte', $dades);
+        $email->setMessage($contingutHtml);
+
+        if ($email->send()) {
+            return redirect()->to(base_url('alumnes/contacte/' . $id))->with('exit', 'El correu s\'ha enviat correctament a l\'alumne.');
+        } else {
+            return redirect()->to(base_url('alumnes/contacte/' . $id))->with('error', 'Hi ha hagut un error enviant el correu. Revisa la configuració (.env).');
+        }
     }
 }

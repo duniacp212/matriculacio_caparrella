@@ -179,7 +179,6 @@ table.table > thead > tr > th {
 
 aside {
   background-color: #F4F6FD;
-  border-top: 4px solid #15C67E;
 }
 
 aside ul {
@@ -239,6 +238,7 @@ aside a span {
 }
 
 
+
 .border-bottom {
   border-bottom: 4px solid #15C67E !important;
 }
@@ -246,7 +246,6 @@ aside a span {
 .px-3.py-3.border-bottom.bg-white {
   border-bottom: none !important;
 }
-
 
 @media (max-width: 768px) {
   .btn {

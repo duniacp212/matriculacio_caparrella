@@ -24,8 +24,13 @@ class AlumneSeeder extends Seeder
             ['nom' => 'Adrià', 'cognom1' => 'Serra', 'cognom2' => 'Costa', 'data_naixement' => '2008-06-03', 'telefon' => '600111123', 'dni' => '12345678M', 'direccio' => 'Carrer Major 13', 'email' => 'adria@email.com'],
             ['nom' => 'Júlia', 'cognom1' => 'Ribas', 'cognom2' => 'Martí', 'data_naixement' => '2007-10-09', 'telefon' => '600111124', 'dni' => '12345678N', 'direccio' => 'Carrer Major 14', 'email' => 'julia@email.com'],
             ['nom' => 'David', 'cognom1' => 'Casals', 'cognom2' => 'Roca', 'data_naixement' => '2008-01-25', 'telefon' => '600111125', 'dni' => '12345678O', 'direccio' => 'Carrer Major 15', 'email' => 'david@email.com'],
+            ['nom' => 'Dunia', 'cognom1' => 'Cañas', 'cognom2' => 'Puig', 'data_naixement' => '2008-01-25', 'telefon' => '600111125', 'dni' => '12345678X', 'direccio' => 'Carrer Major 15', 'email' => 'dunia_2121@hotmail.com'],
         ];
-
-        $this->db->table('alumne')->insertBatch($data);
+        foreach ($data as $alumne) {
+            $existent = $this->db->table('alumne')->where('dni', $alumne['dni'])->get()->getRowArray();
+            if (!$existent) {
+                $this->db->table('alumne')->insert($alumne);
+            }
+        }
     }
 }

@@ -69,6 +69,7 @@
                 <li><strong>Curs:</strong> <?= esc($alumne['nivell']) ?></li>
                 <li><strong>Estat:</strong> <?= esc($alumne['estat']) ?></li>
                 <li><strong>Torn:</strong> <?= esc($alumne['torn']) ?></li>
+                <li><strong>Bonificació:</strong> <?= esc($alumne['bonificats'] ?? '0') ?>%</li>
               </ul>
             </div>
           </div>
