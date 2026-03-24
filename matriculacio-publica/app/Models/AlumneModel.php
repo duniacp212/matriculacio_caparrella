@@ -21,7 +21,10 @@ class AlumneModel extends Model
         'dni',
         'direccio',
         'email',
-        'expedient'
+        'expedient',
+        'codi',
+        'codi_expiracio',
+        'estat'
     ];
 
     protected $useTimestamps = false;

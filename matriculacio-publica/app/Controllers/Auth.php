@@ -32,6 +32,34 @@ class Auth extends BaseController
 
     public function register()
     {
+        $action = $this->request->getPost('action') ?? 'register';
+
+        if ($action === 'login') {
+            // Check if user exists
+            $dni = strtoupper($this->request->getPost('dni'));
+            $email = $this->request->getPost('email');
+
+            $alumne = $this->alumneModel->where('dni', $dni)->where('email', $email)->first();
+
+            if ($alumne) {
+                // Generate new code
+                $codi = $this->alumneModel->generarCodi();
+                $this->alumneModel->update($alumne['id_alumne'], [
+                    'codi' => $codi,
+                    'codi_expiracio' => date('Y-m-d H:i:s', strtotime('+24 hours')),
+                    'estat' => 'pendent'
+                ]);
+
+                return redirect()->to('/auth/login')
+                    ->with('success', 'Codi regenerat! El teu codi és: ' . $codi . ' (comprova el teu correu)');
+            } else {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'No hi ha cap usuari registrat amb aquest DNI i correu. Registra\'t primer.');
+            }
+        }
+
+        // Register logic
         $rules = [
             'dni' => [
                 'label' => 'DNI',
@@ -131,11 +159,11 @@ class Auth extends BaseController
         }
 
         // Actualitzar estat a verificat
-        $this->alumneModel->update($alumne['id'], ['estat' => 'verificat']);
+        $this->alumneModel->update($alumne['id_alumne'], ['estat' => 'verificat']);
 
         // Guardar a sessió
         $this->session->set([
-            'alumne_id' => $alumne['id'],
+            'alumne_id' => $alumne['id_alumne'],
             'dni' => $alumne['dni'],
             'logged_in' => true
         ]);

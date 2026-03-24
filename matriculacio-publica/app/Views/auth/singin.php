@@ -61,8 +61,8 @@
                 </div>
                 <div class="form-text">Utilitzarem aquest correu per enviar-te el codi d'accés</div>
             </div>
-
-            <button type="submit" class="btn btn-primary w-100">Registrar-se</button>
+            <button type="submit" name="action" value="login" class="btn btn-secondary"> Iniciar sessió</button>
+            <button type="submit" name="action" value="register" class="btn btn-primary w-100">Registrar-se</button>
         </form>
     </div>
 

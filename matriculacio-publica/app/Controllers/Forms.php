@@ -68,7 +68,7 @@ class Forms extends BaseController
         $alumne = $this->getCurrentAlumne();
         if (!$alumne) return redirect()->to('/auth/login')->with('error', 'Sessió no vàlida');
 
-        $this->alumneModel->update($alumne['id'], [
+        $this->alumneModel->update($alumne['id_alumne'], [
             'nom' => $this->request->getPost('nom'),
             'cognoms' => $this->request->getPost('cognoms'),
             'data_naixement' => $this->request->getPost('data_naixement'),
@@ -91,7 +91,7 @@ class Forms extends BaseController
     {
         if ($redirect = $this->checkAuth()) return $redirect;
         $alumne = $this->getCurrentAlumne();
-        $tutors = $this->tutorModel->getByAlumne($alumne['id']);
+        $tutors = $this->tutorModel->getByAlumne($alumne['id_alumne']);
         return view('formsviews/dadesTutors', ['title' => 'Dades dels Tutors', 'tutors' => $tutors]);
     }
 
@@ -114,7 +114,7 @@ class Forms extends BaseController
         if (!$alumne) return redirect()->to('/auth/login')->with('error', 'Sessió no vàlida');
 
         $data = [
-            'alumne_id' => $alumne['id'],
+            'id_alumne' => $alumne['id_alumne'],
             'nom_tutor1' => $this->request->getPost('nom_tutor1'),
             'cognoms_tutor1' => $this->request->getPost('cognoms_tutor1'),
             'telefon_tutor1' => $this->request->getPost('telefon_tutor1'),
@@ -127,7 +127,7 @@ class Forms extends BaseController
             'situacions_singulars' => $this->request->getPost('situacions_singulars')
         ];
 
-        $existing = $this->tutorModel->getByAlumne($alumne['id']);
+        $existing = $this->tutorModel->getByAlumne($alumne['id_alumne']);
         if ($existing) {
             $this->tutorModel->update($existing['id'], $data);
         } else {
@@ -145,7 +145,7 @@ class Forms extends BaseController
     {
         if ($redirect = $this->checkAuth()) return $redirect;
         $alumne = $this->getCurrentAlumne();
-        $inscripcio = $this->inscripcioModel->getByAlumne($alumne['id']);
+        $inscripcio = $this->inscripcioModel->getByAlumne($alumne['id_alumne']);
         return view('formsviews/dadesCicle', ['title' => 'Dades del Cicle', 'inscripcio' => $inscripcio]);
     }
 
@@ -176,9 +176,9 @@ class Forms extends BaseController
 
         if ($resguard_file) $data['resguard_notes'] = $resguard_file;
 
-        $existing = $this->inscripcioModel->getByAlumne($alumne['id']);
+        $existing = $this->inscripcioModel->getByAlumne($alumne['id_alumne']);
         if ($existing) {
-            $this->inscripcioModel->update($existing['id'], $data);
+            $this->inscripcioModel->update($existing['id_matricula'], $data);
         } else {
             $this->inscripcioModel->insert($data);
         }
@@ -202,7 +202,7 @@ class Forms extends BaseController
     {
         if ($redirect = $this->checkAuth()) return $redirect;
         $alumne = $this->getCurrentAlumne();
-        $inscripcio = $this->inscripcioModel->getByAlumne($alumne['id']);
+        $inscripcio = $this->inscripcioModel->getByAlumne($alumne['id_alumne']);
         return view('formsviews/documentacio', ['title' => 'Documentació', 'inscripcio' => $inscripcio]);
     }
 
@@ -233,7 +233,7 @@ class Forms extends BaseController
         if ($inscripcio) {
             $this->inscripcioModel->update($inscripcio['id'], $data);
         } else {
-            $data['alumne_id'] = $alumne['id'];
+            $data['id_alumne'] = $alumne['id_alumne'];
             $this->inscripcioModel->insert($data);
         }
 
@@ -241,8 +241,8 @@ class Forms extends BaseController
             return redirect()->back()->with('success', 'Documents guardats com a esborrany');
         }
 
-        $this->inscripcioModel->update($inscripcio['id'], ['estat' => 'completat']);
-        $this->alumneModel->update($alumne['id'], ['estat' => 'completat']);
+        $this->inscripcioModel->update($inscripcio['id_matricula'], ['estat' => 'completat']);
+        $this->alumneModel->update($alumne['id_alumne'], ['estat' => 'completat']);
 
         return redirect()->to('/forms/confirmacio')->with('success', 'Inscripció completada amb èxit!');
     }
@@ -251,8 +251,8 @@ class Forms extends BaseController
     {
         if ($redirect = $this->checkAuth()) return $redirect;
         $alumne = $this->getCurrentAlumne();
-        $tutors = $this->tutorModel->getByAlumne($alumne['id']);
-        $inscripcio = $this->inscripcioModel->getByAlumne($alumne['id']);
+        $tutors = $this->tutorModel->getByAlumne($alumne['id_alumne']);
+        $inscripcio = $this->inscripcioModel->getByAlumne($alumne['id_alumne']);
         return view('formsviews/confirmacio', [
             'title' => 'Confirmació',
             'alumne' => $alumne,

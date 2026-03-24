@@ -18,6 +18,9 @@ class CreateAlumneTable extends Migration
                 `direccio`       VARCHAR(100) NOT NULL,
                 `email`          VARCHAR(100) DEFAULT NULL,
                 `expedient`      VARCHAR(255) DEFAULT NULL,
+                `codi`           VARCHAR(10) DEFAULT NULL,
+                `codi_expiracio` DATETIME DEFAULT NULL,
+                `estat`          VARCHAR(20) DEFAULT NULL,
                 PRIMARY KEY (`id_alumne`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
         ');
