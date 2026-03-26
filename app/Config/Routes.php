@@ -20,6 +20,7 @@ $routes->get('inici', 'IniciController::index');
 $routes->get('matricules/matricula_alumne/(:num)', 'MatriculesController::matricula_alumne/$1');
 //$routes->get('matricules/nova', 'MatriculesController::nova');
 $routes->get('alumnes/resum_matriculats', 'AlumnesController::resumMatriculats');
+$routes->get('alumnes/exportar_resum_pdf', 'AlumnesController::exportarResumPdf');
 
 // MATRÍCULA VIVA
 $routes->get('matricula-viva', 'MatriculaVivaController::index');
@@ -61,7 +62,13 @@ $routes->get('gestio/fp-basica', 'GestioCursosController::fpBasica');
 $routes->get('gestio/pfi', 'GestioCursosController::pfi');
 
 // USUARIS ADMINISTRATIUS
-/*$routes->get('usuaris', 'UsuarisController::index');
+$routes->get('usuaris', 'UsuarisController::index');
+$routes->get('usuaris/nou', 'UsuarisController::nou');
+$routes->post('usuaris/guardar', 'UsuarisController::guardar');
+$routes->get('usuaris/editar/(:num)', 'UsuarisController::editar/$1');
+$routes->post('usuaris/actualitzar/(:num)', 'UsuarisController::actualitzar/$1');
+$routes->get('usuaris/eliminar/(:num)', 'UsuarisController::eliminar/$1');
 
 // CONFIGURACIÓ
-$routes->get('configuracio', 'ConfiguracioController::index');*/
+$routes->get('configuracio', 'ConfiguracioController::index');
+$routes->post('configuracio/guardar', 'ConfiguracioController::guardar');

@@ -1,7 +1,4 @@
 <?php
-
-namespace App\Database\Migrations;
-
 use CodeIgniter\Database\Migration;
 
 class CreateServeisContractatsTable extends Migration

@@ -79,6 +79,38 @@ class AlumnesController extends BaseController
         ]);
     }
 
+    public function exportarResumPdf()
+    {
+        $request = service('request');
+        $anySeleccionat = $request->getGet('any');
+
+        $model = new MatriculaModel();
+        $files = $model->getResumMatriculats($anySeleccionat);
+
+        $organitzat = [];
+        $totalGeneral = 0;
+
+        foreach ($files as $fila) {
+            $organitzat[$fila['estudi']][] = $fila;
+            $totalGeneral += $fila['total'];
+        }
+
+        $html = view('alumnes/resum_pdf', [
+            'dades' => $organitzat,
+            'totalGeneral' => $totalGeneral,
+            'anySeleccionat' => $anySeleccionat
+        ]);
+
+        $dompdf = new \Dompdf\Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/pdf')
+            ->setBody($dompdf->output());
+    }
+
     public function cercaGlobal()
     {
         $request = service('request');
@@ -140,13 +172,11 @@ class AlumnesController extends BaseController
 
         $request = service('request');
         $motiu = $request->getPost('motiu');
-        $telefon = $request->getPost('telefon');
         $missatge = $request->getPost('missatge');
 
         $dades = [
             'alumne' => $alumne,
             'motiu' => $motiu,
-            'telefon' => $telefon,
             'missatge' => $missatge,
         ];
 

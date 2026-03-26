@@ -1,5 +1,6 @@
 <?= view('layouts/header', ['title' => $title]) ?>
 <?= view('layouts/topbar') ?>
+<?php $config_ui = model('App\Models\SettingsModel')->getSettings(); ?>
 
 <div class="container-fluid d-flex flex-column min-vh-100">
 
@@ -10,6 +11,7 @@
 <div class="col-12">
 <div class="row g-2">
 
+<?php if ($config_ui['filtre_any'] ?? true): ?>
 <div class="col-md-2">
 <label class="form-label mb-1">Any</label>
 
@@ -30,7 +32,9 @@ $anySeleccionat = $filtres['any'] ?? '';
 
 </select>
 </div>
+<?php endif; ?>
 
+<?php if ($config_ui['filtre_estudi'] ?? true): ?>
 <div class="col-md-2">
 <label class="form-label mb-1">Estudi</label>
 <select name="estudi" class="form-select form-select-sm">
@@ -45,7 +49,9 @@ $anySeleccionat = $filtres['any'] ?? '';
 
 </select>
 </div>
+<?php endif; ?>
 
+<?php if ($config_ui['filtre_curs'] ?? true): ?>
 <div class="col-md-2">
 <label class="form-label mb-1">Curs</label>
 <select name="curs" class="form-select form-select-sm">
@@ -60,7 +66,9 @@ $anySeleccionat = $filtres['any'] ?? '';
 
 </select>
 </div>
+<?php endif; ?>
 
+<?php if ($config_ui['filtre_torn'] ?? true): ?>
 <div class="col-md-2">
 <label class="form-label mb-1">Torn</label>
 <select name="torn" class="form-select form-select-sm">
@@ -72,7 +80,9 @@ $anySeleccionat = $filtres['any'] ?? '';
 
 </select>
 </div>
+<?php endif; ?>
 
+<?php if ($config_ui['filtre_estat'] ?? true): ?>
 <div class="col-md-2">
 <label class="form-label mb-1">Estat</label>
 <select name="estat" class="form-select form-select-sm">
@@ -81,7 +91,9 @@ $anySeleccionat = $filtres['any'] ?? '';
 <option value="Pendent" <?= ($filtres['estat'] ?? '') === 'Pendent' ? 'selected' : '' ?>>Pendent</option>
 </select>
 </div>
+<?php endif; ?>
 
+<?php if ($config_ui['filtre_pagament'] ?? true): ?>
 <div class="col-md-2">
 <label class="form-label mb-1">Pagament</label>
 <select name="pagament" class="form-select form-select-sm">
@@ -90,7 +102,9 @@ $anySeleccionat = $filtres['any'] ?? '';
 <option value="pendent" <?= ($filtres['pagament'] ?? '') === 'pendent' ? 'selected' : '' ?>>No pagat</option>
 </select>
 </div>
+<?php endif; ?>
 
+<?php if ($config_ui['filtre_bonificacio'] ?? true): ?>
 <div class="col-md-2">
 <label class="form-label mb-1">Bonificació</label>
 <select name="bonificacio" class="form-select form-select-sm">
@@ -100,6 +114,7 @@ $anySeleccionat = $filtres['any'] ?? '';
 <option value="100" <?= ($filtres['bonificats'] ?? '') === '100' ? 'selected' : '' ?>>100%</option>
 </select>
 </div>
+<?php endif; ?>
 
 </div>
 </div>

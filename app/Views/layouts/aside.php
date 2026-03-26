@@ -1,3 +1,4 @@
+<?php $config_ui = model('App\Models\SettingsModel')->getSettings(); ?>
 <aside class="col-2 bg-secondary-subtle p-3 border-end">
   <ul class="list-unstyled">
 
@@ -10,14 +11,16 @@
       </a>
     </li>
 
-   
+    <?php if ($config_ui['menu_alumnes_matriculats'] ?? true): ?>
     <li class="mt-2">
       <a class="fw-semibold text-dark text-decoration-none py-1 d-block"
          href="<?= base_url('alumnes/resum_matriculats') ?>">
         Alumnes matriculats
       </a>
     </li>
+    <?php endif; ?>
 
+    <?php if ($config_ui['menu_gestio_cursos'] ?? true): ?>
     <li class="py-2 mt-3">
       <div class="d-flex justify-content-between align-items-center">
         <a
@@ -46,20 +49,25 @@
         <li><a class="text-dark text-decoration-none py-1 d-block" href="<?= base_url('gestio/pfi') ?>">PFI</a></li>
       </ul>
     </li>
+    <?php endif; ?>
 
+    <?php if ($config_ui['menu_matricula_viva'] ?? true): ?>
     <li class="mt-2">
       <a class="fw-semibold text-dark text-decoration-none py-1 d-block"
          href="<?= base_url('matricula-viva') ?>">
         Matrícula viva
       </a>
     </li>
+    <?php endif; ?>
 
+    <?php if ($config_ui['menu_usuaris'] ?? true): ?>
     <li>
       <a class="fw-semibold text-dark text-decoration-none py-1 d-block"
          href="<?= base_url('usuaris') ?>">
         Gestió d’usuaris administratius
       </a>
     </li>
+    <?php endif; ?>
 
     <li>
       <a class="fw-semibold text-dark text-decoration-none py-1 d-block"

@@ -104,9 +104,9 @@
                     <a href="<?= base_url('alumnes') ?>" class="btn btn-outline-secondary">
                         Tornar
                     </a>
-                    <button class="btn btn-outline-primary">
+                    <a href="<?= base_url('alumnes/exportar_resum_pdf') . '?any=' . esc($anySeleccionat) ?>" class="btn btn-outline-primary" target="_blank">
                         Exportar a PDF
-                    </button>
+                    </a>
                 </div>
 
             </div>

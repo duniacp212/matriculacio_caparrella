@@ -46,16 +46,22 @@
                    value="<?= esc($alumne['dni']) ?>" readonly>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label">Estudi / Curs / Cicle</label>
             <input type="text" class="form-control"
                    value="<?= esc($alumne['tipus']) ?> <?= esc($alumne['nivell']) ?>" readonly>
           </div>
 
-          <div class="col-md-6">
+          <div class="col-md-4">
             <label class="form-label">Correu de l’alumne</label>
             <input type="email" class="form-control"
                    value="<?= esc($alumne['email']) ?>" readonly>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Telèfon de l’alumne</label>
+            <input type="text" class="form-control"
+                   value="<?= esc($alumne['telefon']) ?>" readonly>
           </div>
 
         </div>
@@ -66,7 +72,7 @@
       <div class="card-body">
         <div class="row g-3">
 
-          <div class="col-md-6">
+          <div class="col-12">
             <label class="form-label">Motiu del contacte</label>
             <select name="motiu" class="form-select">
               <option>Informació general</option>
@@ -76,12 +82,6 @@
               <option>Baixa</option>
               <option>Altres</option>
             </select>
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label">Telèfon de contacte</label>
-            <input type="tel" name="telefon" class="form-control"
-                   placeholder="600 000 000">
           </div>
 
           <div class="col-12">

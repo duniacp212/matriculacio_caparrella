@@ -23,9 +23,7 @@
             <?= nl2br(esc($missatge)) ?>
         </div>
         
-        <?php if (!empty($telefon)): ?>
-            <p>Pots respondre o trucar a aquest número per a qualsevol dubte: <strong><?= esc($telefon) ?></strong></p>
-        <?php endif; ?>
+        <p>Pots respondre a aquest correu o trucar a la secretaria del centre per a qualsevol dubte: <strong>973 288 180</strong> o <strong>973 980 350</strong>.</p>
         
         <hr style="margin-top: 30px; border: 0; border-top: 1px solid #ccc;">
         <p style="font-size: 0.85em; color: #777;">Aquest és un correu generat automàticament des del sistema de matriculacions.</p>

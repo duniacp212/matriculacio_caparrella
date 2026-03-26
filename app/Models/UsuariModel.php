@@ -8,8 +8,14 @@ class UsuariModel extends Model
 {
     protected $table = 'usuari';
     protected $primaryKey = 'id_usuari';
+    protected $returnType = \App\Entities\Usuari::class;
+    protected $useAutoIncrement = true;
 
     protected $allowedFields = [
+        'nom',
+        'cognom1',
+        'cognom2',
+        'dni_nie',
         'usuari',
         'password',
         'rol'
