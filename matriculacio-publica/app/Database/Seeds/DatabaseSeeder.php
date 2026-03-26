@@ -29,6 +29,8 @@ class DatabaseSeeder extends Seeder
         // OptativaSeeder — sense dades de proves, es pot afegir si cal
         // $this->call(OptativaSeeder::class);
 
+        $this-> call(BonificacioSeeder::class);
+
         // 4. Alumnes (sense dependències externes)
         $this->call(AlumneSeeder::class);
 

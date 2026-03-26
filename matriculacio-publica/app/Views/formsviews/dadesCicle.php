@@ -61,7 +61,7 @@
                     <div class="form-check checkbox-custom">
                         <input class="form-check-input" type="checkbox" id="acceptacioMatricula">
                         <label class="form-check-label" for="acceptacioMatricula">
-                            Accepto matricular-me als mòduls superats de primer
+                            Accepto matricular-me als mòduls suspessos de primer
                         </label>
                     </div>
                 </div>

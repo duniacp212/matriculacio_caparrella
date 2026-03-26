@@ -149,9 +149,9 @@
 
                 <!-- Botons -->
                 <div class="form-actions">
-                <a href="<?= base_url('forms/documentacio') ?>" class="btn btn-anterior btn-lg">Anterior</a>
+                <a href="<?= base_url('forms/dadesCicle') ?>" class="btn btn-anterior btn-lg">Anterior</a>
                 <button type="button" class="btn btn-outline-secondary btn-lg">Guardar</button>
-                    <a href="<?= base_url('forms/confirmacio') ?>" class="btn btn-primary btn-lg">Següent</a>
+                    <a href="<?= base_url('forms/bonificacions') ?>" class="btn btn-primary btn-lg">Següent</a>
                 </div>
 
             </form>

@@ -52,7 +52,6 @@ $routes->group('auth', function($routes) {
 | Grup FORMS
 |--------------------------------------------------------------------------
 */
-
 $routes->group('forms', function($routes) {
 
     // Dades Personals
@@ -70,6 +69,10 @@ $routes->group('forms', function($routes) {
     // Documentació
     $routes->get('documentacio', 'Forms::documentacio');
     $routes->post('saveDocumentacio', 'Forms::saveDocumentacio');
+
+    // 🆕 Bonificacions
+    $routes->get('bonificacions', 'Bonificacio::index');
+    $routes->post('saveBonificacions', 'Bonificacio::guardar');
 
     // Confirmació
     $routes->get('confirmacio', 'Forms::confirmacio');
