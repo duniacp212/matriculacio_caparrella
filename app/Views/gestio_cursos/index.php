@@ -1,3 +1,20 @@
+<?php
+$urlActual = current_url();
+$segmentAuto = '';
+if (strpos($urlActual, 'eso') !== false)
+    $segmentAuto = 'eso';
+elseif (strpos($urlActual, 'batxillerat') !== false)
+    $segmentAuto = 'batxillerat';
+elseif (strpos($urlActual, 'fp-gm') !== false)
+    $segmentAuto = 'fp-gm';
+elseif (strpos($urlActual, 'fp-gs') !== false)
+    $segmentAuto = 'fp-gs';
+elseif (strpos($urlActual, 'fp-basica') !== false)
+    $segmentAuto = 'fp-basica';
+elseif (strpos($urlActual, 'pfi') !== false)
+    $segmentAuto = 'pfi';
+?>
+
 <?= view('layouts/header', ['title' => $title]) ?>
 
 <div class="container-fluid vh-100 d-flex flex-column">
@@ -6,11 +23,9 @@
         <a href="<?= base_url('/') ?>" class="me-3">
             <img src="<?= base_url('logo.png') ?>" alt="Logo" style="height: 70px" />
         </a>
-
         <div class="flex-grow-1 text-center fw-semibold fs-5">
             <?= esc($title) ?>
         </div>
-
         <div>
             <span class="me-2 fw-semibold">Nom i Cognoms</span>
             <a href="<?= base_url('logout') ?>" class="btn btn-sm btn-outline-secondary">Sortir</a>
@@ -20,15 +35,20 @@
     <main class="container-fluid p-4 overflow-auto">
         <div class="container" style="max-width: 1100px">
 
-            <div class="d-flex justify-content-end gap-2 mb-3">
-                <button class="btn btn-outline-secondary">Duplicar</button>
-                <button class="btn btn-outline-danger">Eliminar</button>
-                <button class="btn btn-outline-primary">Editar</button>
-                <a href="#" class="btn btn-outline-primary">Afegir curs</a>
-                <a href="#" class="btn btn-success">Afegir assignatura</a>
-            </div>
+            <form method="post" action="<?= base_url('gestio/processar') ?>">
 
-            <form method="post" action="">
+                <div class="d-flex justify-content-end gap-2 mb-3">
+                    <button type="submit" name="accio" value="duplicar"
+                        class="btn btn-outline-secondary">Duplicar</button>
+                    <button type="submit" name="accio" value="eliminar" class="btn btn-outline-danger"
+                        onclick="return confirm('Confirmes que vols eliminar els elements seleccionats?')">Eliminar</button>
+                    <button type="submit" name="accio" value="editar" class="btn btn-outline-primary">Editar</button>
+
+                    <a href="<?= base_url('gestio/nou-curs/' . $segmentAuto) ?>" class="btn btn-outline-primary">Afegir
+                        curs</a>
+
+                    <a href="#" class="btn btn-success">Afegir assignatura</a>
+                </div>
 
                 <?php if (empty($cursos)): ?>
                     <div class="alert alert-info">
@@ -42,21 +62,20 @@
                                 <?php $primer = false; ?>
                                 <summary class="resum-lila">
                                     <input type="checkbox" name="cursos[]" value="<?= esc($curs['id_estudi']) ?>" />
-                                    <?= esc($curs['nivell']) ?> <?= esc($curs['tipus']) ?>
+                                    <?= esc($curs['nivell']) ?> &nbsp;&nbsp;&nbsp; <?= esc($curs['tipus']) ?>
                                 </summary>
 
                                 <div class="card-body">
                                     <h6 class="text-secondary fw-semibold mb-3">Assignatures / Mòduls</h6>
                                     <div class="row g-2 mb-4">
                                         <?php if (empty($curs['assignatures'])): ?>
-                                            <div class="col-12 text-muted">
-                                                No s'han trobat assignatures.
-                                            </div>
+                                            <div class="col-12 text-muted">No s'han trobat assignatures.</div>
                                         <?php else: ?>
                                             <?php foreach ($curs['assignatures'] as $assignatura): ?>
                                                 <div class="col-md-4">
                                                     <label class="d-flex align-items-center gap-2">
-                                                        <input type="checkbox" name="assignatures[]" value="<?= esc($assignatura['id_assignatura']) ?>" />
+                                                        <input type="checkbox" name="assignatures[]"
+                                                            value="<?= esc($assignatura['id_assignatura']) ?>" />
                                                         <?= esc($assignatura['nom']) ?>
                                                     </label>
                                                 </div>
@@ -67,14 +86,13 @@
                                     <h6 class="text-secondary fw-semibold mb-3">Assignatures Optatives</h6>
                                     <div class="row g-2">
                                         <?php if (empty($curs['optatives'])): ?>
-                                            <div class="col-12 text-muted">
-                                                No s'han trobat optatives.
-                                            </div>
+                                            <div class="col-12 text-muted">No s'han trobat optatives.</div>
                                         <?php else: ?>
                                             <?php foreach ($curs['optatives'] as $optativa): ?>
                                                 <div class="col-md-4">
                                                     <label class="d-flex align-items-center gap-2">
-                                                        <input type="checkbox" name="optatives[]" value="<?= esc($optativa['id_optativa']) ?>" />
+                                                        <input type="checkbox" name="optatives[]"
+                                                            value="<?= esc($optativa['id_optativa']) ?>" />
                                                         <?= esc($optativa['nom']) ?>
                                                     </label>
                                                 </div>
@@ -85,7 +103,6 @@
                             </details>
                         </div>
                     <?php endforeach; ?>
-
                 <?php endif; ?>
 
                 <div class="d-flex justify-content-end gap-2 mt-4">
@@ -94,10 +111,8 @@
                 </div>
 
             </form>
-
         </div>
     </main>
-
 </div>
 
 <?= view('layouts/footer') ?>

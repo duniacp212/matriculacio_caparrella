@@ -60,6 +60,11 @@ $routes->get('gestio/fp-gm', 'GestioCursosController::fpGrauMitja');
 $routes->get('gestio/fp-gs', 'GestioCursosController::fpGrauSuperior');
 $routes->get('gestio/fp-basica', 'GestioCursosController::fpBasica');
 $routes->get('gestio/pfi', 'GestioCursosController::pfi');
+$routes->post('gestio/processar', 'GestioCursosController::processarAccio');
+
+$routes->get('gestio/nou-curs', 'GestioCursosController::nouCurs');
+$routes->get('gestio/nou-curs/(:segment)', 'GestioCursosController::nouCurs/$1');
+$routes->post('gestio/guardar-curs', 'GestioCursosController::guardarCurs');
 
 // USUARIS ADMINISTRATIUS
 $routes->get('usuaris', 'UsuarisController::index');
@@ -72,3 +77,5 @@ $routes->get('usuaris/eliminar/(:num)', 'UsuarisController::eliminar/$1');
 // CONFIGURACIÓ
 $routes->get('configuracio', 'ConfiguracioController::index');
 $routes->post('configuracio/guardar', 'ConfiguracioController::guardar');
+
+
