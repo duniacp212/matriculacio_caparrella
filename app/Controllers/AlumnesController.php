@@ -196,9 +196,9 @@ class AlumnesController extends BaseController
         $email->initialize($config);
 
         $emailUser = getenv('email.SMTPUser') ?: 'noreply@caparrella.cat';
-        $email->setFrom($emailUser, 'Secretaria La Caparrella');
+        $email->setFrom($emailUser, 'SECRETARIA INSTITUT CAPARRELLA');
         $email->setTo($alumne['email']);
-        $email->setSubject('Avís de Secretaria (La Caparrella): ' . $motiu);
+        $email->setSubject('Avís de Secretaria Institut Caparrella: ' . $motiu);
 
         $contingutHtml = view('emails/contacte', $dades);
         $email->setMessage($contingutHtml);

@@ -35,6 +35,20 @@ elseif (strpos($urlActual, 'pfi') !== false)
     <main class="container-fluid p-4 overflow-auto">
         <div class="container" style="max-width: 1100px">
 
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert">
+                    <?= session()->getFlashdata('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert">
+                    <?= session()->getFlashdata('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
             <form method="post" action="<?= base_url('gestio/processar') ?>">
 
                 <div class="d-flex justify-content-end gap-2 mb-3">

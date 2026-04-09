@@ -66,7 +66,7 @@ class GestioCursosController extends BaseController
 
     public function nouCurs($tipus = '')
     {
-        $tipusNet = strtoupper(str_replace(['fp-gm', 'fp-gs', 'batxillerat'], ['CFGM', 'CFGS', 'BAT'], $tipus));
+        $tipusNet = strtoupper(str_replace(['fp-gm', 'fp-gs', 'batxillerat'], ['CFGM', 'CFGS', 'BATXILLERAT'], $tipus));
 
         return view('gestio_cursos/crear', [
             'title' => 'Afegir nou curs',
@@ -81,12 +81,15 @@ class GestioCursosController extends BaseController
         $tipusEntrada = $this->request->getPost('tipus');
         $prefix = $this->request->getPost('tipus_prefix');
         $nomCicle = $this->request->getPost('tipus_nom');
+        $idFamilia = $this->request->getPost('id_familia') ?? 1;
 
-        $tipusFinal = !empty($tipusEntrada) ? $tipusEntrada : $prefix . $nomCicle;
+
+        $tipusFinal = !empty($nomCicle) ? $prefix . $nomCicle : $tipusEntrada;
 
         $dadesCurs = [
             'nivell' => $this->request->getPost('nivell'),
             'tipus' => $tipusFinal,
+            'id_familia'     => $idFamilia,
             'matricula_viva' => 1
         ];
 
@@ -95,18 +98,17 @@ class GestioCursosController extends BaseController
 
         $estudiModel->crearAmbAssignatures($dadesCurs, $assignatures, $optatives);
 
-        $urlRetorn = 'eso';
-        if (str_contains($tipusFinal, 'BAT'))
-            $urlRetorn = 'batxillerat';
-        if (str_contains($tipusFinal, 'CFGM'))
-            $urlRetorn = 'fp-gm';
-        if (str_contains($tipusFinal, 'CFGS'))
-            $urlRetorn = 'fp-gs';
-        if (str_contains($tipusFinal, 'FPB'))
-            $urlRetorn = 'fp-basica';
-        if (str_contains($tipusFinal, 'PFI'))
-            $urlRetorn = 'pfi';
 
+        $urlRetorn = 'eso';
+        $tipusUpper = strtoupper($tipusFinal);
+
+        if (str_contains($tipusUpper, 'BAT'))  $urlRetorn = 'batxillerat';
+        elseif (str_contains($tipusUpper, 'CFGM')) $urlRetorn = 'fp-grau-mitja';
+        elseif (str_contains($tipusUpper, 'CFGS')) $urlRetorn = 'fp-grau-superior';
+        elseif (str_contains($tipusUpper, 'FPB'))  $urlRetorn = 'fp-basica';
+        elseif (str_contains($tipusUpper, 'PFI'))  $urlRetorn = 'pfi';
+
+        session()->setFlashdata('success', 'Curs creat correctament.');
         return redirect()->to('gestio/' . $urlRetorn);
     }
 

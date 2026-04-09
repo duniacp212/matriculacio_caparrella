@@ -16,6 +16,45 @@ class EstudiModel extends Model
         'matricula_viva'
     ];
 
+    public function duplicarComplet(int $idEstudi)
+    {
+        $original = $this->asArray()->find($idEstudi);
+
+        if (!$original) {
+            return null;
+        }
+
+        unset($original['id_estudi']);
+        $original['nivell'] .= " (Còpia)";
+
+        $this->insert($original);
+        $nouId = $this->getInsertID();
+
+        $assignatures = $this->db->table('assignatura')
+            ->where('id_estudi', $idEstudi)
+            ->get()
+            ->getResultArray();
+
+        foreach ($assignatures as $assignatura) {
+            unset($assignatura['id_assignatura']);
+            $assignatura['id_estudi'] = $nouId;
+            $this->db->table('assignatura')->insert($assignatura);
+        }
+
+        $optatives = $this->db->table('optativa')
+            ->where('id_estudi', $idEstudi)
+            ->get()
+            ->getResultArray();
+
+        foreach ($optatives as $optativa) {
+            unset($optativa['id_optativa']);
+            $optativa['id_estudi'] = $nouId;
+            $this->db->table('optativa')->insert($optativa);
+        }
+
+        return $nouId;
+    }
+
     public function crearAmbAssignatures(array $dadesCurs, array $assignatures, array $optatives)
     {
         $this->insert($dadesCurs);

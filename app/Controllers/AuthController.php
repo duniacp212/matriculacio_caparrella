@@ -22,12 +22,12 @@ class AuthController extends BaseController
 
         $usuari = $model->where('usuari', $username)->first();
 
-        if ($usuari && password_verify($password, $usuari['password'])) {
+        if ($usuari && password_verify($password, $usuari->password)) {
 
             $session->set([
                 'logged_in' => true,
-                'usuari' => $usuari['usuari'],
-                'rol' => $usuari['rol']
+                'usuari' => $usuari->usuari,
+                'rol' => $usuari->rol
             ]);
 
             return redirect()->to('/alumnes');

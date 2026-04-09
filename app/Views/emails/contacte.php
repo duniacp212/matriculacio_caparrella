@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var array $alumne
+ * @var string $motiu
+ * @var string $missatge
+ */
+?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>

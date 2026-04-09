@@ -72,12 +72,17 @@
 <script>
     function afegirFila(id, nom) {
         const div = document.getElementById(id);
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.name = nom;
-        input.className = 'form-control mb-2';
-        input.placeholder = 'Nom...';
-        div.appendChild(input);
+        const row = document.createElement('div');
+        row.className = 'input-group mb-2';
+
+        row.innerHTML = `
+        <input type="text" name="${nom}" class="form-control" placeholder="Nom...">
+        <button type="button" class="btn btn-outline-danger" onclick="this.parentElement.remove()">
+            <i class="bi bi-trash"></i> Esborrar
+        </button>
+    `;
+
+        div.appendChild(row);
     }
 </script>
 
