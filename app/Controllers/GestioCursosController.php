@@ -8,10 +8,8 @@ class GestioCursosController extends BaseController
 {
     public function __construct()
     {
-        $session = session();
-        if (!$session->get('logged_in')) {
-            redirect()->to('/login')->send();
-            exit;
+        if (! in_array(session()->get('rol'), ['super admin', 'administracio'])) {
+            return redirect()->to('/alumnes')->with('error', 'No tens permisos per accedir a aquesta secció.')->send();
         }
     }
 

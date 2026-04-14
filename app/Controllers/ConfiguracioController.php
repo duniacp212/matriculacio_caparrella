@@ -6,6 +6,12 @@ use App\Models\SettingsModel;
 
 class ConfiguracioController extends BaseController
 {
+    public function __construct()
+    {
+        if (session()->get('rol') !== 'super admin') {
+            return redirect()->to('/alumnes')->with('error', 'No tens permisos per accedir a aquesta secció.')->send();
+        }
+    }
     public function index()
     {
         $model = new SettingsModel();

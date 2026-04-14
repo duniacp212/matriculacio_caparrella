@@ -46,7 +46,9 @@
                             </td>
                             <td>
                                 <a href="<?= base_url('usuaris/editar/' . $u->id_usuari) ?>" class="btn btn-outline-primary btn-sm">Editar</a>
-                                <a href="<?= base_url('usuaris/eliminar/' . $u->id_usuari) ?>" class="btn btn-outline-danger btn-sm" onclick="return confirm('Estàs segur que vols eliminar aquest usuari?')">Eliminar</a>
+                                <?php if ($u->rol !== 'super admin'): ?>
+                                    <a href="<?= base_url('usuaris/eliminar/' . $u->id_usuari) ?>" class="btn btn-outline-danger btn-sm" onclick="return confirm('Estàs segur que vols eliminar aquest usuari?')">Eliminar</a>
+                                <?php endif; ?>
                             </td>
                         </tr>
 

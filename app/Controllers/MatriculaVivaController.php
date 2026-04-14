@@ -6,6 +6,12 @@ use App\Models\EstudiModel;
 
 class MatriculaVivaController extends BaseController
 {
+    public function __construct()
+    {
+        if (! in_array(session()->get('rol'), ['super admin', 'administracio'])) {
+            return redirect()->to('/alumnes')->with('error', 'No tens permisos per accedir a aquesta secció.')->send();
+        }
+    }
     public function index()
     {
         $model = new EstudiModel();
