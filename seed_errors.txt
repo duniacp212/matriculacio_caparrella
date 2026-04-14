@@ -1,8 +1,0 @@
-
-CodeIgniter v4.6.4 Command Line Tool - Server Time: 2026-03-19 15:20:23 UTC+00:00
-
-Seeded: App\Database\Seeds\FamiliaSeeder
-Seeded: App\Database\Seeds\EstudiSeeder
-Seeded: App\Database\Seeds\AssignaturaSeeder
-Seeded: App\Database\Seeds\UsuariSeeder
-Seeded: App\Database\Seeds\DatabaseSeeder

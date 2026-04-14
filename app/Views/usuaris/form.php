@@ -23,7 +23,18 @@
                         <div class="alert alert-danger py-2"><?= session()->getFlashdata('error') ?></div>
                     <?php endif; ?>
 
+                    <?php if (session()->getFlashdata('errors')): ?>
+                        <div class="alert alert-danger py-2">
+                            <ul class="mb-0">
+                                <?php foreach (session()->getFlashdata('errors') as $error): ?>
+                                    <li><?= esc($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
                     <form action="<?= $url ?>" method="post">
+                        <?= csrf_field() ?>
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="nom" class="form-label">Nom</label>

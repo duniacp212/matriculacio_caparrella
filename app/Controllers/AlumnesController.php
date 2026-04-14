@@ -8,15 +8,7 @@ use App\Models\EstudiModel;
 
 class AlumnesController extends BaseController
 {
-    public function __construct()
-    {
-        $session = session();
 
-        if (!$session->get('logged_in')) {
-            redirect()->to('/login')->send();
-            exit;
-        }
-    }
 
     public function index()
     {
@@ -171,29 +163,16 @@ class AlumnesController extends BaseController
         }
 
         $request = service('request');
-        $motiu = $request->getPost('motiu');
+        $motiu   = $request->getPost('motiu');
         $missatge = $request->getPost('missatge');
 
         $dades = [
-            'alumne' => $alumne,
-            'motiu' => $motiu,
+            'alumne'   => $alumne,
+            'motiu'    => $motiu,
             'missatge' => $missatge,
         ];
 
         $email = \Config\Services::email();
-
-        $config['protocol'] = 'smtp';
-        $config['SMTPHost'] = 'smtp.gmail.com';
-        $config['SMTPUser'] = getenv('email.SMTPUser');
-        $config['SMTPPass'] = getenv('email.SMTPPass');
-        $config['SMTPCrypto'] = 'tls';
-        $config['SMTPPort'] = 587;
-        $config['mailType'] = 'html';
-        $config['newline'] = "\r\n";
-        $config['CRLF'] = "\r\n";
-        $config['charset'] = "utf-8";
-
-        $email->initialize($config);
 
         $emailUser = getenv('email.SMTPUser') ?: 'noreply@caparrella.cat';
         $email->setFrom($emailUser, 'SECRETARIA INSTITUT CAPARRELLA');

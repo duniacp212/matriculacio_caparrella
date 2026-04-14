@@ -124,3 +124,14 @@ _modules/*
 
 /results/
 /phpunit*.xml
+
+check_counts.php
+count_out.txt
+dump_fam.php
+opts_out.json
+run_seeders.php
+schema.php
+schema.txt
+schema_out.txt
+seed_errors.txt
+seed_out.txt

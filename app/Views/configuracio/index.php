@@ -16,6 +16,7 @@
             <div class="card mt-2 shadow-sm border-0">
                 <div class="card-body">
                     <form action="<?= base_url('configuracio/guardar') ?>" method="post">
+                         <?= csrf_field() ?>
                         
                         <h5 class="mb-3">Elements del Menú</h5>
                         <div class="row mb-4">

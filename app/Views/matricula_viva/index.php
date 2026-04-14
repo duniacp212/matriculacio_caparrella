@@ -19,6 +19,7 @@
                 </div>
 
                 <form method="post" action="<?= base_url('matricula-viva/guardar') ?>">
+                     <?= csrf_field() ?>
 
                     <div class="card-body p-0">
 

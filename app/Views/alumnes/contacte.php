@@ -10,19 +10,20 @@
 
   <main class="container p-4 overflow-auto">
     <form action="<?= base_url('alumnes/enviar_correu/' . $alumne['id_alumne']) ?>" method="post" class="card shadow-sm card-lila p-0">
+      <?= csrf_field() ?>
 
       <div class="card-header fw-semibold">Dades de l’alumne</div>
 
       <?php if (session()->getFlashdata('exit')): ?>
-          <div class="alert alert-success m-3">
-              <?= session()->getFlashdata('exit') ?>
-          </div>
+        <div class="alert alert-success m-3">
+          <?= session()->getFlashdata('exit') ?>
+        </div>
       <?php endif; ?>
 
       <?php if (session()->getFlashdata('error')): ?>
-          <div class="alert alert-danger m-3">
-              <?= session()->getFlashdata('error') ?>
-          </div>
+        <div class="alert alert-danger m-3">
+          <?= session()->getFlashdata('error') ?>
+        </div>
       <?php endif; ?>
 
       <div class="card-body">
@@ -31,37 +32,37 @@
           <div class="col-md-4">
             <label class="form-label">Nom</label>
             <input type="text" class="form-control"
-                   value="<?= esc($alumne['nom']) ?>" readonly>
+              value="<?= esc($alumne['nom']) ?>" readonly>
           </div>
 
           <div class="col-md-4">
             <label class="form-label">Cognoms</label>
             <input type="text" class="form-control"
-                   value="<?= esc($alumne['cognom1']) ?> <?= esc($alumne['cognom2']) ?>" readonly>
+              value="<?= esc($alumne['cognom1']) ?> <?= esc($alumne['cognom2']) ?>" readonly>
           </div>
 
           <div class="col-md-4">
             <label class="form-label">DNI</label>
             <input type="text" class="form-control"
-                   value="<?= esc($alumne['dni']) ?>" readonly>
+              value="<?= esc($alumne['dni']) ?>" readonly>
           </div>
 
           <div class="col-md-4">
             <label class="form-label">Estudi / Curs / Cicle</label>
             <input type="text" class="form-control"
-                   value="<?= esc($alumne['tipus']) ?> <?= esc($alumne['nivell']) ?>" readonly>
+              value="<?= esc($alumne['tipus']) ?> <?= esc($alumne['nivell']) ?>" readonly>
           </div>
 
           <div class="col-md-4">
             <label class="form-label">Correu de l’alumne</label>
             <input type="email" class="form-control"
-                   value="<?= esc($alumne['email']) ?>" readonly>
+              value="<?= esc($alumne['email']) ?>" readonly>
           </div>
 
           <div class="col-md-4">
             <label class="form-label">Telèfon de l’alumne</label>
             <input type="text" class="form-control"
-                   value="<?= esc($alumne['telefon']) ?>" readonly>
+              value="<?= esc($alumne['telefon']) ?>" readonly>
           </div>
 
         </div>
