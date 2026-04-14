@@ -10,7 +10,7 @@ class UsuarisController extends BaseController
     {
         $model = new UsuariModel();
         $data = [
-            'title' => 'Gestió d\'Usuaris Administratius',
+            'title'   => 'Gestió d\'Usuaris Administratius',
             'usuaris' => $model->findAll()
         ];
         return view('usuaris/index', $data);
@@ -19,9 +19,9 @@ class UsuarisController extends BaseController
     public function nou()
     {
         $data = [
-            'title' => 'Nou Usuari',
+            'title'  => 'Nou Usuari',
             'usuari' => new \App\Entities\Usuari(),
-            'url' => base_url('usuaris/guardar')
+            'url'    => base_url('usuaris/guardar')
         ];
         return view('usuaris/form', $data);
     }
@@ -31,13 +31,13 @@ class UsuarisController extends BaseController
         $model = new UsuariModel();
 
         $rules = [
-            'nom'       => 'required|min_length[2]|max_length[100]',
-            'cognom1'   => 'required|min_length[2]|max_length[100]',
-            'cognom2'   => 'permit_empty|max_length[100]',
-            'dni_nie'   => 'required|max_length[20]|is_unique[usuari.dni_nie]',
-            'usuari'    => 'required|min_length[3]|max_length[100]|is_unique[usuari.usuari]',
-            'password'  => 'required|min_length[6]',
-            'rol'       => 'required|in_list[super admin,administracio,secretaria]',
+            'nom'      => 'required|min_length[2]|max_length[100]',
+            'cognom1'  => 'required|min_length[2]|max_length[100]',
+            'cognom2'  => 'permit_empty|max_length[100]',
+            'dni_nie'  => 'required|max_length[20]|is_unique[usuari.dni_nie]|dni_nie_valid',
+            'usuari'   => 'required|min_length[3]|max_length[100]|is_unique[usuari.usuari]',
+            'password' => 'required|min_length[6]',
+            'rol'      => 'required|in_list[super admin,administracio,secretaria]',
         ];
 
         if (! $this->validate($rules)) {
@@ -64,32 +64,33 @@ class UsuarisController extends BaseController
         return redirect()->to('/usuaris')->with('exit', 'Usuari creat correctament.');
     }
 
-
     public function editar($id)
     {
-        $model = new UsuariModel();
+        $id    = (int) $id;
+        $model  = new UsuariModel();
         $usuari = $model->find($id);
 
         $data = [
-            'title' => 'Editar Usuari',
+            'title'  => 'Editar Usuari',
             'usuari' => $usuari,
-            'url' => base_url('usuaris/actualitzar/' . $id)
+            'url'    => base_url('usuaris/actualitzar/' . $id)
         ];
         return view('usuaris/form', $data);
     }
 
     public function actualitzar($id)
     {
+        $id     = (int) $id;
         $model  = new UsuariModel();
         $usuari = $model->find($id);
 
         $rules = [
-            'nom'       => 'required|min_length[2]|max_length[100]',
-            'cognom1'   => 'required|min_length[2]|max_length[100]',
-            'cognom2'   => 'permit_empty|max_length[100]',
-            'dni_nie'   => "required|max_length[20]|is_unique[usuari.dni_nie,id_usuari,{$id}]",
-            'usuari'    => "required|min_length[3]|max_length[100]|is_unique[usuari.usuari,id_usuari,{$id}]",
-            'rol'       => 'required|in_list[super admin,administracio,secretaria]',
+            'nom'     => 'required|min_length[2]|max_length[100]',
+            'cognom1' => 'required|min_length[2]|max_length[100]',
+            'cognom2' => 'permit_empty|max_length[100]',
+            'dni_nie' => 'required|max_length[20]|is_unique[usuari.dni_nie,id_usuari,' . $id . ']|dni_nie_valid',
+            'usuari'  => 'required|min_length[3]|max_length[100]|is_unique[usuari.usuari,id_usuari,' . $id . ']',
+            'rol'     => 'required|in_list[super admin,administracio,secretaria]',
         ];
 
         if (! $this->validate($rules)) {

@@ -23,7 +23,10 @@ class SettingsSeeder extends Seeder
         ];
 
         foreach ($data as $d) {
-            $this->db->table('settings')->insert($d);
+            $exists = $this->db->table('settings')->where('clau', $d['clau'])->get()->getRowArray();
+            if (!$exists) {
+                $this->db->table('settings')->insert($d);
+            }
         }
     }
 }

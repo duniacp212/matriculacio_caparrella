@@ -5,16 +5,21 @@
     <meta charset="UTF-8">
     <title>Login</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?= base_url('bootstrap/css/bootstrap.min.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('estils.css') ?>?v=<?= time() ?>">
 </head>
 
 <body class="bg-light">
 
     <div class="container vh-100 d-flex align-items-center justify-content-center">
 
-        <div class="card shadow p-4" style="width:400px">
+        <div class="card shadow p-4" style="width:400px; min-height:550px;">
 
-            <h4 class="text-center mb-4">Accés administració</h4>
+            <div class="text-center mb-3">
+                <img src="<?= base_url('logo.png') ?>" alt="Logo Institut Caparrella" style="width:280px;">
+            </div>
+
+            <h4 class="text-center mb-4" style="color: var(--caparrella-lila);">Accés administració</h4>
 
             <?php if (session()->getFlashdata('error')): ?>
                 <div class="alert alert-danger">
@@ -45,6 +50,8 @@
         </div>
 
     </div>
+
+    <?= view('layouts/footer') ?>
 
 </body>
 

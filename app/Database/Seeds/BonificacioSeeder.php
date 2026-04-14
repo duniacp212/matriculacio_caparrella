@@ -31,37 +31,6 @@ class BonificacioSeeder extends Seeder
             ],
         ];
 
-        $this->db->query('SET FOREIGN_KEY_CHECKS=0');
-        $this->db->table('matricula_bonificacio')->truncate();
-        $this->db->table('bonificacio')->truncate();
-        $this->db->query('SET FOREIGN_KEY_CHECKS=1');
-
         $this->db->table('bonificacio')->insertBatch($bonificacions);
-
-        $matricules = $this->db->table('matricula')->select('id_matricula')->get()->getResultArray();
-        
-        if (!empty($matricules)) {
-            
-            $bonificacionsIds = $this->db->table('bonificacio')->select('id_bonificacio')->get()->getResultArray();
-
-            $assignacions = [];
-            
-            foreach ($matricules as $matricula) {
-                if (rand(1, 10) <= 3) {
-                    $bonificacioSeleccionada = $bonificacionsIds[array_rand($bonificacionsIds)]['id_bonificacio'];
-                    
-                    $assignacions[] = [
-                        'id_matricula'   => $matricula['id_matricula'],
-                        'id_bonificacio' => $bonificacioSeleccionada,
-                        'estat'          => 'Validat',
-                        'observacions'   => 'Introduït a través del seeder',
-                    ];
-                }
-            }
-            
-            if (!empty($assignacions)) {
-                $this->db->table('matricula_bonificacio')->insertBatch($assignacions);
-            }
-        }
     }
 }
