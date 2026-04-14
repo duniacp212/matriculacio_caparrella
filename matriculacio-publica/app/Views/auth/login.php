@@ -27,8 +27,8 @@
             </div>
         <?php endif; ?>
 
-        <form method="POST" action="<?= base_url('/auth/dologin') ?>" id="loginForm">
-            <?= csrf_field() ?>
+        <form method="POST" action="<?= base_url('/auth/doLogin') ?>" id="loginForm">
+        <?= csrf_field() ?>
             
             <div class="mb-3">
                 <label for="dniInput" class="form-label">DNI / NIE</label>
