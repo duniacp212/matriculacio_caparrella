@@ -1,4 +1,5 @@
 <?php
+
 use CodeIgniter\Database\Migration;
 
 class CreateSettingsTable extends Migration
@@ -11,6 +12,15 @@ class CreateSettingsTable extends Migration
                 'constraint'     => 11,
                 'unsigned'       => true,
                 'auto_increment' => true,
+            ],
+            'clau' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '100',
+                'unique'     => true,
+            ],
+            'valor' => [
+                'type'    => 'BOOLEAN',
+                'default' => true,
             ],
         ]);
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Filters;
 
 use CodeIgniter\Filters\FilterInterface;
@@ -11,13 +12,11 @@ class Auth implements FilterInterface
     {
         if (! session()->get('logged_in')) {
             session()->set('redirect_url', current_url());
-            return redirect()->to('/login')->with('error', 'Accés denegat. Inicia sessió.');
+            return redirect()->to('/login');
         }
 
         return null;
     }
 
-    public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
-    {
-    }
+    public function after(RequestInterface $request, ResponseInterface $response, $arguments = null) {}
 }

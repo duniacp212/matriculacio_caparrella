@@ -13,6 +13,7 @@ class SettingsSeeder extends Seeder
             ['clau' => 'menu_gestio_cursos', 'valor' => 1],
             ['clau' => 'menu_matricula_viva', 'valor' => 1],
             ['clau' => 'menu_usuaris', 'valor' => 1],
+            ['clau' => 'menu_calendari', 'valor' => 1],
             ['clau' => 'filtre_any', 'valor' => 1],
             ['clau' => 'filtre_estudi', 'valor' => 1],
             ['clau' => 'filtre_curs', 'valor' => 1],

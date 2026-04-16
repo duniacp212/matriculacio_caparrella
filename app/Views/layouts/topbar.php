@@ -21,7 +21,9 @@
   </div>
 
   <div>
-    <span class="me-2 fw-semibold">Nom i Cognoms</span>
+    <a href="<?= base_url('perfil') ?>" class="me-2 fw-semibold text-dark text-decoration-none">
+      <?= esc(session()->get('usuari')) ?>
+    </a>
     <a href="<?= base_url('logout') ?>" class="btn btn-sm btn-outline-secondary">
       Sortir
     </a>

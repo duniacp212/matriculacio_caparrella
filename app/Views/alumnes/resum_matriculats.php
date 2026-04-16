@@ -31,7 +31,6 @@
                         </select>
                     </div>
 
-
                     <div>
                         <button type="submit" class="btn btn-outline-primary">
                             Filtrar
@@ -40,16 +39,14 @@
 
                 </form>
 
-
-                <h5 class="mb-3">Resum d’alumnes matriculats</h5>
+                <h5 class="mb-3">Resum d'alumnes matriculats</h5>
 
                 <table class="table table-bordered align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>Tipus d’estudi</th>
-                            <th>Cicle</th>
-                            <th>Curs</th>
-                            <th class="text-end">Alumnes matriculats</th>
+                            <th style="width: 40%">Tipus d'estudi</th>
+                            <th style="width: 40%">Curs</th>
+                            <th style="width: 20%" class="text-end">Alumnes matriculats</th>
                         </tr>
                     </thead>
 
@@ -61,7 +58,7 @@
                         ?>
 
                             <tr>
-                                <td colspan="4" class="p-0 border-0">
+                                <td colspan="3" class="p-0 border-0">
                                     <details <?= $primer ? 'open' : '' ?>>
                                         <summary class="px-3 py-2 fw-semibold resum-lila">
                                             <?= esc($estudi) ?>
@@ -69,18 +66,13 @@
 
                                         <table class="table table-bordered table-hover mb-0">
                                             <tbody>
-
                                                 <?php foreach ($files as $fila): ?>
                                                     <tr>
-                                                        <td></td>
-                                                        <td><?= esc($fila['cicle'] ?? '—') ?></td>
-                                                        <td><?= esc($fila['curs']) ?></td>
-                                                        <td class="text-end fw-semibold">
-                                                            <?= esc($fila['total']) ?>
-                                                        </td>
+                                                        <td style="width: 40%"></td>
+                                                        <td style="width: 40%"><?= esc($fila['curs']) ?></td>
+                                                        <td style="width: 20%" class="text-end fw-semibold"><?= esc($fila['total']) ?></td>
                                                     </tr>
                                                 <?php endforeach; ?>
-
                                             </tbody>
                                         </table>
 

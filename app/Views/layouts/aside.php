@@ -19,6 +19,15 @@ $rol = session()->get('rol');
         </a>
       </li>
     <?php endif; ?>
+    <?php if ($config_ui['menu_calendari'] ?? true): ?>
+      <li class="mt-2">
+        <a class="fw-semibold text-dark text-decoration-none py-1 d-block"
+          href="<?= base_url('calendari') ?>">
+          Calendari
+        </a>
+      </li>
+    <?php endif; ?>
+
 
     <?php if (($config_ui['menu_gestio_cursos'] ?? true) && in_array($rol, ['super admin', 'administracio'])): ?>
       <li class="py-2 mt-3">

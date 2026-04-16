@@ -4,14 +4,14 @@ namespace App\Controllers;
 
 use App\Models\UsuariModel;
 
-class AuthController extends BaseController
+class AutenticacioController extends BaseController
 {
     public function login()
     {
         return view('auth/login');
     }
 
-    public function authenticate()
+    public function autenticacio()
     {
         $session = session();
 

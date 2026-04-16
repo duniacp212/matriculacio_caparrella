@@ -30,6 +30,7 @@ class ConfiguracioController extends BaseController
         $allKeys = [
             'menu_alumnes_matriculats',
             'menu_gestio_cursos',
+            'menu_calendari',
             'menu_matricula_viva',
             'menu_usuaris',
             'filtre_any',

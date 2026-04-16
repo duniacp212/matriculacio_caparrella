@@ -7,12 +7,13 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 // PÚBLIQUES (sense autenticació)
-$routes->get('/login', 'AuthController::login');
-$routes->post('/login', 'AuthController::authenticate');
-$routes->get('/logout', 'AuthController::logout');
+$routes->get('/login', 'AutenticacioController::login');
+$routes->post('/login', 'AutenticacioController::autenticacio');
+$routes->get('/logout', 'AutenticacioController::logout');
+
 
 // PRIVADES (amb autenticació)
-$routes->group('', ['filter' => 'auth'], function($routes) {
+$routes->group('', ['filter' => 'auth'], function ($routes) {
 
     // INICI
     $routes->get('/', 'AlumnesController::index');
@@ -68,8 +69,20 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->post('usuaris/actualitzar/(:num)', 'UsuarisController::actualitzar/$1');
     $routes->get('usuaris/eliminar/(:num)', 'UsuarisController::eliminar/$1');
 
+    //PERFIL
+
+    $routes->get('perfil', 'PerfilController::index');
+    $routes->post('perfil/actualitzar', 'PerfilController::actualitzar');
+
+
+
     // CONFIGURACIÓ
     $routes->get('configuracio', 'ConfiguracioController::index');
     $routes->post('configuracio/guardar', 'ConfiguracioController::guardar');
 
+    // CALENDARI
+    $routes->get('calendari', 'CalendariController::index');
+    $routes->get('calendari/events', 'CalendariController::events');
+    $routes->post('calendari/guardar', 'CalendariController::guardar');
+    $routes->get('calendari/eliminar/(:num)', 'CalendariController::eliminar/$1');
 });
