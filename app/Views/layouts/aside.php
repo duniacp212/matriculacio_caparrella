@@ -28,6 +28,15 @@ $rol = session()->get('rol');
       </li>
     <?php endif; ?>
 
+    <?php if (in_array($rol, ['super admin', 'administracio'])): ?>
+      <li class="mt-2">
+        <a class="fw-semibold text-dark text-decoration-none py-1 d-block"
+          href="<?= base_url('serveis') ?>">
+          Serveis complementaris
+        </a>
+      </li>
+    <?php endif; ?>
+
 
     <?php if (($config_ui['menu_gestio_cursos'] ?? true) && in_array($rol, ['super admin', 'administracio'])): ?>
       <li class="py-2 mt-3">

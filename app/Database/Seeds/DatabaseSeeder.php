@@ -16,5 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call('MatriculaSeeder');
         $this->call('SettingsSeeder');
         $this->call('UsuariSeeder');
+        $this->call('ServeisSeeder');
     }
 }

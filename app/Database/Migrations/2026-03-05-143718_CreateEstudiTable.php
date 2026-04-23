@@ -38,6 +38,12 @@ class CreateEstudiTable extends Migration
                 'constraint' => 1,
                 'default'    => 1,
             ],
+            'places' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'null'       => true,
+                'default'    => null,
+            ],
         ]);
 
         $this->forge->addKey('id_estudi', true);

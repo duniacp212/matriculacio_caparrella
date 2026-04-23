@@ -85,4 +85,11 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('calendari/events', 'CalendariController::events');
     $routes->post('calendari/guardar', 'CalendariController::guardar');
     $routes->get('calendari/eliminar/(:num)', 'CalendariController::eliminar/$1');
+    
+    // SERVEIS COMPLEMENTARIS
+    $routes->get('serveis/nou', 'ServeiComplementariController::nou');
+    $routes->get('serveis', 'ServeiComplementariController::index');
+    $routes->post('serveis/crear', 'ServeiComplementariController::crear');
+    $routes->post('serveis/guardar', 'ServeiComplementariController::guardar');
+    $routes->get('serveis/eliminar/(:num)', 'ServeiComplementariController::eliminar/$1');
 });

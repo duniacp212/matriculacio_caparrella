@@ -23,7 +23,7 @@ class MatriculaSeeder extends Seeder
                 'id_alumne'     => $alumne['id_alumne'],
                 'id_estudi'     => $estudis[array_rand($estudis)]['id_estudi'],
                 'data'          => date('Y-m-d'),
-                'estat'         => 'activa',
+                'estat' => rand(0, 1) ? 'Validat' : 'Pendent',
                 'torn'          => rand(1, 3),
                 'data_pagament' => rand(0, 1) ? date('Y-m-d') : null
             ];

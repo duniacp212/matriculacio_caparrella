@@ -15,35 +15,47 @@ class AlumnesController extends BaseController
         $request = service('request');
 
         $filtres = [
-            'any' => $request->getGet('any'),
-            'estudi' => $request->getGet('estudi'),
-            'curs' => $request->getGet('curs'),
-            'torn' => $request->getGet('torn'),
-            'familia' => $request->getGet('familia'),
-            'cicle' => $request->getGet('cicle'),
-            'estat' => $request->getGet('estat'),
-            'pagament' => $request->getGet('pagament'),
+            'any'        => $request->getGet('any'),
+            'estudi'     => $request->getGet('estudi'),
+            'curs'       => $request->getGet('curs'),
+            'torn'       => $request->getGet('torn'),
+            'familia'    => $request->getGet('familia'),
+            'cicle'      => $request->getGet('cicle'),
+            'estat'      => $request->getGet('estat'),
+            'pagament'   => $request->getGet('pagament'),
             'bonificats' => $request->getGet('bonificacio'),
-            'cerca' => $request->getGet('cerca'),
+            'cerca'      => $request->getGet('cerca'),
         ];
 
-        $model = new AlumneModel();
-        $alumnes = $model->getAlumnesAmbMatricula($filtres);
+        $perPagina = 15;
+        $paginador = service('pager');
+        $paginador->setPath('/alumnes');
+
+        $model  = new AlumneModel();
+        $total  = $model->countAlumnesAmbMatricula($filtres);
+        $pagina = (int) ($request->getGet('page') ?? 1);
+        $offset = ($pagina - 1) * $perPagina;
+
+        $alumnes = $model->getAlumnesAmbMatricula($filtres, $perPagina, $offset);
+
+        $paginador->makeLinks($pagina, $perPagina, $total, 'bootstrap_full');
 
         $estudiModel = new EstudiModel();
-        $cicles = $estudiModel->obtenirCicles();
-        $cursos = $estudiModel->obtenirCursos();
-        $estudis = $estudiModel->obtenirEstudis();
-        $families = $estudiModel->obtenirFamilies();
+        $cicles      = $estudiModel->obtenirCicles();
+        $cursos      = $estudiModel->obtenirCursos();
+        $estudis     = $estudiModel->obtenirEstudis();
+        $families    = $estudiModel->obtenirFamilies();
 
         return view('alumnes/index', [
-            'title' => 'Alumnes / Expedients',
-            'alumnes' => $alumnes,
-            'filtres' => $filtres,
-            'cicles' => $cicles,
-            'cursos' => $cursos,
-            'estudis' => $estudis,
-            'families' => $families
+            'title'     => 'Alumnes / Expedients',
+            'alumnes'   => $alumnes,
+            'filtres'   => $filtres,
+            'cicles'    => $cicles,
+            'cursos'    => $cursos,
+            'estudis'   => $estudis,
+            'families'  => $families,
+            'paginador' => $paginador,
+            'total'     => $total,
         ]);
     }
 

@@ -12,6 +12,7 @@ class MatriculaVivaController extends BaseController
             return redirect()->to('/alumnes')->with('error', 'No tens permisos per accedir a aquesta secció.')->send();
         }
     }
+
     public function index()
     {
         $model = new EstudiModel();
@@ -24,13 +25,14 @@ class MatriculaVivaController extends BaseController
 
     public function guardar()
     {
-        $model = new EstudiModel();
-
+        $model  = new EstudiModel();
         $estats = $this->request->getPost('estat') ?? [];
+        $places = $this->request->getPost('places') ?? [];
 
         foreach ($estats as $id => $valor) {
             $model->update($id, [
-                'matricula_viva' => $valor
+                'matricula_viva' => $valor,
+                'places'         => $places[$id] ?? null,
             ]);
         }
 

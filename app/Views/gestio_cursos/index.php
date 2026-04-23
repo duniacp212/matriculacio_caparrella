@@ -51,6 +51,8 @@ elseif (strpos($urlActual, 'pfi') !== false)
 
             <form method="post" action="<?= base_url('gestio/processar') ?>">
 
+             <?= csrf_field() ?>
+
                 <div class="d-flex justify-content-end gap-2 mb-3">
                     <button type="submit" name="accio" value="duplicar"
                         class="btn btn-outline-secondary">Duplicar</button>

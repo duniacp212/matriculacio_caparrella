@@ -14,9 +14,9 @@
 
     <main class="container-fluid p-4 overflow-auto">
         <div class="container" style="max-width: 900px">
-            <form method="post" action="<?= base_url('gestio/guardar-curs') ?>"
+            <form method="post" action="<?= base_url('gestio/guardar-curs') ?>" class="bg-white p-4 shadow-sm rounded border">
                 <?= csrf_field() ?>
-                class="bg-white p-4 shadow-sm rounded border">
+
                 <div class="row mb-4">
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Nivell</label>
