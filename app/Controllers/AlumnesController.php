@@ -5,11 +5,11 @@ namespace App\Controllers;
 use App\Models\AlumneModel;
 use App\Models\MatriculaModel;
 use App\Models\EstudiModel;
+use App\Models\DocumentAlumneModel;
+use App\Models\AlumneTutorLegalModel;
 
 class AlumnesController extends BaseController
 {
-
-
     public function index()
     {
         $request = service('request');
@@ -59,15 +59,105 @@ class AlumnesController extends BaseController
         ]);
     }
 
+    public function expedient($id)
+    {
+        $alumneModel   = new AlumneModel();
+        $documentModel = new DocumentAlumneModel();
+        $tutorModel    = new AlumneTutorLegalModel();
+
+        $alumne = $alumneModel->getExpedientPerId($id);
+
+        if (!$alumne) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
+        }
+
+        $tutors = $tutorModel->getTutorsPerAlumne($id);
+
+        $documents = $documentModel->getDocumentsPerAlumne($id);
+
+        return view('alumnes/expedient', [
+            'title'     => 'Expedient de l\'alumne',
+            'alumne'    => $alumne,
+            'tutors'    => $tutors,
+            'documents' => $documents,
+        ]);
+    }
+
+    public function pujarDocument($id)
+    {
+        $binaryId = hex2bin(str_replace('-', '', $id));
+        $alumneModel = new AlumneModel();
+        $alumne      = $alumneModel->find($binaryId);
+
+        if (!$alumne) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
+        }
+
+        $fitxer = $this->request->getFile('document');
+
+        if (!$fitxer->isValid() || $fitxer->hasMoved()) {
+            return redirect()->back()->with('error', 'Error en la pujada del fitxer.');
+        }
+
+        $extensionsPermeses = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
+        if (!in_array(strtolower($fitxer->getExtension()), $extensionsPermeses)) {
+            return redirect()->back()->with('error', 'Tipus de fitxer no permès. Només PDF, imatges i documents Word.');
+        }
+
+        $any        = date('Y');
+        $dni        = $alumne->dni;
+        $carpeta    = WRITEPATH . 'uploads/' . $any . '/' . $dni . '/';
+
+        if (!is_dir($carpeta)) {
+            mkdir($carpeta, 0755, true);
+        }
+
+        $nomOriginal = $fitxer->getClientName();
+        $nomFitxer   = $fitxer->getRandomName();
+
+        $fitxer->move($carpeta, $nomFitxer);
+
+        $documentModel = new DocumentAlumneModel();
+        $documentModel->insert([
+            'id_alumne'    => $binaryId,
+            'nom_original' => $nomOriginal,
+            'nom_fitxer'   => $nomFitxer,
+            'ruta'         => $any . '/' . $dni . '/' . $nomFitxer,
+            'tipus'        => $this->request->getPost('tipus'),
+            'any_academic' => $any,
+        ]);
+
+        return redirect()->to(base_url('alumnes/expedient/' . $id))->with('exit', 'Document pujat correctament.');
+    }
+
+    public function eliminarDocument($idDocument)
+    {
+        $documentModel = new DocumentAlumneModel();
+        $document      = $documentModel->find($idDocument);
+
+        if (!$document) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Document no trobat');
+        }
+
+        $ruta = WRITEPATH . 'uploads/' . $document['ruta'];
+        if (file_exists($ruta)) {
+            unlink($ruta);
+        }
+
+        $documentModel->delete($idDocument);
+
+        return redirect()->to(base_url('alumnes/expedient/' . $document['id_alumne']))->with('exit', 'Document eliminat correctament.');
+    }
+
     public function resumMatriculats()
     {
-        $request = service('request');
+        $request        = service('request');
         $anySeleccionat = $request->getGet('any');
 
         $model = new MatriculaModel();
         $files = $model->getResumMatriculats($anySeleccionat);
 
-        $organitzat = [];
+        $organitzat   = [];
         $totalGeneral = 0;
 
         foreach ($files as $fila) {
@@ -76,22 +166,22 @@ class AlumnesController extends BaseController
         }
 
         return view('alumnes/resum_matriculats', [
-            'title' => 'Resum d’alumnes matriculats',
-            'dades' => $organitzat,
-            'totalGeneral' => $totalGeneral,
+            'title'          => 'Resum d\'alumnes matriculats',
+            'dades'          => $organitzat,
+            'totalGeneral'   => $totalGeneral,
             'anySeleccionat' => $anySeleccionat
         ]);
     }
 
     public function exportarResumPdf()
     {
-        $request = service('request');
+        $request        = service('request');
         $anySeleccionat = $request->getGet('any');
 
         $model = new MatriculaModel();
         $files = $model->getResumMatriculats($anySeleccionat);
 
-        $organitzat = [];
+        $organitzat   = [];
         $totalGeneral = 0;
 
         foreach ($files as $fila) {
@@ -100,8 +190,8 @@ class AlumnesController extends BaseController
         }
 
         $html = view('alumnes/resum_pdf', [
-            'dades' => $organitzat,
-            'totalGeneral' => $totalGeneral,
+            'dades'          => $organitzat,
+            'totalGeneral'   => $totalGeneral,
             'anySeleccionat' => $anySeleccionat
         ]);
 
@@ -118,10 +208,9 @@ class AlumnesController extends BaseController
     public function cercaGlobal()
     {
         $request = service('request');
-        $q = $request->getGet('q');
+        $q       = $request->getGet('q');
 
-        $model = new AlumneModel();
-
+        $model    = new AlumneModel();
         $resultats = [];
 
         if (!empty($q)) {
@@ -129,15 +218,15 @@ class AlumnesController extends BaseController
         }
 
         return view('alumnes/cerca', [
-            'title' => 'Resultats de la cerca',
+            'title'     => 'Resultats de la cerca',
             'resultats' => $resultats,
-            'q' => $q
+            'q'         => $q
         ]);
     }
 
-    public function contacte(int $id)
+    public function contacte($id)
     {
-        $model = new AlumneModel();
+        $model  = new AlumneModel();
         $alumne = $model->getContactePerId($id);
 
         if (!$alumne) {
@@ -145,37 +234,22 @@ class AlumnesController extends BaseController
         }
 
         return view('alumnes/contacte', [
-            'title' => 'Contacte alumne',
+            'title'  => 'Contacte alumne',
             'alumne' => $alumne
         ]);
     }
 
-    public function expedient(int $id)
+    public function enviar_correu($id)
     {
-        $model = new AlumneModel();
-        $alumne = $model->getExpedientPerId($id);
-
-        if (!$alumne) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
-        }
-
-        return view('alumnes/expedient', [
-            'title' => 'Expedient de l’alumne',
-            'alumne' => $alumne
-        ]);
-    }
-
-    public function enviar_correu(int $id)
-    {
-        $model = new AlumneModel();
+        $model  = new AlumneModel();
         $alumne = $model->getContactePerId($id);
 
         if (!$alumne) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
         }
 
-        $request = service('request');
-        $motiu   = $request->getPost('motiu');
+        $request  = service('request');
+        $motiu    = $request->getPost('motiu');
         $missatge = $request->getPost('missatge');
 
         $dades = [
@@ -184,11 +258,11 @@ class AlumnesController extends BaseController
             'missatge' => $missatge,
         ];
 
-        $email = \Config\Services::email();
-
+        $email     = \Config\Services::email();
         $emailUser = getenv('email.SMTPUser') ?: 'noreply@caparrella.cat';
+
         $email->setFrom($emailUser, 'SECRETARIA INSTITUT CAPARRELLA');
-        $email->setTo($alumne['email']);
+        $email->setTo($alumne->email);
         $email->setSubject('Avís de Secretaria Institut Caparrella: ' . $motiu);
 
         $contingutHtml = view('emails/contacte', $dades);

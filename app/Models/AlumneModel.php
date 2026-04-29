@@ -3,24 +3,47 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Entities\Alumne;
+use Ramsey\Uuid\Uuid;
 
 class AlumneModel extends Model
 {
-    protected $table = 'alumne';
+    protected $table      = 'alumne';
     protected $primaryKey = 'id_alumne';
-    protected $returnType = 'array';
+    protected $returnType = Alumne::class;
+    protected $useAutoIncrement = false;
 
     protected $allowedFields = [
+        'id_alumne',
         'nom',
         'cognom1',
         'cognom2',
         'data_naixement',
         'telefon',
+        'telefon2',
         'dni',
-        'direccio',
         'email',
+        'carrer',
+        'numero',
+        'pis',
+        'codi_postal',
+        'poblacio',
+        'nacionalitat',
+        'lloc_naixement',
         'expedient'
     ];
+
+    protected $beforeInsert = ['generateUuidV7'];
+
+    protected function generateUuidV7(array $data)
+    {
+        if (! isset($data['data']['id_alumne'])) {
+            $uuid = Uuid::uuid7();
+            $data['data']['id_alumne'] = $uuid->getBytes();
+        }
+
+        return $data;
+    }
 
     public function getAlumnesAmbMatricula(array $filtres = [], int $limit = 0, int $offset = 0)
     {
@@ -102,7 +125,7 @@ class AlumneModel extends Model
             $builder->limit($limit, $offset);
         }
 
-        return $builder->get()->getResultArray();
+        return $builder->get()->getResult(Alumne::class);
     }
 
     public function countAlumnesAmbMatricula(array $filtres = []): int
@@ -165,8 +188,9 @@ class AlumneModel extends Model
         return $builder->countAllResults();
     }
 
-    public function getContactePerId(int $id)
+    public function getContactePerId($id)
     {
+        $binaryId = hex2bin(str_replace('-', '', $id));
         return $this->db->table('alumne a')
             ->select('
                 a.id_alumne,
@@ -181,13 +205,14 @@ class AlumneModel extends Model
             ')
             ->join('matricula m', 'm.id_alumne = a.id_alumne', 'left')
             ->join('estudi e', 'e.id_estudi = m.id_estudi', 'left')
-            ->where('a.id_alumne', $id)
+            ->where('a.id_alumne', $binaryId)
             ->get()
-            ->getRowArray();
+            ->getFirstRow(Alumne::class);
     }
 
-    public function getExpedientPerId(int $id)
+    public function getExpedientPerId($id)
     {
+        $binaryId = hex2bin(str_replace('-', '', $id));
         return $this->db->table('alumne a')
             ->select('
                 a.id_alumne,
@@ -198,6 +223,14 @@ class AlumneModel extends Model
                 a.data_naixement,
                 a.email,
                 a.telefon,
+                a.telefon2,
+                a.carrer,
+                a.numero,
+                a.pis,
+                a.codi_postal,
+                a.poblacio,
+                a.nacionalitat,
+                a.lloc_naixement,
                 YEAR(m.data) as any_matricula,
                 e.tipus,
                 e.nivell,
@@ -209,9 +242,9 @@ class AlumneModel extends Model
             ->join('estudi e', 'e.id_estudi = m.id_estudi', 'left')
             ->join('matricula_bonificacio mb', 'mb.id_matricula = m.id_matricula', 'left')
             ->join('bonificacio b', 'b.id_bonificacio = mb.id_bonificacio', 'left')
-            ->where('a.id_alumne', $id)
+            ->where('a.id_alumne', $binaryId)
             ->get()
-            ->getRowArray();
+            ->getFirstRow(Alumne::class);
     }
 
     public function cercaGlobal($q)
@@ -236,6 +269,6 @@ class AlumneModel extends Model
             ->orLike('a.dni', $q)
             ->groupEnd()
             ->get()
-            ->getResultArray();
+            ->getResult(Alumne::class);
     }
 }

@@ -13,21 +13,26 @@ $routes->get('/logout', 'AutenticacioController::logout');
 
 
 // PRIVADES (amb autenticació)
-$routes->group('', ['filter' => 'auth'], function ($routes) {
+$routes->group('', function ($routes) {
 
     // INICI
     $routes->get('/', 'AlumnesController::index');
     $routes->get('alumnes', 'AlumnesController::index');
-    $routes->get('alumnes/expedient/(:num)', 'AlumnesController::expedient/$1');
-    $routes->get('alumnes/contacte/(:num)', 'AlumnesController::contacte/$1');
-    $routes->post('alumnes/enviar_correu/(:num)', 'AlumnesController::enviar_correu/$1');
+    $routes->get('alumnes/expedient/(:any)', 'AlumnesController::expedient/$1');
+    $routes->get('alumnes/contacte/(:any)', 'AlumnesController::contacte/$1');
+    $routes->post('alumnes/enviar_correu/(:any)', 'AlumnesController::enviar_correu/$1');
     $routes->get('alumnes/resum_matriculats', 'AlumnesController::resumMatriculats');
     $routes->get('alumnes/exportar_resum_pdf', 'AlumnesController::exportarResumPdf');
+    $routes->post('alumnes/pujar-document/(:any)', 'AlumnesController::pujarDocument/$1');
+    $routes->get('alumnes/eliminar-document/(:any)', 'AlumnesController::eliminarDocument/$1');
 
     $routes->get('inici', 'IniciController::index');
 
     // MATRÍCULES
-    $routes->get('matricules/matricula_alumne/(:num)', 'MatriculesController::matricula_alumne/$1');
+    $routes->get('matricules/matricula_alumne/(:any)', 'MatriculesController::matricula_alumne/$1');
+    $routes->post('matricules/actualitzar/(:any)', 'MatriculesController::actualitzar/$1');
+    $routes->get('matricules/validar/(:any)', 'MatriculesController::validar_matricula/$1');
+    $routes->get('matricules/invalidar/(:any)', 'MatriculesController::invalidar_matricula/$1');
     //$routes->get('matricules/nova', 'MatriculesController::nova');
     $routes->get('matricula-viva', 'MatriculaVivaController::index');
     $routes->post('matricula-viva/guardar', 'MatriculaVivaController::guardar');
@@ -60,14 +65,16 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('gestio/nou-curs', 'GestioCursosController::nouCurs');
     $routes->get('gestio/nou-curs/(:segment)', 'GestioCursosController::nouCurs/$1');
     $routes->post('gestio/guardar-curs', 'GestioCursosController::guardarCurs');
+    $routes->get('gestio/editar-curs/(:num)', 'GestioCursosController::editarCurs/$1');
+    $routes->post('gestio/actualitzar-curs/(:num)', 'GestioCursosController::actualitzarCurs/$1');
 
     // USUARIS ADMINISTRATIUS
     $routes->get('usuaris', 'UsuarisController::index');
     $routes->get('usuaris/nou', 'UsuarisController::nou');
     $routes->post('usuaris/guardar', 'UsuarisController::guardar');
-    $routes->get('usuaris/editar/(:num)', 'UsuarisController::editar/$1');
-    $routes->post('usuaris/actualitzar/(:num)', 'UsuarisController::actualitzar/$1');
-    $routes->get('usuaris/eliminar/(:num)', 'UsuarisController::eliminar/$1');
+    $routes->get('usuaris/editar/(:any)', 'UsuarisController::editar/$1');
+    $routes->post('usuaris/actualitzar/(:any)', 'UsuarisController::actualitzar/$1');
+    $routes->get('usuaris/eliminar/(:any)', 'UsuarisController::eliminar/$1');
 
     //PERFIL
 
@@ -92,4 +99,11 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->post('serveis/crear', 'ServeiComplementariController::crear');
     $routes->post('serveis/guardar', 'ServeiComplementariController::guardar');
     $routes->get('serveis/eliminar/(:num)', 'ServeiComplementariController::eliminar/$1');
+
+    // BONIFICACIONS
+    $routes->get('bonificacions/nou', 'BonificacionsController::nou');
+    $routes->get('bonificacions', 'BonificacionsController::index');
+    $routes->post('bonificacions/crear', 'BonificacionsController::crear');
+    $routes->post('bonificacions/guardar', 'BonificacionsController::guardar');
+    $routes->get('bonificacions/eliminar/(:num)', 'BonificacionsController::eliminar/$1');
 });

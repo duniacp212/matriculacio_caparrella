@@ -13,10 +13,9 @@ class CreateMissatgeTable extends Migration
                 'auto_increment' => true,
             ],
             'id_matricula' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
-                'null'       => false,
+                'type'       => 'BINARY',
+                'constraint' => 16,
+                'null'       => true,
             ],
             'data' => [
                 'type' => 'DATETIME',

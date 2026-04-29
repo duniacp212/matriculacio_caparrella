@@ -3,17 +3,30 @@
 
 <div class="container-fluid d-flex flex-column min-vh-100">
 
-    <div class="px-3 pt-2 pb-1 border-bottom-lila bg-white">
-        <h4 class="mb-0">Configuració de la Interfície</h4>
+    <div class="px-3 pt-2 pb-1 bg-white">
+        <div class="row align-items-center">
+            <div class="col-12">
+                 <h4 class="mb-0">Configuració de la Interfície</h4>
+            </div>
+        </div>
     </div>
 
     <div class="row flex-grow-1 g-0 mt-3">
 
-        <?= view('layouts/aside') ?>
+        <main class="col-12 pt-0 px-3 overflow-auto">
 
-        <main class="col-10 pt-0 px-3 overflow-auto">
+            <?php if (session()->getFlashdata('exit')): ?>
+                <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-3 py-2 small" role="alert">
+                    <?= session()->getFlashdata('exit') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
 
-            <div class="card mt-2 shadow-sm border-0">
+            <div class="d-flex justify-content-start mb-3">
+                 <a href="<?= base_url('alumnes') ?>" class="btn btn-outline-secondary btn-sm px-4">Tornar</a>
+            </div>
+
+            <div class="card shadow-sm border-0">
                 <div class="card-body">
                     <form action="<?= base_url('configuracio/guardar') ?>" method="post">
                         <?= csrf_field() ?>
@@ -40,8 +53,16 @@
                                     <label class="form-check-label">Gestió d'usuaris</label>
                                 </div>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" name="config[menu_calendari]" <?= $config['menu_calendari'] ? 'checked' : '' ?>>
+                                    <input class="form-check-input" type="checkbox" name="config[menu_calendari]" <?= ($config['menu_calendari'] ?? 0) ? 'checked' : '' ?>>
                                     <label class="form-check-label">Calendari</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="config[menu_serveis_complementaris]" <?= ($config['menu_serveis_complementaris'] ?? 0) ? 'checked' : '' ?>>
+                                    <label class="form-check-label">Serveis complementaris</label>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="config[menu_bonificacions]" <?= ($config['menu_bonificacions'] ?? 0) ? 'checked' : '' ?>>
+                                    <label class="form-check-label">Gestió de bonificacions</label>
                                 </div>
                             </div>
                         </div>
@@ -86,8 +107,8 @@
                             </div>
                         </div>
 
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-primary">Desar configuració</button>
+                        <div class="text-end border-top pt-3">
+                            <button type="submit" class="btn btn-primary btn-sm px-4">Desar configuració</button>
                         </div>
                     </form>
                 </div>

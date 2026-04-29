@@ -31,6 +31,8 @@ class ConfiguracioController extends BaseController
             'menu_alumnes_matriculats',
             'menu_gestio_cursos',
             'menu_calendari',
+            'menu_serveis_complementaris',
+            'menu_bonificacions',
             'menu_matricula_viva',
             'menu_usuaris',
             'filtre_any',
@@ -44,9 +46,15 @@ class ConfiguracioController extends BaseController
 
         foreach ($allKeys as $key) {
             $value = isset($configs[$key]) ? 1 : 0;
-            $model->where('clau', $key)->set(['valor' => $value])->update();
+            
+            $existing = $model->where('clau', $key)->first();
+            if ($existing) {
+                $model->where('clau', $key)->set(['valor' => $value])->update();
+            } else {
+                $model->insert(['clau' => $key, 'valor' => $value]);
+            }
         }
 
-        return redirect()->to('/configuracio');
+        return redirect()->to('/configuracio')->with('exit', 'Configuració desada correctament.');
     }
 }

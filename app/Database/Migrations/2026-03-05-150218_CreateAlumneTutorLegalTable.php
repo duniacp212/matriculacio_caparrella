@@ -47,15 +47,9 @@ class CreateAlumneTutorLegalTable extends Migration
                 'constraint' => 50,
                 'null'       => false,
             ],
-            'custodia_percentatge' => [
-                'type'       => 'INT',
-                'constraint' => 3,
-                'null'       => false,
-            ],
             'id_alumne' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+                'type'       => 'BINARY',
+                'constraint' => 16,
                 'null'       => false,
             ],
         ]);

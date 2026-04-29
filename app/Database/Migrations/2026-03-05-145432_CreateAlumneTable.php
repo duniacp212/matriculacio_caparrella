@@ -7,10 +7,8 @@ class CreateAlumneTable extends Migration
     {
         $this->forge->addField([
             'id_alumne' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+                'type'       => 'BINARY',
+                'constraint' => 16,
             ],
             'nom' => [
                 'type'       => 'VARCHAR',
@@ -29,9 +27,14 @@ class CreateAlumneTable extends Migration
             ],
             'data_naixement' => [
                 'type' => 'DATE',
-                'null' => false,
+                'null' => true,
             ],
             'telefon' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 20,
+                'null'       => true,
+            ],
+            'telefon2' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 20,
                 'null'       => true,
@@ -41,12 +44,42 @@ class CreateAlumneTable extends Migration
                 'constraint' => 20,
                 'null'       => false,
             ],
-            'direccio' => [
+            'email' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
-                'null'       => false,
+                'null'       => true,
             ],
-            'email' => [
+            'carrer' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+                'null'       => true,
+            ],
+            'numero' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 10,
+                'null'       => true,
+            ],
+            'pis' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 20,
+                'null'       => true,
+            ],
+            'codi_postal' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 10,
+                'null'       => true,
+            ],
+            'poblacio' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+                'null'       => true,
+            ],
+            'nacionalitat' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 50,
+                'null'       => true,
+            ],
+            'lloc_naixement' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
                 'null'       => true,

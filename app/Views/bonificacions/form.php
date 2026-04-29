@@ -16,7 +16,7 @@
         <main class="col-12 pt-0 px-3 overflow-auto">
 
             <div class="d-flex justify-content-start mb-3">
-                 <a href="<?= base_url('serveis') ?>" class="btn btn-outline-secondary btn-sm px-4">Tornar</a>
+                 <a href="<?= base_url('bonificacions') ?>" class="btn btn-outline-secondary btn-sm px-4">Tornar</a>
             </div>
 
             <div class="card shadow-sm border-0 mx-auto" style="max-width: 800px;">
@@ -29,26 +29,23 @@
                     <form action="<?= esc($url) ?>" method="post">
                         <?= csrf_field() ?>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold">Tipus de servei</label>
-                                <input type="text" name="tipus" value="<?= esc($servei['tipus'] ?? '') ?>" class="form-control form-control-sm" required>
+                        <div class="row align-items-end">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold">Tipus de bonificació</label>
+                                <input type="text" name="tipus" value="<?= esc($bonificacio['tipus'] ?? '') ?>" class="form-control form-control-sm" required>
+                            </div>
+                            <div class="col-md-5 mb-3">
+                                <label class="form-label fw-semibold">Descripció</label>
+                                <input type="text" name="descripcio" value="<?= esc($bonificacio['descripcio'] ?? '') ?>" class="form-control form-control-sm">
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label class="form-label fw-semibold">Preu (€)</label>
-                                <input type="number" name="preu" value="<?= esc($servei['preu'] ?? '') ?>" class="form-control form-control-sm" step="0.01" min="0">
-                            </div>
-                            <div class="col-md-3 mb-3">
-                                <label class="form-label fw-semibold">Estat</label>
-                                <select name="estat" class="form-select form-select-sm">
-                                    <option value="actiu" <?= ($servei['estat'] ?? '') === 'actiu' ? 'selected' : '' ?>>Actiu</option>
-                                    <option value="inactiu" <?= ($servei['estat'] ?? '') === 'inactiu' ? 'selected' : '' ?>>Inactiu</option>
-                                </select>
+                                <label class="form-label fw-semibold text-nowrap">Percentatge (%)</label>
+                                <input type="number" name="percentatge" value="<?= esc($bonificacio['percentatge'] ?? '') ?>" class="form-control form-control-sm" step="0.01" min="0" max="100" required>
                             </div>
                         </div>
 
                         <div class="text-end border-top pt-3 mt-3">
-                            <a href="<?= base_url('serveis') ?>" class="btn btn-outline-secondary btn-sm me-2 px-3">Cancel·lar</a>
+                            <a href="<?= base_url('bonificacions') ?>" class="btn btn-outline-secondary btn-sm me-2 px-3">Cancel·lar</a>
                             <button type="submit" class="btn btn-primary btn-sm px-4">Guardar</button>
                         </div>
 

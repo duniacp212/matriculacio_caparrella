@@ -243,6 +243,10 @@ aside a span {
   border-bottom: 4px solid #15C67E !important;
 }
 
+.border-bottom-lila {
+  border-bottom: 2px solid var(--caparrella-lila) !important;
+}
+
 .px-3.py-3.border-bottom.bg-white {
   border-bottom: none !important;
 }

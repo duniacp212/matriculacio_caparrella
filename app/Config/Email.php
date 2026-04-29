@@ -30,15 +30,19 @@ class Email extends BaseConfig
      */
     public string $SMTPHost = 'smtp.gmail.com';
 
-    /**
-     * SMTP Username
-     */
     public string $SMTPUser = '';
 
     /**
      * SMTP Password
      */
     public string $SMTPPass = '';
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->SMTPUser = getenv('email.SMTPUser') ?: '';
+        $this->SMTPPass = getenv('email.SMTPPass') ?: '';
+    }
 
     /**
      * SMTP Port

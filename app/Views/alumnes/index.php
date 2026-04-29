@@ -5,7 +5,7 @@
 <div class="container-fluid d-flex flex-column min-vh-100">
 
     <form method="get" action="<?= current_url() ?>">
-        <div class="px-3 pt-2 pb-1 border-bottom-lila bg-white">
+        <div class="px-3 pt-2 pb-1 bg-white">
             <div class="row align-items-end">
 
                 <div class="col-12">
@@ -160,35 +160,35 @@
                         <tr>
 
                             <td>
-                                <input type="radio" name="matricula_id" value="<?= esc($alumne['id_matricula']) ?>" data-alumne-id="<?= esc($alumne['id_alumne']) ?>">
+                                <input type="radio" name="matricula_id" value="<?= esc($alumne->id_matricula) ?>" data-alumne-id="<?= esc($alumne->id_alumne) ?>">
                             </td>
 
-                            <td><?= esc($alumne['nom']) ?></td>
+                            <td><?= esc($alumne->nom) ?></td>
 
                             <td>
-                                <?= esc($alumne['cognom1']) ?>
+                                <?= esc($alumne->cognom1) ?>
 
-                                <?= esc($alumne['cognom2']) ?>
+                                <?= esc($alumne->cognom2) ?>
                             </td>
 
-                            <td><?= esc($alumne['dni']) ?></td>
+                            <td><?= esc($alumne->dni) ?></td>
 
-                            <td><?= esc($alumne['estudi'] ?? '') ?></td>
+                            <td><?= esc($alumne->estudi ?? '') ?></td>
 
-                            <td><?= esc($alumne['curs'] ?? '') ?></td>
+                            <td><?= esc($alumne->curs ?? '') ?></td>
 
-                            <td><?= esc($alumne['torn'] ?? '') ?></td>
+                            <td><?= !empty($alumne->torn) ? 'Torn ' . esc($alumne->torn) : '' ?></td>
 
-                            <td><?= esc($alumne['estat']) ?></td>
+                            <td><?= esc($alumne->estat) ?></td>
 
-                            <td class="<?= !empty($alumne['data_pagament']) ? 'text-success' : 'text-danger' ?>">
-                                <?= !empty($alumne['data_pagament']) ? 'Pagat' : 'No pagat' ?>
+                            <td class="<?= !empty($alumne->data_pagament) ? 'text-success' : 'text-danger' ?>">
+                                <?= !empty($alumne->data_pagament) ? 'Pagat' : 'No pagat' ?>
                             </td>
 
                             <td>
-                                <?php if ($alumne['bonificats'] == 50): ?>
+                                <?php if ($alumne->bonificats == 50): ?>
                                     <span class="badge bg-warning text-dark">50%</span>
-                                <?php elseif ($alumne['bonificats'] == 100): ?>
+                                <?php elseif ($alumne->bonificats == 100): ?>
                                     <span class="badge bg-success">100%</span>
                                 <?php else: ?>
                                     <span class="badge bg-secondary">0%</span>

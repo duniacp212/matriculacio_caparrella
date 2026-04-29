@@ -29,7 +29,10 @@ class MatriculaSeeder extends Seeder
             ];
         }
 
-        $this->db->table('matricula')->insertBatch($data);
+        $model = new \App\Models\MatriculaModel();
+        foreach ($data as $dades) {
+            $model->insert($dades);
+        }
 
         if (!empty($bonificacions)) {
             $matricules = $this->db->table('matricula')->select('id_matricula')->get()->getResultArray();

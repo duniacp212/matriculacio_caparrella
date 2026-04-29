@@ -5,7 +5,7 @@
 
 
   <form method="get" action="<?= base_url('alumnes') ?>">
-    <div class="px-3 pt-2 pb-1 border-bottom-lila bg-white">
+    <div class="px-3 pt-2 pb-1 bg-white">
       <div class="row align-items-end">
 
         <div class="col-12 col-xl-9">

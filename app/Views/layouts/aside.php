@@ -28,11 +28,20 @@ $rol = session()->get('rol');
       </li>
     <?php endif; ?>
 
-    <?php if (in_array($rol, ['super admin', 'administracio'])): ?>
+    <?php if (($config_ui['menu_serveis_complementaris'] ?? true) && in_array($rol, ['super admin', 'administracio'])): ?>
       <li class="mt-2">
         <a class="fw-semibold text-dark text-decoration-none py-1 d-block"
           href="<?= base_url('serveis') ?>">
           Serveis complementaris
+        </a>
+      </li>
+    <?php endif; ?>
+
+    <?php if (($config_ui['menu_bonificacions'] ?? true) && in_array($rol, ['super admin', 'administracio'])): ?>
+      <li class="mt-2">
+        <a class="fw-semibold text-dark text-decoration-none py-1 d-block"
+          href="<?= base_url('bonificacions') ?>">
+          Gestió de bonificacions
         </a>
       </li>
     <?php endif; ?>
@@ -44,11 +53,25 @@ $rol = session()->get('rol');
           <a class="fw-semibold text-dark text-decoration-none" href="#">
             Gestió de cursos
           </a>
-          <a class="text-dark text-decoration-none" data-bs-toggle="collapse" href="#menuGestioCursos" role="button">
-            ▾
+          <a class="text-dark text-decoration-none collapsed" data-bs-toggle="collapse" href="#menuGestioCursos" role="button" id="toggleGestioCursos">
+            <span id="fletxaCursos" class="fs-5" style="transition: all 0.2s; line-height: 1;">▾</span>
           </a>
         </div>
         <ul class="list-unstyled ps-3 collapse" id="menuGestioCursos">
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const menu = document.getElementById('menuGestioCursos');
+              const fletxa = document.getElementById('fletxaCursos');
+              if (menu && fletxa) {
+                menu.addEventListener('show.bs.collapse', function () {
+                  fletxa.textContent = '▸';
+                });
+                menu.addEventListener('hide.bs.collapse', function () {
+                  fletxa.textContent = '▾';
+                });
+              }
+            });
+          </script>
           <li><a class="text-dark text-decoration-none py-1 d-block" href="<?= base_url('gestio/eso') ?>">ESO</a></li>
           <li><a class="text-dark text-decoration-none py-1 d-block" href="<?= base_url('gestio/batxillerat') ?>">Batxillerat</a></li>
           <li><a class="text-dark text-decoration-none py-1 d-block" href="<?= base_url('gestio/fp-gm') ?>">FP Grau Mitjà</a></li>

@@ -2,7 +2,7 @@
 
 use CodeIgniter\Database\Migration;
 
-class CreateUsuariTableFinal extends Migration
+class CreateUsuariTable extends Migration
 {
     public function up()
     {
@@ -10,10 +10,8 @@ class CreateUsuariTableFinal extends Migration
 
         $this->forge->addField([
             'id_usuari' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+                'type'       => 'BINARY',
+                'constraint' => 16,
             ],
             'nom' => [
                 'type'       => 'VARCHAR',
@@ -41,6 +39,16 @@ class CreateUsuariTableFinal extends Migration
             'password' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
+            ],
+            'email' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '150',
+                'unique'     => true,
+            ],
+            'telefon' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '20',
+                'null'       => true,
             ],
             'rol' => [
                 'type'       => 'ENUM',

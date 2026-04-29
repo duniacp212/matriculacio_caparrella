@@ -7,9 +7,8 @@ class CreateMatriculaBonificacioTable extends Migration
     {
         $this->forge->addField([
             'id_matricula' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+                'type'       => 'BINARY',
+                'constraint' => 16,
                 'null'       => false,
             ],
             'id_bonificacio' => [

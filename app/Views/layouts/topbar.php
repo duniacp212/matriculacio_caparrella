@@ -22,7 +22,7 @@
 
   <div>
     <a href="<?= base_url('perfil') ?>" class="me-2 fw-semibold text-dark text-decoration-none">
-      <?= esc(session()->get('usuari')) ?>
+      <?= esc(session()->get('nom_complet')) ?>
     </a>
     <a href="<?= base_url('logout') ?>" class="btn btn-sm btn-outline-secondary">
       Sortir

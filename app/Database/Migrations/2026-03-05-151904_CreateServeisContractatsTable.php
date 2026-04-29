@@ -13,9 +13,8 @@ class CreateServeisContractatsTable extends Migration
                 'null'       => false,
             ],
             'id_matricula' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+                'type'       => 'BINARY',
+                'constraint' => 16,
                 'null'       => false,
             ],
             'data_alta' => [

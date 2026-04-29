@@ -15,9 +15,9 @@
 
         <main class="col-12 pt-0 px-3 overflow-auto">
 
-            <div class="d-flex justify-content-end gap-2 mb-3">
-                 <a href="<?= base_url('alumnes') ?>" class="btn btn-outline-secondary btn-sm px-4 me-auto">Tornar</a>
-                 <a href="<?= base_url('serveis/nou') ?>" class="btn btn-primary btn-sm px-4">Nou servei</a>
+            <div class="d-flex justify-content-start mb-3">
+                 <a href="<?= base_url('alumnes') ?>" class="btn btn-outline-secondary btn-sm px-4">Tornar</a>
+                 <a href="<?= base_url('bonificacions/nou') ?>" class="btn btn-primary btn-sm px-4 ms-auto">Nova bonificació</a>
             </div>
 
             <div class="card shadow-sm border-0">
@@ -27,44 +27,45 @@
                         <div class="alert alert-success py-2 small"><?= session()->getFlashdata('exit') ?></div>
                     <?php endif; ?>
 
-                    <?php if (empty($serveis)): ?>
-                        <div class="alert alert-info">No hi ha serveis complementaris definits.</div>
+                    <?php if (empty($bonificacions)): ?>
+                        <div class="alert alert-info">No hi ha bonificacions definides.</div>
                     <?php else: ?>
 
-                        <form method="post" action="<?= base_url('serveis/guardar') ?>">
+                        <form method="post" action="<?= base_url('bonificacions/guardar') ?>">
                             <?= csrf_field() ?>
 
                             <table class="table table-bordered table-hover bg-white mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Tipus de servei</th>
-                                        <th style="width: 150px">Preu (€)</th>
-                                        <th style="width: 150px">Estat</th>
+                                        <th>Tipus de bonificació</th>
+                                        <th>Descripció</th>
+                                        <th style="width: 150px">Percentatge (%)</th>
                                         <th style="width: 100px" class="text-end">Accions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($serveis as $servei): ?>
+                                    <?php foreach ($bonificacions as $boni): ?>
                                         <tr>
-                                            <td class="fw-semibold"><?= esc($servei['tipus']) ?></td>
+                                            <td class="fw-semibold"><?= esc($boni['tipus']) ?></td>
+                                            <td>
+                                                <input type="text"
+                                                    name="descripcio[<?= $boni['id_bonificacio'] ?>]"
+                                                    value="<?= esc($boni['descripcio'] ?? '') ?>"
+                                                    class="form-control form-control-sm">
+                                            </td>
                                             <td>
                                                 <input type="number"
-                                                    name="preu[<?= $servei['id_servei'] ?>]"
-                                                    value="<?= esc($servei['preu'] ?? '') ?>"
+                                                    name="percentatge[<?= $boni['id_bonificacio'] ?>]"
+                                                    value="<?= esc($boni['percentatge'] ?? '') ?>"
                                                     class="form-control form-control-sm"
                                                     step="0.01"
-                                                    min="0">
-                                            </td>
-                                            <td>
-                                                <select name="estat[<?= $servei['id_servei'] ?>]" class="form-select form-select-sm">
-                                                    <option value="actiu" <?= $servei['estat'] === 'actiu' ? 'selected' : '' ?>>Actiu</option>
-                                                    <option value="inactiu" <?= $servei['estat'] === 'inactiu' ? 'selected' : '' ?>>Inactiu</option>
-                                                </select>
+                                                    min="0"
+                                                    max="100">
                                             </td>
                                             <td class="text-end">
-                                                <a href="<?= base_url('serveis/eliminar/' . $servei['id_servei']) ?>"
+                                                <a href="<?= base_url('bonificacions/eliminar/' . $boni['id_bonificacio']) ?>"
                                                     class="btn btn-outline-danger btn-sm"
-                                                    onclick="return confirm('Estàs segur que vols eliminar aquest servei?')">
+                                                    onclick="return confirm('Estàs segur que vols eliminar aquesta bonificació?')">
                                                     Eliminar
                                                 </a>
                                             </td>

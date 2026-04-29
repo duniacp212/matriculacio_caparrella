@@ -4,8 +4,18 @@ namespace App\Entities;
 
 use CodeIgniter\Entity\Entity;
 
+use App\Entities\Casts\UuidV7Cast;
+
 class Usuari extends Entity
 {
+    protected $casts = [
+        'id_usuari' => 'uuid_v7',
+    ];
+
+    protected $castHandlers = [
+        'uuid_v7' => UuidV7Cast::class,
+    ];
+
     protected $attributes = [
         'id_usuari' => null,
         'nom' => null,
@@ -14,6 +24,8 @@ class Usuari extends Entity
         'dni_nie' => null,
         'usuari' => null,
         'password' => null,
+        'email' => null,
+        'telefon' => null,
         'rol' => null
     ];
 

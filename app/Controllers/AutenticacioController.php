@@ -20,14 +20,21 @@ class AutenticacioController extends BaseController
 
         $model = new UsuariModel();
 
-        $usuari = $model->where('usuari', $username)->first();
+        $usuari = $model->groupStart()
+                        ->where('usuari', $username)
+                        ->orWhere('email', $username)
+                        ->groupEnd()
+                        ->first();
 
         if ($usuari && password_verify($password, $usuari->password)) {
 
+            $nomComplet = $usuari->nom . ' ' . $usuari->cognom1 . ($usuari->cognom2 ? ' ' . $usuari->cognom2 : '');
+            
             $session->set([
-                'logged_in' => true,
-                'usuari' => $usuari->usuari,
-                'rol' => $usuari->rol
+                'logged_in'   => true,
+                'id_usuari'   => $usuari->id_usuari,
+                'nom_complet' => $nomComplet,
+                'rol'         => $usuari->rol
             ]);
 
             return redirect()->to('/alumnes');

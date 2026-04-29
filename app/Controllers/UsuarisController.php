@@ -42,7 +42,8 @@ class UsuarisController extends BaseController
             'cognom1'  => 'required|min_length[2]|max_length[100]',
             'cognom2'  => 'permit_empty|max_length[100]',
             'dni_nie'  => 'required|max_length[20]|is_unique[usuari.dni_nie]|dni_nie_valid',
-            'usuari'   => 'required|min_length[3]|max_length[100]|is_unique[usuari.usuari]',
+            'email'    => 'required|valid_email|is_unique[usuari.email]|max_length[150]',
+            'telefon'  => 'permit_empty|max_length[20]',
             'password' => 'required|min_length[6]',
             'rol'      => 'required|in_list[super admin,administracio,secretaria]',
         ];
@@ -63,19 +64,40 @@ class UsuarisController extends BaseController
         $usuari->cognom1  = $this->request->getPost('cognom1');
         $usuari->cognom2  = $this->request->getPost('cognom2');
         $usuari->dni_nie  = $this->request->getPost('dni_nie');
-        $usuari->usuari   = $this->request->getPost('usuari');
+        $usuari->email    = $this->request->getPost('email');
+        $usuari->telefon  = $this->request->getPost('telefon');
+        $usuari->usuari   = $this->request->getPost('email');
         $usuari->rol      = $this->request->getPost('rol');
         $usuari->password = $password;
 
-        $model->save($usuari);
-        return redirect()->to('/usuaris')->with('exit', 'Usuari creat correctament.');
+        if ($model->save($usuari)) {
+            $email = \Config\Services::email();
+            $configEmail = getenv('email.SMTPUser') ?: 'noreply@caparrella.cat';
+            
+            $email->setFrom($configEmail, 'SECRETARIA INSTITUT CAPARRELLA');
+            $email->setTo($usuari->email);
+            $email->setSubject('Registre d\'usuari correcte - Institut Caparrella');
+            
+            $contingut = view('emails/registre_usuari', [
+                'nom'    => $usuari->nom,
+                'usuari' => $usuari->usuari,
+                'rol'    => $usuari->rol
+            ]);
+            
+            $email->setMessage($contingut);
+            $email->send();
+            
+            return redirect()->to('/usuaris')->with('exit', 'Usuari creat correctament i notificació enviada.');
+        }
+        
+        return redirect()->back()->withInput()->with('error', 'No s\'ha pogut crear l\'usuari.');
     }
 
     public function editar($id)
     {
-        $id    = (int) $id;
+        $binaryId = hex2bin(str_replace('-', '', $id));
         $model  = new UsuariModel();
-        $usuari = $model->find($id);
+        $usuari = $model->find($binaryId);
 
         $data = [
             'title'  => 'Editar Usuari',
@@ -87,16 +109,17 @@ class UsuarisController extends BaseController
 
     public function actualitzar($id)
     {
-        $id     = (int) $id;
+        $binaryId = hex2bin(str_replace('-', '', $id));
         $model  = new UsuariModel();
-        $usuari = $model->find($id);
+        $usuari = $model->find($binaryId);
 
         $rules = [
             'nom'     => 'required|min_length[2]|max_length[100]',
             'cognom1' => 'required|min_length[2]|max_length[100]',
             'cognom2' => 'permit_empty|max_length[100]',
-            'dni_nie' => 'required|max_length[20]|is_unique[usuari.dni_nie,id_usuari,' . $id . ']|dni_nie_valid',
-            'usuari'  => 'required|min_length[3]|max_length[100]|is_unique[usuari.usuari,id_usuari,' . $id . ']',
+            'dni_nie' => 'required|max_length[20]|is_unique[usuari.dni_nie,id_usuari,' . $binaryId . ']|dni_nie_valid',
+            'email'   => 'required|valid_email|is_unique[usuari.email,id_usuari,' . $binaryId . ']|max_length[150]',
+            'telefon' => 'permit_empty|max_length[20]',
             'rol'     => 'required|in_list[super admin,administracio,secretaria]',
         ];
 
@@ -115,21 +138,47 @@ class UsuarisController extends BaseController
         $usuari->cognom1 = $this->request->getPost('cognom1');
         $usuari->cognom2 = $this->request->getPost('cognom2');
         $usuari->dni_nie = $this->request->getPost('dni_nie');
-        $usuari->usuari  = $this->request->getPost('usuari');
+        $usuari->email   = $this->request->getPost('email');
+        $usuari->telefon = $this->request->getPost('telefon');
+        $usuari->usuari  = $this->request->getPost('email');
         $usuari->rol     = $this->request->getPost('rol');
 
         if (!empty($password)) {
             $usuari->password = $password;
         }
 
-        $model->save($usuari);
+        if ($usuari->hasChanged()) {
+            $model->save($usuari);
+        }
+        
         return redirect()->to('/usuaris')->with('exit', 'Usuari actualitzat correctament.');
     }
 
     public function eliminar($id)
     {
+        $binaryId = hex2bin(str_replace('-', '', $id));
         $model = new UsuariModel();
-        $model->delete($id);
-        return redirect()->to('/usuaris');
+        $usuari = $model->find($binaryId);
+
+        if ($usuari) {
+            $email = \Config\Services::email();
+            $configEmail = getenv('email.SMTPUser') ?: 'noreply@caparrella.cat';
+            
+            $email->setFrom($configEmail, 'SECRETARIA INSTITUT CAPARRELLA');
+            $email->setTo($usuari->email);
+            $email->setSubject('Avís d\'eliminació de compte - Institut Caparrella');
+            
+            $contingut = view('emails/eliminacio_usuari', [
+                'nom'    => $usuari->nom,
+                'usuari' => $usuari->usuari
+            ]);
+            
+            $email->setMessage($contingut);
+            $email->send();
+
+            $model->delete($binaryId);
+        }
+
+        return redirect()->to('/usuaris')->with('exit', 'Usuari eliminat i notificació enviada.');
     }
 }

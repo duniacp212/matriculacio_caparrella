@@ -3,25 +3,25 @@
 
 <div class="container-fluid d-flex flex-column min-vh-100">
 
-    <div class="px-3 pt-2 pb-1 border-bottom-lila bg-white">
+    <div class="px-3 pt-2 pb-1 bg-white">
         <div class="row align-items-center">
             <div class="col-12">
-                <h4 class="mb-0"><?= esc($title) ?></h4>
+                 <h4 class="mb-0"><?= esc($title) ?></h4>
             </div>
         </div>
     </div>
 
     <div class="row flex-grow-1 g-0 mt-3">
 
-        <?= view('layouts/aside') ?>
+        <main class="col-12 pt-0 px-3 overflow-auto">
 
-        <main class="col-10 pt-0 px-3 overflow-auto">
+            <div class="d-flex justify-content-start mb-3">
+                <a href="<?= base_url('alumnes') ?>" class="btn btn-outline-secondary btn-sm px-4">Tornar</a>
+            </div>
 
-            <div class="card mt-2 shadow-sm border-0">
+            <div class="card shadow-sm border-0">
                 <div class="card-body">
-
                     <div id="calendari"></div>
-
                 </div>
             </div>
 
@@ -79,10 +79,8 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-
         const calEl = document.getElementById('calendari');
         let tascaId = null;
-
         const modalTasca = new bootstrap.Modal(document.getElementById('modalTasca'));
         const modalVeureTasca = new bootstrap.Modal(document.getElementById('modalVeureTasca'));
 
@@ -90,18 +88,7 @@
             initialView: 'dayGridMonth',
             locale: 'ca',
             firstDay: 1,
-            buttonText: {
-                today: 'Avui',
-                month: 'Mes',
-                list: 'Llista'
-            },
-            buttonHints: {
-                today: 'Avui',
-                month: 'Mes',
-                list: 'Llista'
-            },
-            allDayText: 'Tot el dia',
-            noEventsText: 'No hi ha esdeveniments per mostrar',
+            buttonText: { today: 'Avui', month: 'Mes', list: 'Llista' },
             headerToolbar: {
                 left: 'prev,next today',
                 center: 'title',
@@ -130,35 +117,29 @@
             const descripcio = document.getElementById('descripcio').value;
             const data = document.getElementById('data').value;
 
-            if (!titol) {
-                alert('El títol és obligatori');
-                return;
-            }
+            if (!titol) { alert('El títol és obligatori'); return; }
 
             fetch('<?= base_url('calendari/guardar') ?>', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: new URLSearchParams({
-                        titol: titol,
-                        descripcio: descripcio,
-                        data: data,
-                        '<?= csrf_token() ?>': '<?= csrf_hash() ?>'
-                    })
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    titol: titol,
+                    descripcio: descripcio,
+                    data: data,
+                    '<?= csrf_token() ?>': '<?= csrf_hash() ?>'
                 })
-                .then(r => r.json())
-                .then(data => {
-                    if (data.ok) {
-                        modalTasca.hide();
-                        cal.refetchEvents();
-                    }
-                });
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.ok) {
+                    modalTasca.hide();
+                    cal.refetchEvents();
+                }
+            });
         });
 
         document.getElementById('btnEliminar').addEventListener('click', function() {
             if (!confirm('Estàs segur que vols eliminar aquesta tasca?')) return;
-
             fetch('<?= base_url('calendari/eliminar/') ?>' + tascaId)
                 .then(r => r.json())
                 .then(data => {
@@ -168,7 +149,6 @@
                     }
                 });
         });
-
     });
 </script>
 

@@ -7,15 +7,12 @@ class CreateMatriculaTable extends Migration
     {
         $this->forge->addField([
             'id_matricula' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+                'type'       => 'BINARY',
+                'constraint' => 16,
             ],
             'id_alumne' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+                'type'       => 'BINARY',
+                'constraint' => 16,
                 'null'       => false,
             ],
             'id_estudi' => [

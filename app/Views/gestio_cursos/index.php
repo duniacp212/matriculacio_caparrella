@@ -16,24 +16,21 @@ elseif (strpos($urlActual, 'pfi') !== false)
 ?>
 
 <?= view('layouts/header', ['title' => $title]) ?>
+<?= view('layouts/topbar') ?>
 
-<div class="container-fluid vh-100 d-flex flex-column">
+<div class="container-fluid d-flex flex-column min-vh-100">
 
-    <div class="d-flex align-items-center px-3 py-2 border-bottom bg-light">
-        <a href="<?= base_url('/') ?>" class="me-3">
-            <img src="<?= base_url('logo.png') ?>" alt="Logo" style="height: 70px" />
-        </a>
-        <div class="flex-grow-1 text-center fw-semibold fs-5">
-            <?= esc($title) ?>
-        </div>
-        <div>
-            <span class="me-2 fw-semibold">Nom i Cognoms</span>
-            <a href="<?= base_url('logout') ?>" class="btn btn-sm btn-outline-secondary">Sortir</a>
+    <div class="px-3 pt-2 pb-1 bg-white">
+        <div class="row align-items-center">
+            <div class="col-12">
+                 <h4 class="mb-0"><?= esc($title) ?></h4>
+            </div>
         </div>
     </div>
 
-    <main class="container-fluid p-4 overflow-auto">
-        <div class="container" style="max-width: 1100px">
+    <div class="row flex-grow-1 g-0 mt-3">
+
+        <main class="col-12 pt-0 px-3 overflow-auto">
 
             <?php if (session()->getFlashdata('success')): ?>
                 <div class="alert alert-success alert-dismissible fade show mb-4 border-0 shadow-sm" role="alert">
@@ -49,21 +46,19 @@ elseif (strpos($urlActual, 'pfi') !== false)
                 </div>
             <?php endif; ?>
 
-            <form method="post" action="<?= base_url('gestio/processar') ?>">
+            <form id="formCursos" method="post" action="<?= base_url('gestio/processar') ?>">
 
              <?= csrf_field() ?>
 
                 <div class="d-flex justify-content-end gap-2 mb-3">
-                    <button type="submit" name="accio" value="duplicar"
-                        class="btn btn-outline-secondary">Duplicar</button>
-                    <button type="submit" name="accio" value="eliminar" class="btn btn-outline-danger"
-                        onclick="return confirm('Confirmes que vols eliminar els elements seleccionats?')">Eliminar</button>
-                    <button type="submit" name="accio" value="editar" class="btn btn-outline-primary">Editar</button>
+                    <a href="<?= base_url('alumnes') ?>" class="btn btn-outline-secondary btn-sm px-4 me-auto">Tornar</a>
+                    <button type="submit" name="accio" value="duplicar" class="btn btn-outline-secondary btn-sm action-btn">Duplicar</button>
+                    <button type="submit" name="accio" value="eliminar" class="btn btn-outline-danger btn-sm action-btn">Eliminar</button>
+                    <button type="submit" name="accio" value="editar" class="btn btn-outline-primary btn-sm action-btn">Editar</button>
 
-                    <a href="<?= base_url('gestio/nou-curs/' . $segmentAuto) ?>" class="btn btn-outline-primary">Afegir
-                        curs</a>
+                    <a href="<?= base_url('gestio/nou-curs/' . $segmentAuto) ?>" class="btn btn-outline-primary btn-sm">Afegir curs</a>
 
-                    <a href="#" class="btn btn-success">Afegir assignatura</a>
+                    <button type="submit" name="accio" value="afegir-assignatura" class="btn btn-success btn-sm action-btn">Afegir assignatura</button>
                 </div>
 
                 <?php if (empty($cursos)): ?>
@@ -77,7 +72,7 @@ elseif (strpos($urlActual, 'pfi') !== false)
                             <details <?= $primer ? 'open' : '' ?>>
                                 <?php $primer = false; ?>
                                 <summary class="resum-lila">
-                                    <input type="checkbox" name="cursos[]" value="<?= esc($curs['id_estudi']) ?>" />
+                                    <input type="checkbox" name="cursos[]" value="<?= esc($curs['id_estudi']) ?>" class="curso-checkbox" />
                                     <?= esc($curs['nivell']) ?> &nbsp;&nbsp;&nbsp; <?= esc($curs['tipus']) ?>
                                 </summary>
 
@@ -91,7 +86,7 @@ elseif (strpos($urlActual, 'pfi') !== false)
                                                 <div class="col-md-4">
                                                     <label class="d-flex align-items-center gap-2">
                                                         <input type="checkbox" name="assignatures[]"
-                                                            value="<?= esc($assignatura['id_assignatura']) ?>" />
+                                                            value="<?= esc($assignatura['id_assignatura']) ?>" class="item-checkbox" />
                                                         <?= esc($assignatura['nom']) ?>
                                                     </label>
                                                 </div>
@@ -108,7 +103,7 @@ elseif (strpos($urlActual, 'pfi') !== false)
                                                 <div class="col-md-4">
                                                     <label class="d-flex align-items-center gap-2">
                                                         <input type="checkbox" name="optatives[]"
-                                                            value="<?= esc($optativa['id_optativa']) ?>" />
+                                                            value="<?= esc($optativa['id_optativa']) ?>" class="item-checkbox" />
                                                         <?= esc($optativa['nom']) ?>
                                                     </label>
                                                 </div>
@@ -121,14 +116,42 @@ elseif (strpos($urlActual, 'pfi') !== false)
                     <?php endforeach; ?>
                 <?php endif; ?>
 
-                <div class="d-flex justify-content-end gap-2 mt-4">
-                    <a href="<?= base_url('/') ?>" class="btn btn-outline-secondary">Cancel·lar</a>
-                    <button type="submit" class="btn btn-success">Guardar canvis</button>
-                </div>
-
             </form>
-        </div>
-    </main>
+        </main>
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('formCursos');
+    const actionButtons = document.querySelectorAll('.action-btn');
+
+    actionButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const action = this.value;
+            const checkedCourses = document.querySelectorAll('.curso-checkbox:checked');
+            const checkedItems = document.querySelectorAll('.item-checkbox:checked');
+            const totalChecked = checkedCourses.length + checkedItems.length;
+
+            if (totalChecked === 0) {
+                e.preventDefault();
+                alert('Si us plau, selecciona almenys un element per realitzar aquesta acció.');
+                return;
+            }
+
+            if (action === 'eliminar') {
+                if (!confirm('Estàs segur que vols eliminar els elements seleccionats?')) {
+                    e.preventDefault();
+                }
+            }
+
+            if (action === 'editar' && checkedCourses.length === 0) {
+                e.preventDefault();
+                alert('Selecciona un curs per poder editar-lo.');
+            }
+        });
+    });
+});
+</script>
 
 <?= view('layouts/footer') ?>

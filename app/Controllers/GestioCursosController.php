@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\EstudiModel;
+use App\Models\AssignaturaModel;
+use App\Models\OptativaModel;
 
 class GestioCursosController extends BaseController
 {
@@ -17,7 +19,8 @@ class GestioCursosController extends BaseController
     {
         $accio = $this->request->getPost('accio');
         $estudiModel = new EstudiModel();
-        $db = \Config\Database::connect();
+        $assignaturaModel = new AssignaturaModel();
+        $optativaModel = new OptativaModel();
 
         $cursosIds = $this->request->getPost('cursos') ?? [];
         $assignaturesIds = $this->request->getPost('assignatures') ?? [];
@@ -29,20 +32,20 @@ class GestioCursosController extends BaseController
             }
 
             foreach ($assignaturesIds as $id) {
-                $original = $db->table('assignatura')->where('id_assignatura', $id)->get()->getRowArray();
+                $original = $assignaturaModel->find($id);
                 if ($original) {
                     unset($original['id_assignatura']);
                     $original['nom'] .= " (Còpia)";
-                    $db->table('assignatura')->insert($original);
+                    $assignaturaModel->insert($original);
                 }
             }
 
             foreach ($optativesIds as $id) {
-                $original = $db->table('optativa')->where('id_optativa', $id)->get()->getRowArray();
+                $original = $optativaModel->find($id);
                 if ($original) {
                     unset($original['id_optativa']);
                     $original['nom'] .= " (Còpia)";
-                    $db->table('optativa')->insert($original);
+                    $optativaModel->insert($original);
                 }
             }
         }
@@ -52,11 +55,18 @@ class GestioCursosController extends BaseController
                 $estudiModel->delete($cursosIds);
             }
             if (!empty($assignaturesIds)) {
-                $db->table('assignatura')->whereIn('id_assignatura', $assignaturesIds)->delete();
+                $assignaturaModel->delete($assignaturesIds);
             }
             if (!empty($optativesIds)) {
-                $db->table('optativa')->whereIn('id_optativa', $optativesIds)->delete();
+                $optativaModel->delete($optativesIds);
             }
+        }
+
+        if ($accio === 'editar') {
+            if (empty($cursosIds)) {
+                return redirect()->back()->with('error', 'Selecciona almenys un curs per editar.');
+            }
+            return redirect()->to('gestio/editar-curs/' . $cursosIds[0]);
         }
 
         return redirect()->back();
@@ -81,7 +91,6 @@ class GestioCursosController extends BaseController
         $nomCicle = $this->request->getPost('tipus_nom');
         $idFamilia = $this->request->getPost('id_familia') ?? 1;
 
-
         $tipusFinal = !empty($nomCicle) ? $prefix . $nomCicle : $tipusEntrada;
 
         $dadesCurs = [
@@ -96,18 +105,103 @@ class GestioCursosController extends BaseController
 
         $estudiModel->crearAmbAssignatures($dadesCurs, $assignatures, $optatives);
 
+        $urlRetorn = $this->calcularUrlRetorn($tipusFinal);
 
+        session()->setFlashdata('success', 'Curs creat correctament.');
+        return redirect()->to('gestio/' . $urlRetorn);
+    }
+
+    public function editarCurs($id)
+    {
+        $model = new EstudiModel();
+        $curs = $model->find($id);
+
+        if (!$curs) {
+            return redirect()->to('gestio/eso')->with('error', 'Curs no trobat.');
+        }
+
+        $assignaturaModel = new AssignaturaModel();
+        $optativaModel = new OptativaModel();
+        $assignatures = $assignaturaModel->where('id_estudi', $id)->findAll();
+        $optatives = $optativaModel->where('id_estudi', $id)->findAll();
+
+        $tipusAuto = '';
+        if (str_contains($curs['tipus'], 'CFGM')) $tipusAuto = 'CFGM';
+        elseif (str_contains($curs['tipus'], 'CFGS')) $tipusAuto = 'CFGS';
+        elseif (str_contains($curs['tipus'], 'Batxillerat')) $tipusAuto = 'BATXILLERAT';
+
+        $tipusNom = $curs['tipus'];
+        if (!empty($tipusAuto)) {
+            $prefixLabel = ($tipusAuto === 'BATXILLERAT') ? 'Batxillerat' : $tipusAuto;
+            $tipusNom = str_replace($prefixLabel . ' - ', '', $curs['tipus']);
+        }
+
+        return view('gestio_cursos/crear', [
+            'title' => 'Editar curs',
+            'tipusAuto' => $tipusAuto,
+            'tipusNom' => $tipusNom,
+            'curs' => $curs,
+            'assignatures' => $assignatures,
+            'optatives' => $optatives,
+            'url' => base_url('gestio/actualitzar-curs/' . $id)
+        ]);
+    }
+
+    public function actualitzarCurs($id)
+    {
+        $model = new EstudiModel();
+        
+        $tipusEntrada = $this->request->getPost('tipus');
+        $prefix = $this->request->getPost('tipus_prefix');
+        $nomCicle = $this->request->getPost('tipus_nom');
+        
+        $tipusFinal = !empty($nomCicle) ? $prefix . $nomCicle : $tipusEntrada;
+
+        $dadesCurs = [
+            'id_estudi' => $id,
+            'nivell' => $this->request->getPost('nivell'),
+            'tipus' => $tipusFinal
+        ];
+
+        $model->save($dadesCurs);
+
+        $assignaturaModel = new AssignaturaModel();
+        $optativaModel = new OptativaModel();
+        
+        $assignaturaModel->where('id_estudi', $id)->delete();
+        $assignaturesNoves = $this->request->getPost('assignatures') ?? [];
+        foreach ($assignaturesNoves as $nom) {
+            if (!empty(trim($nom))) {
+                $assignaturaModel->insert(['nom' => $nom, 'id_estudi' => $id]);
+            }
+        }
+
+        $optativaModel->where('id_estudi', $id)->delete();
+        $optativesNoves = $this->request->getPost('optatives') ?? [];
+        foreach ($optativesNoves as $nom) {
+            if (!empty(trim($nom))) {
+                $optativaModel->insert(['nom' => $nom, 'id_estudi' => $id]);
+            }
+        }
+
+        $urlRetorn = $this->calcularUrlRetorn($tipusFinal);
+
+        session()->setFlashdata('success', 'Curs actualitzat correctament.');
+        return redirect()->to('gestio/' . $urlRetorn);
+    }
+
+    private function calcularUrlRetorn($tipusFinal)
+    {
         $urlRetorn = 'eso';
         $tipusUpper = strtoupper($tipusFinal);
 
         if (str_contains($tipusUpper, 'BAT'))  $urlRetorn = 'batxillerat';
-        elseif (str_contains($tipusUpper, 'CFGM')) $urlRetorn = 'fp-grau-mitja';
-        elseif (str_contains($tipusUpper, 'CFGS')) $urlRetorn = 'fp-grau-superior';
+        elseif (str_contains($tipusUpper, 'CFGM')) $urlRetorn = 'fp-gm';
+        elseif (str_contains($tipusUpper, 'CFGS')) $urlRetorn = 'fp-gs';
         elseif (str_contains($tipusUpper, 'FPB'))  $urlRetorn = 'fp-basica';
         elseif (str_contains($tipusUpper, 'PFI'))  $urlRetorn = 'pfi';
-
-        session()->setFlashdata('success', 'Curs creat correctament.');
-        return redirect()->to('gestio/' . $urlRetorn);
+        
+        return $urlRetorn;
     }
 
     private function renderCursosPerGrup(string $prefix, string $titol)
@@ -154,16 +248,16 @@ class GestioCursosController extends BaseController
                 $curs['assignatures'] = [];
                 $curs['optatives'] = [];
 
-                $db = \Config\Database::connect();
-                $curs['assignatures'] = $db->table('assignatura')
-                    ->where('id_estudi', $curs['id_estudi'])
-                    ->get()
-                    ->getResultArray();
+                $assignaturaModel = new AssignaturaModel();
+                $optativaModel = new OptativaModel();
 
-                $curs['optatives'] = $db->table('optativa')
+                $curs['assignatures'] = $assignaturaModel
                     ->where('id_estudi', $curs['id_estudi'])
-                    ->get()
-                    ->getResultArray();
+                    ->findAll();
+
+                $curs['optatives'] = $optativaModel
+                    ->where('id_estudi', $curs['id_estudi'])
+                    ->findAll();
 
                 $cursosFiltrats[] = $curs;
             }
