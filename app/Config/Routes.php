@@ -13,7 +13,7 @@ $routes->get('/logout', 'AutenticacioController::logout');
 
 
 // PRIVADES (amb autenticació)
-$routes->group('', function ($routes) {
+$routes->group('', ['filter' => 'auth'], function ($routes) {
 
     // INICI
     $routes->get('/', 'AlumnesController::index');
@@ -96,7 +96,7 @@ $routes->group('', function ($routes) {
     $routes->get('calendari/events', 'CalendariController::events');
     $routes->post('calendari/guardar', 'CalendariController::guardar');
     $routes->get('calendari/eliminar/(:num)', 'CalendariController::eliminar/$1');
-    
+
     // SERVEIS COMPLEMENTARIS
     $routes->get('serveis/nou', 'ServeiComplementariController::nou');
     $routes->get('serveis', 'ServeiComplementariController::index');

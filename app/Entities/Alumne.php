@@ -33,6 +33,17 @@ class Alumne extends Entity
         'poblacio' => null,
         'nacionalitat' => null,
         'lloc_naixement' => null,
-        'expedient' => null
+        'expedient' => null,
+        'any_matricula' => null,
+        'data_matricula' => null,
+        'data_pagament' => null,
+        'tipus' => null,
+        'nivell' => null,
+        'id_matricula' => null,
+        'estat' => null,
+        'torn' => null,
+        'observacions' => null,
+        'bonificats' => null,
+        'bonificacio_nom' => null,
     ];
 }

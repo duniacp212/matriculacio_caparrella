@@ -29,7 +29,7 @@ class MatriculaModel extends Model
 
     protected function generateUuidV7(array $data)
     {
-        if (! isset($data['data']['id_matricula'])) {
+        if (!isset($data['data']['id_matricula'])) {
             $uuid = Uuid::uuid7();
             $data['data']['id_matricula'] = $uuid->getBytes();
         }
@@ -83,22 +83,34 @@ class MatriculaModel extends Model
         $binaryId = hex2bin(str_replace('-', '', $id));
         return $this->db->table('matricula m')
             ->select('
-                m.id_matricula,
-                m.id_alumne,
-                m.data,
-                m.data_pagament,
-                m.estat,
-                m.torn,
-                m.observacions,
-                a.nom,
-                a.cognom1,
-                a.cognom2,
-                a.dni,
-                e.tipus,
-                e.nivell,
-                b.tipus as bonificacio_nom,
-                b.percentatge as bonificacio_percentatge
-            ')
+            m.id_matricula,
+            m.id_alumne,
+            m.data,
+            m.data_pagament,
+            m.estat,
+            m.torn,
+            m.observacions,
+            a.nom,
+            a.cognom1,
+            a.cognom2,
+            a.dni,
+            a.data_naixement,
+            a.email,
+            a.telefon,
+            a.telefon2,
+            a.carrer,
+            a.numero,
+            a.pis,
+            a.codi_postal,
+            a.poblacio,
+            a.nacionalitat,
+            a.lloc_naixement,
+            e.tipus,
+            e.nivell,
+            YEAR(m.data) as any_matricula,
+            b.tipus as bonificacio_nom,
+            b.percentatge as bonificacio_percentatge
+        ')
             ->join('alumne a', 'a.id_alumne = m.id_alumne')
             ->join('estudi e', 'e.id_estudi = m.id_estudi')
             ->join('matricula_bonificacio mb', 'mb.id_matricula = m.id_matricula', 'left')

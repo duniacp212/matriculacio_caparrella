@@ -8,7 +8,7 @@ use Ramsey\Uuid\Uuid;
 
 class AlumneModel extends Model
 {
-    protected $table      = 'alumne';
+    protected $table = 'alumne';
     protected $primaryKey = 'id_alumne';
     protected $returnType = Alumne::class;
     protected $useAutoIncrement = false;
@@ -37,7 +37,7 @@ class AlumneModel extends Model
 
     protected function generateUuidV7(array $data)
     {
-        if (! isset($data['data']['id_alumne'])) {
+        if (!isset($data['data']['id_alumne'])) {
             $uuid = Uuid::uuid7();
             $data['data']['id_alumne'] = $uuid->getBytes();
         }
@@ -217,31 +217,34 @@ class AlumneModel extends Model
         $binaryId = hex2bin(str_replace('-', '', $id));
         return $this->db->table('alumne a')
             ->select('
-                a.id_alumne,
-                a.nom,
-                a.cognom1,
-                a.cognom2,
-                a.dni,
-                a.data_naixement,
-                a.email,
-                a.telefon,
-                a.telefon2,
-                a.carrer,
-                a.numero,
-                a.pis,
-                a.codi_postal,
-                a.poblacio,
-                a.nacionalitat,
-                a.lloc_naixement,
-                YEAR(m.data) as any_matricula,
-                e.tipus,
-                e.nivell,
-                m.id_matricula,
-                m.estat,
-                m.torn,
-                m.observacions,
-                COALESCE(b.percentatge, 0) as bonificats
-            ')
+            a.id_alumne,
+            a.nom,
+            a.cognom1,
+            a.cognom2,
+            a.dni,
+            a.data_naixement,
+            a.email,
+            a.telefon,
+            a.telefon2,
+            a.carrer,
+            a.numero,
+            a.pis,
+            a.codi_postal,
+            a.poblacio,
+            a.nacionalitat,
+            a.lloc_naixement,
+            YEAR(m.data) as any_matricula,
+            m.data as data_matricula,
+            m.data_pagament,
+            e.tipus,
+            e.nivell,
+            m.id_matricula,
+            m.estat,
+            m.torn,
+            m.observacions,
+            COALESCE(b.percentatge, 0) as bonificats,
+            b.tipus as bonificacio_nom
+        ')
             ->join('matricula m', 'm.id_alumne = a.id_alumne', 'left')
             ->join('estudi e', 'e.id_estudi = m.id_estudi', 'left')
             ->join('matricula_bonificacio mb', 'mb.id_matricula = m.id_matricula', 'left')

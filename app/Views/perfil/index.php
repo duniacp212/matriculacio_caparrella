@@ -16,7 +16,7 @@
         <main class="col-12 pt-0 px-3 overflow-auto">
 
             <div class="d-flex justify-content-start mb-3">
-                 <a href="<?= base_url('alumnes') ?>" class="btn btn-outline-secondary btn-sm px-4">Tornar</a>
+                <a href="<?= base_url('alumnes') ?>" class="btn btn-outline-secondary btn-sm px-4">Tornar</a>
             </div>
 
             <div class="card mt-2 shadow-sm border-0 mx-auto" style="max-width: 700px;">
@@ -44,11 +44,16 @@
                         <h5 class="pb-2">Dades personals</h5>
                         <div class="mb-3">
                             <label class="text-muted small d-block">Nom i cognoms</label>
-                            <div class="fw-semibold"><?= esc($usuari->nom) ?> <?= esc($usuari->cognom1) ?> <?= esc($usuari->cognom2) ?></div>
+                            <div class="fw-semibold"><?= esc($usuari->nom) ?> <?= esc($usuari->cognom1) ?>
+                                <?= esc($usuari->cognom2) ?></div>
                         </div>
                         <div class="mb-3">
                             <label class="text-muted small d-block">DNI / NIE</label>
                             <div class="fw-semibold"><?= esc($usuari->dni_nie) ?></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small d-block">Nom d'usuari</label>
+                            <div class="fw-semibold"><?= esc($usuari->usuari) ?></div>
                         </div>
                         <div class="mb-3">
                             <label class="text-muted small d-block">Rol assignat</label>
@@ -56,26 +61,17 @@
                         </div>
                     </div>
 
-                    <h5 class="pb-2 mt-4">Actualitzar perfil</h5>
+                    <h5 class="pb-2 mt-4">Canviar contrasenya</h5>
                     <form action="<?= base_url('perfil/actualitzar') ?>" method="post">
 
                         <?= csrf_field() ?>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Correu electrònic</label>
-                            <input type="email" name="email" value="<?= old('email', $usuari->email) ?>" class="form-control" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Telèfon</label>
-                            <input type="text" name="telefon" value="<?= old('telefon', $usuari->telefon) ?>" class="form-control">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Nova contrasenya <span class="text-muted small">(buida per no canviar)</span></label>
+                            <label class="form-label fw-semibold">Nova contrasenya <span class="text-muted small">(buida
+                                    per no canviar)</span></label>
                             <input type="password" name="password" class="form-control">
                         </div>
-                        
+
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Repeteix la contrasenya</label>
                             <input type="password" name="repetir_password" class="form-control">
