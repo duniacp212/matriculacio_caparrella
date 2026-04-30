@@ -66,8 +66,8 @@ class MatriculesController extends BaseController
         $alumneModel->update($id_alumne, $dadesAlumne);
 
         $dadesMatricula = [
-            'torn' => $this->request->getPost('torn'),
-            'observacions' => $this->request->getPost('observacions'),
+            'torn'        => $this->request->getPost('torn'),
+            'observacions' => $this->request->getPost('observacions_matricula') ?? '',
         ];
 
         $model->update($binaryId, $dadesMatricula);

@@ -25,6 +25,10 @@ $routes->group('', function ($routes) {
     $routes->get('alumnes/exportar_resum_pdf', 'AlumnesController::exportarResumPdf');
     $routes->post('alumnes/pujar-document/(:any)', 'AlumnesController::pujarDocument/$1');
     $routes->get('alumnes/eliminar-document/(:any)', 'AlumnesController::eliminarDocument/$1');
+    $routes->post('alumnes/actualitzar-observacions/(:any)', 'AlumnesController::actualitzarObservacions/$1');
+    $routes->get('alumnes/eliminar-observacio/(:any)/(:any)', 'AlumnesController::eliminarObservacio/$1/$2');
+    $routes->get('alumnes/pdf-expedient/(:any)', 'AlumnesController::pdfExpedient/$1');
+    $routes->get('alumnes/pdf-matricula/(:any)', 'AlumnesController::pdfMatricula/$1');
 
     $routes->get('inici', 'IniciController::index');
 

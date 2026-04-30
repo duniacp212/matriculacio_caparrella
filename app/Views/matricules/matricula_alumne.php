@@ -5,9 +5,11 @@
 
     <div class="row flex-grow-1 g-0 mt-3">
 
-        <?= view('layouts/aside') ?>
+        <main class="col-12 pt-0 px-3 overflow-auto">
 
-        <main class="col-10 pt-0 px-3 overflow-auto">
+            <div class="d-flex justify-content-start mb-3">
+                 <a href="<?= base_url('alumnes') ?>" class="btn btn-outline-secondary btn-sm px-4">Tornar</a>
+            </div>
 
             <?php
             $esMenor = false;
@@ -30,11 +32,6 @@
                                 <?= esc($alumne->nom) ?> <?= esc($alumne->cognom1) ?> <?= esc($alumne->cognom2) ?>
                                 · DNI <?= esc($alumne->dni) ?>
                             </h5>
-                            <div class="d-flex gap-2">
-                                <button type="button" id="btnEditar" class="btn btn-outline-primary btn-sm">Editar dades</button>
-                                <button type="submit" id="btnGuardar" class="btn btn-primary btn-sm d-none">Guardar canvis</button>
-                                <button type="button" id="btnCancel·lar" class="btn btn-outline-secondary btn-sm d-none">Cancel·lar</button>
-                            </div>
                         </div>
 
                         <?php if (session()->getFlashdata('exit')): ?>
@@ -181,10 +178,11 @@
                                         </div>
                                         <div class="row mt-3">
                                             <div class="col-12">
-                                                <label class="form-label text-muted small">Observacions</label>
-                                                <textarea name="observacions" class="form-control" rows="3" disabled><?= esc($matricula->observacions ?? '') ?></textarea>
+                                                <label class="form-label text-muted small">Observacions de la matrícula</label>
+                                                <textarea name="observacions_matricula" class="form-control" rows="3" disabled><?= esc($matricula->observacions ?? '') ?></textarea>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -199,34 +197,34 @@
                                     <div class="accordion-body">
                                         <?php if (!empty($tutors)): ?>
                                             <?php foreach ($tutors as $idx => $tutor): ?>
-                                                <input type="hidden" name="tutor_id[]" value="<?= esc($tutor['id_tutor']) ?>">
+                                                <input type="hidden" name="tutor_id[]" value="<?= esc($tutor->id_tutor) ?>">
                                                 <div class="row g-0 mb-4 pb-3 <?= ($idx < count($tutors) - 1) ? 'border-bottom' : '' ?>">
                                                     <div class="col-md-6 pe-md-3">
                                                         <div class="mb-3">
                                                             <label class="form-label text-muted small">Nom</label>
-                                                            <input type="text" name="tutor_nom[]" class="form-control" value="<?= esc($tutor['nom']) ?>" disabled <?= ($idx === 0 && $esMenor) ? 'required' : '' ?>>
+                                                            <input type="text" name="tutor_nom[]" class="form-control" value="<?= esc($tutor->nom) ?>" disabled <?= ($idx === 0 && $esMenor) ? 'required' : '' ?>>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label text-muted small">Primer cognom</label>
-                                                            <input type="text" name="tutor_cognom1[]" class="form-control" value="<?= esc($tutor['cognom1']) ?>" disabled <?= ($idx === 0 && $esMenor) ? 'required' : '' ?>>
+                                                            <input type="text" name="tutor_cognom1[]" class="form-control" value="<?= esc($tutor->cognom1) ?>" disabled <?= ($idx === 0 && $esMenor) ? 'required' : '' ?>>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label text-muted small">DNI</label>
-                                                            <input type="text" name="tutor_dni[]" class="form-control" value="<?= esc($tutor['dni']) ?>" disabled <?= ($idx === 0 && $esMenor) ? 'required' : '' ?>>
+                                                            <input type="text" name="tutor_dni[]" class="form-control" value="<?= esc($tutor->dni) ?>" disabled <?= ($idx === 0 && $esMenor) ? 'required' : '' ?>>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6 ps-md-3 border-start">
                                                         <div class="mb-3">
                                                             <label class="form-label text-muted small">Rol</label>
-                                                            <input type="text" name="tutor_rol[]" class="form-control" value="<?= esc($tutor['rol']) ?>" disabled <?= ($idx === 0 && $esMenor) ? 'required' : '' ?>>
+                                                            <input type="text" name="tutor_rol[]" class="form-control" value="<?= esc($tutor->rol) ?>" disabled <?= ($idx === 0 && $esMenor) ? 'required' : '' ?>>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label text-muted small">Telèfon</label>
-                                                            <input type="text" name="tutor_telefon[]" class="form-control" value="<?= esc($tutor['telefon']) ?>" disabled <?= ($idx === 0 && $esMenor) ? 'required' : '' ?>>
+                                                            <input type="text" name="tutor_telefon[]" class="form-control" value="<?= esc($tutor->telefon) ?>" disabled <?= ($idx === 0 && $esMenor) ? 'required' : '' ?>>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label text-muted small">Email</label>
-                                                            <input type="email" name="tutor_email[]" class="form-control" value="<?= esc($tutor['email']) ?>" disabled <?= ($idx === 0 && $esMenor) ? 'required' : '' ?>>
+                                                            <input type="email" name="tutor_email[]" class="form-control" value="<?= esc($tutor->email) ?>" disabled <?= ($idx === 0 && $esMenor) ? 'required' : '' ?>>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -242,9 +240,15 @@
 
                     </form>
 
-                    <div class="d-flex justify-content-between align-items-center mt-4 mb-5">
-                        <a href="<?= base_url('alumnes') ?>" class="btn btn-outline-secondary">Tornar</a>
+                    <div class="d-flex justify-content-between align-items-center mt-4 mb-5 border-top pt-3">
                         <div class="d-flex gap-2">
+                            <a href="<?= base_url('alumnes/pdf-matricula/' . $matricula->id_matricula) ?>" target="_blank" class="btn btn-outline-danger">Exportar Matrícula (PDF)</a>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="button" id="btnEditar" class="btn btn-outline-primary">Editar dades</button>
+                            <button type="submit" id="btnGuardar" form="formMatricula" class="btn btn-primary d-none">Guardar canvis</button>
+                            <button type="button" id="btnCancel·lar" class="btn btn-outline-secondary d-none">Cancel·lar</button>
+
                             <?php if ($matricula->estat !== 'Validat'): ?>
                                 <a href="<?= base_url('matricules/validar/' . $matricula->id_matricula) ?>" 
                                    class="btn btn-success"

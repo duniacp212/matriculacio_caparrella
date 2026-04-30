@@ -130,6 +130,61 @@ class AlumnesController extends BaseController
         return redirect()->to(base_url('alumnes/expedient/' . $id))->with('exit', 'Document pujat correctament.');
     }
 
+    public function actualitzarObservacions($idMatricula)
+    {
+        $binaryId = hex2bin(str_replace('-', '', $idMatricula));
+        $matriculaModel = new MatriculaModel();
+        
+        $matricula = $matriculaModel->find($binaryId);
+        if (!$matricula) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Matrícula no trobada');
+        }
+
+        $nouText = trim((string) $this->request->getPost('observacions'));
+
+        if (!empty($nouText)) {
+            $historial = json_decode($matricula->observacions, true);
+            if (!is_array($historial)) {
+                $historial = empty(trim((string) $matricula->observacions)) ? [] : [
+                    ['id' => uniqid(), 'data' => date('Y-m-d H:i:s'), 'text' => $matricula->observacions]
+                ];
+            }
+
+            $historial[] = [
+                'id' => uniqid(),
+                'data' => date('Y-m-d H:i:s'),
+                'text' => $nouText
+            ];
+
+            $matricula->observacions = json_encode($historial);
+            $matriculaModel->save($matricula);
+        }
+
+        return redirect()->back()->with('exit', 'Observació afegida correctament.');
+    }
+
+    public function eliminarObservacio($idMatricula, $idObservacio)
+    {
+        $binaryId = hex2bin(str_replace('-', '', $idMatricula));
+        $matriculaModel = new MatriculaModel();
+        
+        $matricula = $matriculaModel->find($binaryId);
+        if ($matricula) {
+            $historial = json_decode($matricula->observacions, true);
+            if (is_array($historial)) {
+                foreach ($historial as $index => $obs) {
+                    if (isset($obs['id']) && $obs['id'] === $idObservacio) {
+                        unset($historial[$index]);
+                        break;
+                    }
+                }
+                $matricula->observacions = json_encode(array_values($historial));
+                $matriculaModel->save($matricula);
+            }
+        }
+        return redirect()->back()->with('exit', 'Observació eliminada correctament.');
+    }
+
     public function eliminarDocument($idDocument)
     {
         $documentModel = new DocumentAlumneModel();
@@ -205,6 +260,68 @@ class AlumnesController extends BaseController
             ->setBody($dompdf->output());
     }
 
+    public function pdfExpedient($id)
+    {
+        $alumneModel = new AlumneModel();
+        $alumne = $alumneModel->getExpedientPerId($id);
+        if (!$alumne) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
+        }
+
+        $tutorModel = new AlumneTutorLegalModel();
+        $tutors = $tutorModel->getTutorsPerAlumne($id);
+
+        $html = view('alumnes/pdf_expedient', [
+            'tipus' => 'Expedient complet',
+            'alumne' => $alumne,
+            'tutors' => $tutors
+        ]);
+
+        $dompdf = new \Dompdf\Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/pdf')
+            ->setHeader('Content-Disposition', 'inline; filename="expedient_'.$alumne->dni.'.pdf"')
+            ->setBody($dompdf->output());
+    }
+
+    public function pdfMatricula($idMatricula)
+    {
+        $binaryId = hex2bin(str_replace('-', '', $idMatricula));
+        $matriculaModel = new MatriculaModel();
+        $matricula = $matriculaModel->find($binaryId);
+        
+        if (!$matricula) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Matrícula no trobada');
+        }
+
+        $alumneModel = new AlumneModel();
+        $alumne = $alumneModel->getExpedientPerId($matricula->id_alumne);
+
+        $tutorModel = new AlumneTutorLegalModel();
+        $tutors = $tutorModel->getTutorsPerAlumne($matricula->id_alumne);
+
+        $html = view('alumnes/pdf_matricula', [
+            'tipus'    => 'Resguard de Matrícula',
+            'alumne'   => $alumne,
+            'matricula' => $matricula,
+            'tutors'   => $tutors
+        ]);
+
+        $dompdf = new \Dompdf\Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        return $this->response
+            ->setHeader('Content-Type', 'application/pdf')
+            ->setHeader('Content-Disposition', 'inline; filename="resguard_'.$alumne->dni.'.pdf"')
+            ->setBody($dompdf->output());
+    }
+
     public function cercaGlobal()
     {
         $request = service('request');
@@ -226,31 +343,74 @@ class AlumnesController extends BaseController
 
     public function contacte($id)
     {
-        $model  = new AlumneModel();
-        $alumne = $model->getContactePerId($id);
+        $model      = new AlumneModel();
+        $tutorModel = new AlumneTutorLegalModel();
+        $alumne     = $model->getContactePerId($id);
 
         if (!$alumne) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
         }
 
+        $tutors  = $tutorModel->getTutorsPerAlumne($id);
+        $esMenor = false;
+        if (!empty($alumne->data_naixement)) {
+            $naixement = new \DateTime($alumne->data_naixement);
+            $edat      = $naixement->diff(new \DateTime())->y;
+            $esMenor   = ($edat < 18);
+        }
+
         return view('alumnes/contacte', [
-            'title'  => 'Contacte alumne',
-            'alumne' => $alumne
+            'title'   => 'Contacte alumne',
+            'alumne'  => $alumne,
+            'tutors'  => $tutors,
+            'esMenor' => $esMenor,
         ]);
     }
 
     public function enviar_correu($id)
     {
-        $model  = new AlumneModel();
-        $alumne = $model->getContactePerId($id);
+        $model      = new AlumneModel();
+        $tutorModel = new AlumneTutorLegalModel();
+        $alumne     = $model->getContactePerId($id);
 
         if (!$alumne) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
         }
 
+        $tutors   = $tutorModel->getTutorsPerAlumne($id);
         $request  = service('request');
         $motiu    = $request->getPost('motiu');
         $missatge = $request->getPost('missatge');
+        $dest     = $request->getPost('destinatari');
+
+        $esMenor = false;
+        if (!empty($alumne->data_naixement)) {
+            $naixement = new \DateTime($alumne->data_naixement);
+            $edat      = $naixement->diff(new \DateTime())->y;
+            $esMenor   = ($edat < 18);
+        }
+
+        $adreces = [];
+        if ($esMenor && !empty($tutors)) {
+            if ($dest === 'alumne') {
+                if (!empty($alumne->email)) $adreces[] = $alumne->email;
+            } elseif ($dest === 'tutor_0' && isset($tutors[0]) && !empty($tutors[0]->email)) {
+                $adreces[] = $tutors[0]->email;
+            } elseif ($dest === 'tutor_1' && isset($tutors[1]) && !empty($tutors[1]->email)) {
+                $adreces[] = $tutors[1]->email;
+            } else {
+                if (!empty($alumne->email)) $adreces[] = $alumne->email;
+                foreach ($tutors as $tutor) {
+                    if (!empty($tutor->email)) $adreces[] = $tutor->email;
+                }
+            }
+        } else {
+            if (!empty($alumne->email)) $adreces[] = $alumne->email;
+        }
+
+        if (empty($adreces)) {
+            return redirect()->to(base_url('alumnes/contacte/' . $id))->with('error', 'No hi ha cap adreça de correu disponible per enviar.');
+        }
 
         $dades = [
             'alumne'   => $alumne,
@@ -262,14 +422,14 @@ class AlumnesController extends BaseController
         $emailUser = getenv('email.SMTPUser') ?: 'noreply@caparrella.cat';
 
         $email->setFrom($emailUser, 'SECRETARIA INSTITUT CAPARRELLA');
-        $email->setTo($alumne->email);
+        $email->setTo($adreces);
         $email->setSubject('Avís de Secretaria Institut Caparrella: ' . $motiu);
 
         $contingutHtml = view('emails/contacte', $dades);
         $email->setMessage($contingutHtml);
 
         if ($email->send()) {
-            return redirect()->to(base_url('alumnes/contacte/' . $id))->with('exit', 'El correu s\'ha enviat correctament a l\'alumne.');
+            return redirect()->to(base_url('alumnes/contacte/' . $id))->with('exit', 'El correu s\'ha enviat correctament.');
         } else {
             return redirect()->to(base_url('alumnes/contacte/' . $id))->with('error', 'Hi ha hagut un error enviant el correu. Revisa la configuració (.env).');
         }

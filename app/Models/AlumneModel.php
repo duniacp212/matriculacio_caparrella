@@ -198,8 +198,10 @@ class AlumneModel extends Model
                 a.cognom1,
                 a.cognom2,
                 a.dni,
+                a.data_naixement,
                 a.email,
                 a.telefon,
+                a.telefon2,
                 e.tipus,
                 e.nivell
             ')
@@ -234,8 +236,10 @@ class AlumneModel extends Model
                 YEAR(m.data) as any_matricula,
                 e.tipus,
                 e.nivell,
+                m.id_matricula,
                 m.estat,
                 m.torn,
+                m.observacions,
                 COALESCE(b.percentatge, 0) as bonificats
             ')
             ->join('matricula m', 'm.id_alumne = a.id_alumne', 'left')
