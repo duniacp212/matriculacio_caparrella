@@ -8,12 +8,6 @@ use App\Models\OptativaModel;
 
 class GestioCursosController extends BaseController
 {
-    public function __construct()
-    {
-        if (! in_array(session()->get('rol'), ['super admin', 'administracio'])) {
-            return redirect()->to('/alumnes')->with('error', 'No tens permisos per accedir a aquesta secció.')->send();
-        }
-    }
 
     public function processarAccio()
     {
@@ -96,7 +90,7 @@ class GestioCursosController extends BaseController
         $dadesCurs = [
             'nivell' => $this->request->getPost('nivell'),
             'tipus' => $tipusFinal,
-            'id_familia'     => $idFamilia,
+            'id_familia' => $idFamilia,
             'matricula_viva' => 1
         ];
 
@@ -126,9 +120,12 @@ class GestioCursosController extends BaseController
         $optatives = $optativaModel->where('id_estudi', $id)->findAll();
 
         $tipusAuto = '';
-        if (str_contains($curs['tipus'], 'CFGM')) $tipusAuto = 'CFGM';
-        elseif (str_contains($curs['tipus'], 'CFGS')) $tipusAuto = 'CFGS';
-        elseif (str_contains($curs['tipus'], 'Batxillerat')) $tipusAuto = 'BATXILLERAT';
+        if (str_contains($curs['tipus'], 'CFGM'))
+            $tipusAuto = 'CFGM';
+        elseif (str_contains($curs['tipus'], 'CFGS'))
+            $tipusAuto = 'CFGS';
+        elseif (str_contains($curs['tipus'], 'Batxillerat'))
+            $tipusAuto = 'BATXILLERAT';
 
         $tipusNom = $curs['tipus'];
         if (!empty($tipusAuto)) {
@@ -150,11 +147,11 @@ class GestioCursosController extends BaseController
     public function actualitzarCurs($id)
     {
         $model = new EstudiModel();
-        
+
         $tipusEntrada = $this->request->getPost('tipus');
         $prefix = $this->request->getPost('tipus_prefix');
         $nomCicle = $this->request->getPost('tipus_nom');
-        
+
         $tipusFinal = !empty($nomCicle) ? $prefix . $nomCicle : $tipusEntrada;
 
         $dadesCurs = [
@@ -167,7 +164,7 @@ class GestioCursosController extends BaseController
 
         $assignaturaModel = new AssignaturaModel();
         $optativaModel = new OptativaModel();
-        
+
         $assignaturaModel->where('id_estudi', $id)->delete();
         $assignaturesNoves = $this->request->getPost('assignatures') ?? [];
         foreach ($assignaturesNoves as $nom) {
@@ -195,12 +192,17 @@ class GestioCursosController extends BaseController
         $urlRetorn = 'eso';
         $tipusUpper = strtoupper($tipusFinal);
 
-        if (str_contains($tipusUpper, 'BAT'))  $urlRetorn = 'batxillerat';
-        elseif (str_contains($tipusUpper, 'CFGM')) $urlRetorn = 'fp-gm';
-        elseif (str_contains($tipusUpper, 'CFGS')) $urlRetorn = 'fp-gs';
-        elseif (str_contains($tipusUpper, 'FPB'))  $urlRetorn = 'fp-basica';
-        elseif (str_contains($tipusUpper, 'PFI'))  $urlRetorn = 'pfi';
-        
+        if (str_contains($tipusUpper, 'BAT'))
+            $urlRetorn = 'batxillerat';
+        elseif (str_contains($tipusUpper, 'CFGM'))
+            $urlRetorn = 'fp-gm';
+        elseif (str_contains($tipusUpper, 'CFGS'))
+            $urlRetorn = 'fp-gs';
+        elseif (str_contains($tipusUpper, 'FPB'))
+            $urlRetorn = 'fp-basica';
+        elseif (str_contains($tipusUpper, 'PFI'))
+            $urlRetorn = 'pfi';
+
         return $urlRetorn;
     }
 

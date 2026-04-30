@@ -15,24 +15,24 @@ class AlumnesController extends BaseController
         $request = service('request');
 
         $filtres = [
-            'any'        => $request->getGet('any'),
-            'estudi'     => $request->getGet('estudi'),
-            'curs'       => $request->getGet('curs'),
-            'torn'       => $request->getGet('torn'),
-            'familia'    => $request->getGet('familia'),
-            'cicle'      => $request->getGet('cicle'),
-            'estat'      => $request->getGet('estat'),
-            'pagament'   => $request->getGet('pagament'),
+            'any' => $request->getGet('any'),
+            'estudi' => $request->getGet('estudi'),
+            'curs' => $request->getGet('curs'),
+            'torn' => $request->getGet('torn'),
+            'familia' => $request->getGet('familia'),
+            'cicle' => $request->getGet('cicle'),
+            'estat' => $request->getGet('estat'),
+            'pagament' => $request->getGet('pagament'),
             'bonificats' => $request->getGet('bonificacio'),
-            'cerca'      => $request->getGet('cerca'),
+            'cerca' => $request->getGet('cerca'),
         ];
 
         $perPagina = 15;
         $paginador = service('pager');
         $paginador->setPath('/alumnes');
 
-        $model  = new AlumneModel();
-        $total  = $model->countAlumnesAmbMatricula($filtres);
+        $model = new AlumneModel();
+        $total = $model->countAlumnesAmbMatricula($filtres);
         $pagina = (int) ($request->getGet('page') ?? 1);
         $offset = ($pagina - 1) * $perPagina;
 
@@ -41,29 +41,29 @@ class AlumnesController extends BaseController
         $paginador->makeLinks($pagina, $perPagina, $total, 'bootstrap_full');
 
         $estudiModel = new EstudiModel();
-        $cicles      = $estudiModel->obtenirCicles();
-        $cursos      = $estudiModel->obtenirCursos();
-        $estudis     = $estudiModel->obtenirEstudis();
-        $families    = $estudiModel->obtenirFamilies();
+        $cicles = $estudiModel->obtenirCicles();
+        $cursos = $estudiModel->obtenirCursos();
+        $estudis = $estudiModel->obtenirEstudis();
+        $families = $estudiModel->obtenirFamilies();
 
         return view('alumnes/index', [
-            'title'     => 'Alumnes / Expedients',
-            'alumnes'   => $alumnes,
-            'filtres'   => $filtres,
-            'cicles'    => $cicles,
-            'cursos'    => $cursos,
-            'estudis'   => $estudis,
-            'families'  => $families,
+            'title' => 'Alumnes / Expedients',
+            'alumnes' => $alumnes,
+            'filtres' => $filtres,
+            'cicles' => $cicles,
+            'cursos' => $cursos,
+            'estudis' => $estudis,
+            'families' => $families,
             'paginador' => $paginador,
-            'total'     => $total,
+            'total' => $total,
         ]);
     }
 
     public function expedient($id)
     {
-        $alumneModel   = new AlumneModel();
+        $alumneModel = new AlumneModel();
         $documentModel = new DocumentAlumneModel();
-        $tutorModel    = new AlumneTutorLegalModel();
+        $tutorModel = new AlumneTutorLegalModel();
 
         $alumne = $alumneModel->getExpedientPerId($id);
 
@@ -76,9 +76,9 @@ class AlumnesController extends BaseController
         $documents = $documentModel->getDocumentsPerAlumne($id);
 
         return view('alumnes/expedient', [
-            'title'     => 'Expedient de l\'alumne',
-            'alumne'    => $alumne,
-            'tutors'    => $tutors,
+            'title' => 'Expedient de l\'alumne',
+            'alumne' => $alumne,
+            'tutors' => $tutors,
             'documents' => $documents,
         ]);
     }
@@ -87,7 +87,7 @@ class AlumnesController extends BaseController
     {
         $binaryId = hex2bin(str_replace('-', '', $id));
         $alumneModel = new AlumneModel();
-        $alumne      = $alumneModel->find($binaryId);
+        $alumne = $alumneModel->find($binaryId);
 
         if (!$alumne) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
@@ -104,26 +104,26 @@ class AlumnesController extends BaseController
             return redirect()->back()->with('error', 'Tipus de fitxer no permès. Només PDF, imatges i documents Word.');
         }
 
-        $any        = date('Y');
-        $dni        = $alumne->dni;
-        $carpeta    = WRITEPATH . 'uploads/' . $any . '/' . $dni . '/';
+        $any = date('Y');
+        $dni = $alumne->dni;
+        $carpeta = WRITEPATH . 'uploads/' . $any . '/' . $dni . '/';
 
         if (!is_dir($carpeta)) {
             mkdir($carpeta, 0755, true);
         }
 
         $nomOriginal = $fitxer->getClientName();
-        $nomFitxer   = $fitxer->getRandomName();
+        $nomFitxer = $fitxer->getRandomName();
 
         $fitxer->move($carpeta, $nomFitxer);
 
         $documentModel = new DocumentAlumneModel();
         $documentModel->insert([
-            'id_alumne'    => $binaryId,
+            'id_alumne' => $binaryId,
             'nom_original' => $nomOriginal,
-            'nom_fitxer'   => $nomFitxer,
-            'ruta'         => $any . '/' . $dni . '/' . $nomFitxer,
-            'tipus'        => $this->request->getPost('tipus'),
+            'nom_fitxer' => $nomFitxer,
+            'ruta' => $any . '/' . $dni . '/' . $nomFitxer,
+            'tipus' => $this->request->getPost('tipus'),
             'any_academic' => $any,
         ]);
 
@@ -134,7 +134,7 @@ class AlumnesController extends BaseController
     {
         $binaryId = hex2bin(str_replace('-', '', $idMatricula));
         $matriculaModel = new MatriculaModel();
-        
+
         $matricula = $matriculaModel->find($binaryId);
         if (!$matricula) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Matrícula no trobada');
@@ -167,7 +167,7 @@ class AlumnesController extends BaseController
     {
         $binaryId = hex2bin(str_replace('-', '', $idMatricula));
         $matriculaModel = new MatriculaModel();
-        
+
         $matricula = $matriculaModel->find($binaryId);
         if ($matricula) {
             $historial = json_decode($matricula->observacions, true);
@@ -188,7 +188,7 @@ class AlumnesController extends BaseController
     public function eliminarDocument($idDocument)
     {
         $documentModel = new DocumentAlumneModel();
-        $document      = $documentModel->find($idDocument);
+        $document = $documentModel->find($idDocument);
 
         if (!$document) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Document no trobat');
@@ -206,13 +206,13 @@ class AlumnesController extends BaseController
 
     public function resumMatriculats()
     {
-        $request        = service('request');
+        $request = service('request');
         $anySeleccionat = $request->getGet('any');
 
         $model = new MatriculaModel();
         $files = $model->getResumMatriculats($anySeleccionat);
 
-        $organitzat   = [];
+        $organitzat = [];
         $totalGeneral = 0;
 
         foreach ($files as $fila) {
@@ -221,22 +221,22 @@ class AlumnesController extends BaseController
         }
 
         return view('alumnes/resum_matriculats', [
-            'title'          => 'Resum d\'alumnes matriculats',
-            'dades'          => $organitzat,
-            'totalGeneral'   => $totalGeneral,
+            'title' => 'Resum d\'alumnes matriculats',
+            'dades' => $organitzat,
+            'totalGeneral' => $totalGeneral,
             'anySeleccionat' => $anySeleccionat
         ]);
     }
 
     public function exportarResumPdf()
     {
-        $request        = service('request');
+        $request = service('request');
         $anySeleccionat = $request->getGet('any');
 
         $model = new MatriculaModel();
         $files = $model->getResumMatriculats($anySeleccionat);
 
-        $organitzat   = [];
+        $organitzat = [];
         $totalGeneral = 0;
 
         foreach ($files as $fila) {
@@ -245,8 +245,8 @@ class AlumnesController extends BaseController
         }
 
         $html = view('alumnes/resum_pdf', [
-            'dades'          => $organitzat,
-            'totalGeneral'   => $totalGeneral,
+            'dades' => $organitzat,
+            'totalGeneral' => $totalGeneral,
             'anySeleccionat' => $anySeleccionat
         ]);
 
@@ -284,7 +284,7 @@ class AlumnesController extends BaseController
 
         return $this->response
             ->setHeader('Content-Type', 'application/pdf')
-            ->setHeader('Content-Disposition', 'inline; filename="expedient_'.$alumne->dni.'.pdf"')
+            ->setHeader('Content-Disposition', 'inline; filename="expedient_' . $alumne->dni . '.pdf"')
             ->setBody($dompdf->output());
     }
 
@@ -293,7 +293,7 @@ class AlumnesController extends BaseController
         $binaryId = hex2bin(str_replace('-', '', $idMatricula));
         $matriculaModel = new MatriculaModel();
         $matricula = $matriculaModel->find($binaryId);
-        
+
         if (!$matricula) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Matrícula no trobada');
         }
@@ -305,10 +305,10 @@ class AlumnesController extends BaseController
         $tutors = $tutorModel->getTutorsPerAlumne($matricula->id_alumne);
 
         $html = view('alumnes/pdf_matricula', [
-            'tipus'    => 'Resguard de Matrícula',
-            'alumne'   => $alumne,
+            'tipus' => 'Resguard de Matrícula',
+            'alumne' => $alumne,
             'matricula' => $matricula,
-            'tutors'   => $tutors
+            'tutors' => $tutors
         ]);
 
         $dompdf = new \Dompdf\Dompdf();
@@ -318,16 +318,16 @@ class AlumnesController extends BaseController
 
         return $this->response
             ->setHeader('Content-Type', 'application/pdf')
-            ->setHeader('Content-Disposition', 'inline; filename="resguard_'.$alumne->dni.'.pdf"')
+            ->setHeader('Content-Disposition', 'inline; filename="resguard_' . $alumne->dni . '.pdf"')
             ->setBody($dompdf->output());
     }
 
     public function cercaGlobal()
     {
         $request = service('request');
-        $q       = $request->getGet('q');
+        $q = $request->getGet('q');
 
-        $model    = new AlumneModel();
+        $model = new AlumneModel();
         $resultats = [];
 
         if (!empty($q)) {
@@ -335,77 +335,81 @@ class AlumnesController extends BaseController
         }
 
         return view('alumnes/cerca', [
-            'title'     => 'Resultats de la cerca',
+            'title' => 'Resultats de la cerca',
             'resultats' => $resultats,
-            'q'         => $q
+            'q' => $q
         ]);
     }
 
     public function contacte($id)
     {
-        $model      = new AlumneModel();
+        $model = new AlumneModel();
         $tutorModel = new AlumneTutorLegalModel();
-        $alumne     = $model->getContactePerId($id);
+        $alumne = $model->getContactePerId($id);
 
         if (!$alumne) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
         }
 
-        $tutors  = $tutorModel->getTutorsPerAlumne($id);
+        $tutors = $tutorModel->getTutorsPerAlumne($id);
         $esMenor = false;
         if (!empty($alumne->data_naixement)) {
             $naixement = new \DateTime($alumne->data_naixement);
-            $edat      = $naixement->diff(new \DateTime())->y;
-            $esMenor   = ($edat < 18);
+            $edat = $naixement->diff(new \DateTime())->y;
+            $esMenor = ($edat < 18);
         }
 
         return view('alumnes/contacte', [
-            'title'   => 'Contacte alumne',
-            'alumne'  => $alumne,
-            'tutors'  => $tutors,
+            'title' => 'Contacte alumne',
+            'alumne' => $alumne,
+            'tutors' => $tutors,
             'esMenor' => $esMenor,
         ]);
     }
 
     public function enviar_correu($id)
     {
-        $model      = new AlumneModel();
+        $model = new AlumneModel();
         $tutorModel = new AlumneTutorLegalModel();
-        $alumne     = $model->getContactePerId($id);
+        $alumne = $model->getContactePerId($id);
 
         if (!$alumne) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
         }
 
-        $tutors   = $tutorModel->getTutorsPerAlumne($id);
-        $request  = service('request');
-        $motiu    = $request->getPost('motiu');
+        $tutors = $tutorModel->getTutorsPerAlumne($id);
+        $request = service('request');
+        $motiu = $request->getPost('motiu');
         $missatge = $request->getPost('missatge');
-        $dest     = $request->getPost('destinatari');
+        $dest = $request->getPost('destinatari');
 
         $esMenor = false;
         if (!empty($alumne->data_naixement)) {
             $naixement = new \DateTime($alumne->data_naixement);
-            $edat      = $naixement->diff(new \DateTime())->y;
-            $esMenor   = ($edat < 18);
+            $edat = $naixement->diff(new \DateTime())->y;
+            $esMenor = ($edat < 18);
         }
 
         $adreces = [];
         if ($esMenor && !empty($tutors)) {
             if ($dest === 'alumne') {
-                if (!empty($alumne->email)) $adreces[] = $alumne->email;
+                if (!empty($alumne->email))
+                    $adreces[] = $alumne->email;
             } elseif ($dest === 'tutor_0' && isset($tutors[0]) && !empty($tutors[0]->email)) {
                 $adreces[] = $tutors[0]->email;
             } elseif ($dest === 'tutor_1' && isset($tutors[1]) && !empty($tutors[1]->email)) {
                 $adreces[] = $tutors[1]->email;
             } else {
-                if (!empty($alumne->email)) $adreces[] = $alumne->email;
+                if (!empty($alumne->email))
+                    $adreces[] = $alumne->email;
                 foreach ($tutors as $tutor) {
-                    if (!empty($tutor->email)) $adreces[] = $tutor->email;
+                    if (!empty($tutor->email))
+                        $adreces[] = $tutor->email;
                 }
             }
         } else {
-            if (!empty($alumne->email)) $adreces[] = $alumne->email;
+            if (!empty($alumne->email))
+                $adreces[] = $alumne->email;
         }
 
         if (empty($adreces)) {
@@ -413,12 +417,12 @@ class AlumnesController extends BaseController
         }
 
         $dades = [
-            'alumne'   => $alumne,
-            'motiu'    => $motiu,
+            'alumne' => $alumne,
+            'motiu' => $motiu,
             'missatge' => $missatge,
         ];
 
-        $email     = \Config\Services::email();
+        $email = \Config\Services::email();
         $emailUser = getenv('email.SMTPUser') ?: 'noreply@caparrella.cat';
 
         $email->setFrom($emailUser, 'SECRETARIA INSTITUT CAPARRELLA');

@@ -6,32 +6,26 @@ use App\Models\ServeiComplementariModel;
 
 class ServeiComplementariController extends BaseController
 {
-    public function __construct()
-    {
-        if (! in_array(session()->get('rol'), ['super admin', 'administracio'])) {
-            return redirect()->to('/alumnes')->with('error', 'No tens permisos per accedir a aquesta secció.')->send();
-        }
-    }
 
     public function index()
     {
         $model = new ServeiComplementariModel();
 
         return view('serveis/index', [
-            'title'   => 'Gestió de serveis complementaris',
+            'title' => 'Gestió de serveis complementaris',
             'serveis' => $model->findAll()
         ]);
     }
 
     public function guardar()
     {
-        $model  = new ServeiComplementariModel();
-        $preus  = $this->request->getPost('preu') ?? [];
+        $model = new ServeiComplementariModel();
+        $preus = $this->request->getPost('preu') ?? [];
         $estats = $this->request->getPost('estat') ?? [];
 
         foreach ($preus as $id => $preu) {
             $model->update($id, [
-                'preu'  => $preu,
+                'preu' => $preu,
                 'estat' => $estats[$id] ?? null,
             ]);
         }
@@ -43,9 +37,9 @@ class ServeiComplementariController extends BaseController
     public function nou()
     {
         return view('serveis/form', [
-            'title'  => 'Nou servei complementari',
+            'title' => 'Nou servei complementari',
             'servei' => null,
-            'url'    => base_url('serveis/crear')
+            'url' => base_url('serveis/crear')
         ]);
     }
 
@@ -53,11 +47,11 @@ class ServeiComplementariController extends BaseController
     {
         $rules = [
             'tipus' => 'required|min_length[2]|max_length[100]',
-            'preu'  => 'permit_empty|decimal|greater_than_equal_to[0]',
+            'preu' => 'permit_empty|decimal|greater_than_equal_to[0]',
             'estat' => 'required|in_list[actiu,inactiu]',
         ];
 
-        if (! $this->validate($rules)) {
+        if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
@@ -66,7 +60,7 @@ class ServeiComplementariController extends BaseController
         $model->insert([
             'tipus' => $this->request->getPost('tipus'),
             'estat' => $this->request->getPost('estat'),
-            'preu'  => $this->request->getPost('preu'),
+            'preu' => $this->request->getPost('preu'),
         ]);
 
         return redirect()->to(base_url('serveis'))
@@ -75,7 +69,7 @@ class ServeiComplementariController extends BaseController
 
     public function eliminar($id)
     {
-        $id    = (int) $id;
+        $id = (int) $id;
         $model = new ServeiComplementariModel();
         $model->delete($id);
 

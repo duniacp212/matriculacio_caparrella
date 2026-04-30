@@ -11,8 +11,7 @@ $routes->get('/login', 'AutenticacioController::login');
 $routes->post('/login', 'AutenticacioController::autenticacio');
 $routes->get('/logout', 'AutenticacioController::logout');
 
-
-// PRIVADES (amb autenticació)
+// PRIVADES - TOTS ELS ROLS (auth)
 $routes->group('', ['filter' => 'auth'], function ($routes) {
 
     // INICI
@@ -38,13 +37,9 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('matricules/validar/(:any)', 'MatriculesController::validar_matricula/$1');
     $routes->get('matricules/invalidar/(:any)', 'MatriculesController::invalidar_matricula/$1');
     //$routes->get('matricules/nova', 'MatriculesController::nova');
-    $routes->get('matricula-viva', 'MatriculaVivaController::index');
-    $routes->post('matricula-viva/guardar', 'MatriculaVivaController::guardar');
 
     // CERCA
     $routes->get('cerca', 'AlumnesController::cercaGlobal');
-
-    $routes->get('expedients', 'ExpedientsController::index');
 
     /* ALUMNES / EXPEDIENTS
     $routes->get('alumnes', 'AlumnesController::index');
@@ -57,6 +52,25 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('pagaments/bonificats', 'PagamentsController::bonificats');
     $routes->get('pagaments/resum', 'PagamentsController::resum');
     */
+
+    // PERFIL
+    $routes->get('perfil', 'PerfilController::index');
+    $routes->post('perfil/actualitzar', 'PerfilController::actualitzar');
+
+    // CALENDARI
+    $routes->get('calendari', 'CalendariController::index');
+    $routes->get('calendari/events', 'CalendariController::events');
+    $routes->post('calendari/guardar', 'CalendariController::guardar');
+    $routes->get('calendari/eliminar/(:num)', 'CalendariController::eliminar/$1');
+
+});
+
+// PRIVADES - SUPER ADMIN I ADMINISTRACIO (rolAdmin)
+$routes->group('', ['filter' => ['auth', 'rolAdmin']], function ($routes) {
+
+    // MATRÍCULA VIVA
+    $routes->get('matricula-viva', 'MatriculaVivaController::index');
+    $routes->post('matricula-viva/guardar', 'MatriculaVivaController::guardar');
 
     // GESTIÓ DE CURSOS
     $routes->get('gestio/eso', 'GestioCursosController::eso');
@@ -72,31 +86,6 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('gestio/editar-curs/(:num)', 'GestioCursosController::editarCurs/$1');
     $routes->post('gestio/actualitzar-curs/(:num)', 'GestioCursosController::actualitzarCurs/$1');
 
-    // USUARIS ADMINISTRATIUS
-    $routes->get('usuaris', 'UsuarisController::index');
-    $routes->get('usuaris/nou', 'UsuarisController::nou');
-    $routes->post('usuaris/guardar', 'UsuarisController::guardar');
-    $routes->get('usuaris/editar/(:any)', 'UsuarisController::editar/$1');
-    $routes->post('usuaris/actualitzar/(:any)', 'UsuarisController::actualitzar/$1');
-    $routes->get('usuaris/eliminar/(:any)', 'UsuarisController::eliminar/$1');
-
-    //PERFIL
-
-    $routes->get('perfil', 'PerfilController::index');
-    $routes->post('perfil/actualitzar', 'PerfilController::actualitzar');
-
-
-
-    // CONFIGURACIÓ
-    $routes->get('configuracio', 'ConfiguracioController::index');
-    $routes->post('configuracio/guardar', 'ConfiguracioController::guardar');
-
-    // CALENDARI
-    $routes->get('calendari', 'CalendariController::index');
-    $routes->get('calendari/events', 'CalendariController::events');
-    $routes->post('calendari/guardar', 'CalendariController::guardar');
-    $routes->get('calendari/eliminar/(:num)', 'CalendariController::eliminar/$1');
-
     // SERVEIS COMPLEMENTARIS
     $routes->get('serveis/nou', 'ServeiComplementariController::nou');
     $routes->get('serveis', 'ServeiComplementariController::index');
@@ -110,4 +99,22 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->post('bonificacions/crear', 'BonificacionsController::crear');
     $routes->post('bonificacions/guardar', 'BonificacionsController::guardar');
     $routes->get('bonificacions/eliminar/(:num)', 'BonificacionsController::eliminar/$1');
+
+});
+
+// PRIVADES - NOMÉS SUPER ADMIN (rolSuperAdmin)
+$routes->group('', ['filter' => ['auth', 'rolSuperAdmin']], function ($routes) {
+
+    // USUARIS ADMINISTRATIUS
+    $routes->get('usuaris', 'UsuarisController::index');
+    $routes->get('usuaris/nou', 'UsuarisController::nou');
+    $routes->post('usuaris/guardar', 'UsuarisController::guardar');
+    $routes->get('usuaris/editar/(:any)', 'UsuarisController::editar/$1');
+    $routes->post('usuaris/actualitzar/(:any)', 'UsuarisController::actualitzar/$1');
+    $routes->get('usuaris/eliminar/(:any)', 'UsuarisController::eliminar/$1');
+
+    // CONFIGURACIÓ
+    $routes->get('configuracio', 'ConfiguracioController::index');
+    $routes->post('configuracio/guardar', 'ConfiguracioController::guardar');
+
 });

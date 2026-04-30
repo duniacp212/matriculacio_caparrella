@@ -7,25 +7,25 @@ class CreateServeisComplementarisTable extends Migration
     {
         $this->forge->addField([
             'id_servei' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true,
                 'auto_increment' => true,
             ],
             'tipus' => [
-                'type'       => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => 100,
-                'null'       => true,
+                'null' => false,
             ],
             'estat' => [
-                'type'       => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => 50,
-                'null'       => true,
+                'null' => false,
             ],
             'preu' => [
-                'type'       => 'DECIMAL',
+                'type' => 'DECIMAL',
                 'constraint' => '8,2',
-                'null'       => true,
+                'null' => false,
             ],
         ]);
 

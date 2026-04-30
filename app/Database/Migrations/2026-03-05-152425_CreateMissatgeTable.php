@@ -7,28 +7,28 @@ class CreateMissatgeTable extends Migration
     {
         $this->forge->addField([
             'id_missatge' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
+                'type' => 'INT',
+                'constraint' => 11,
+                'unsigned' => true,
                 'auto_increment' => true,
             ],
             'id_matricula' => [
-                'type'       => 'BINARY',
+                'type' => 'BINARY',
                 'constraint' => 16,
-                'null'       => true,
+                'null' => true,
             ],
             'data' => [
                 'type' => 'DATETIME',
                 'null' => false,
             ],
             'asumpte' => [
-                'type'       => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => 150,
-                'null'       => false,
+                'null' => false,
             ],
             'text' => [
                 'type' => 'TEXT',
-                'null' => true,
+                'null' => false,
             ],
         ]);
 

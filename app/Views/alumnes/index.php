@@ -87,8 +87,10 @@
                                 <label class="form-label mb-1">Estat</label>
                                 <select name="estat" class="form-select form-select-sm">
                                     <option value="">Tots</option>
-                                    <option value="Validat" <?= ($filtres['estat'] ?? '') === 'Validat' ? 'selected' : '' ?>>Validat</option>
-                                    <option value="Pendent" <?= ($filtres['estat'] ?? '') === 'Pendent' ? 'selected' : '' ?>>Pendent</option>
+                                    <option value="Validat" <?= ($filtres['estat'] ?? '') === 'Validat' ? 'selected' : '' ?>>
+                                        Validat</option>
+                                    <option value="Pendent" <?= ($filtres['estat'] ?? '') === 'Pendent' ? 'selected' : '' ?>>
+                                        Pendent</option>
                                 </select>
                             </div>
                         <?php endif; ?>
@@ -98,7 +100,8 @@
                                 <label class="form-label mb-1">Pagament</label>
                                 <select name="pagament" class="form-select form-select-sm">
                                     <option value="">Tots</option>
-                                    <option value="pagat" <?= ($filtres['pagament'] ?? '') === 'pagat' ? 'selected' : '' ?>>Pagat</option>
+                                    <option value="pagat" <?= ($filtres['pagament'] ?? '') === 'pagat' ? 'selected' : '' ?>>
+                                        Pagat</option>
                                     <option value="pendent" <?= ($filtres['pagament'] ?? '') === 'pendent' ? 'selected' : '' ?>>No pagat</option>
                                 </select>
                             </div>
@@ -109,9 +112,12 @@
                                 <label class="form-label mb-1">Bonificació</label>
                                 <select name="bonificacio" class="form-select form-select-sm">
                                     <option value="">Totes</option>
-                                    <option value="0" <?= ($filtres['bonificats'] ?? '') === '0' ? 'selected' : '' ?>>Sense bonificació (0%)</option>
-                                    <option value="50" <?= ($filtres['bonificats'] ?? '') === '50' ? 'selected' : '' ?>>50%</option>
-                                    <option value="100" <?= ($filtres['bonificats'] ?? '') === '100' ? 'selected' : '' ?>>100%</option>
+                                    <option value="0" <?= ($filtres['bonificats'] ?? '') === '0' ? 'selected' : '' ?>>Sense
+                                        bonificació (0%)</option>
+                                    <option value="50" <?= ($filtres['bonificats'] ?? '') === '50' ? 'selected' : '' ?>>50%
+                                    </option>
+                                    <option value="100" <?= ($filtres['bonificats'] ?? '') === '100' ? 'selected' : '' ?>>100%
+                                    </option>
                                 </select>
                             </div>
                         <?php endif; ?>
@@ -122,8 +128,10 @@
                 <div class="col-12 mt-2 d-flex justify-content-end gap-2">
                     <button type="submit" class="btn btn-outline-primary btn-sm">Filtrar</button>
                     <a href="<?= current_url() ?>" class="btn btn-outline-secondary btn-sm">Netejar Filtres</a>
-                    <button type="button" id="btnVeureExpedient" class="btn btn-outline-primary btn-sm">Veure expedient</button>
-                    <button type="button" id="btnVeureMatricula" class="btn btn-outline-primary btn-sm">Veure matrícula</button>
+                    <button type="button" id="btnVeureExpedient" class="btn btn-outline-primary btn-sm">Veure
+                        expedient</button>
+                    <button type="button" id="btnVeureMatricula" class="btn btn-outline-primary btn-sm">Veure
+                        matrícula</button>
                     <button type="button" id="btnContactar" class="btn btn-outline-secondary btn-sm">Contactar</button>
                 </div>
 
@@ -160,16 +168,13 @@
                         <tr>
 
                             <td>
-                                <input type="radio" name="matricula_id" value="<?= esc($alumne->id_matricula) ?>" data-alumne-id="<?= esc($alumne->id_alumne) ?>">
+                                <input type="radio" name="matricula_id" value="<?= esc($alumne->id_matricula) ?>"
+                                    data-alumne-id="<?= esc($alumne->id_alumne) ?>">
                             </td>
 
                             <td><?= esc($alumne->nom) ?></td>
 
-                            <td>
-                                <?= esc($alumne->cognom1) ?>
-
-                                <?= esc($alumne->cognom2) ?>
-                            </td>
+                            <td><?= esc($alumne->cognom1) ?><?= esc($alumne->cognom2) ?></td>
 
                             <td><?= esc($alumne->dni) ?></td>
 
@@ -217,25 +222,25 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
 
         function seleccionat() {
             return document.querySelector('input[name="matricula_id"]:checked');
         }
 
-        document.getElementById('btnVeureExpedient').onclick = function() {
+        document.getElementById('btnVeureExpedient').onclick = function () {
             const s = seleccionat();
             if (!s) return alert('Selecciona una matrícula primer');
             window.location.href = "<?= base_url('alumnes/expedient') ?>/" + s.dataset.alumneId;
         };
 
-        document.getElementById('btnVeureMatricula').onclick = function() {
+        document.getElementById('btnVeureMatricula').onclick = function () {
             const s = seleccionat();
             if (!s) return alert('Selecciona una matrícula primer');
             window.location.href = "<?= base_url('matricules/matricula_alumne') ?>/" + s.value;
         };
 
-        document.getElementById('btnContactar').onclick = function() {
+        document.getElementById('btnContactar').onclick = function () {
             const s = seleccionat();
             if (!s) return alert('Selecciona una matrícula primer');
             window.location.href = "<?= base_url('alumnes/contacte') ?>/" + s.dataset.alumneId;

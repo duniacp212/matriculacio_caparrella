@@ -6,12 +6,6 @@ use App\Models\SettingsModel;
 
 class ConfiguracioController extends BaseController
 {
-    public function __construct()
-    {
-        if (session()->get('rol') !== 'super admin') {
-            return redirect()->to('/alumnes')->with('error', 'No tens permisos per accedir a aquesta secció.')->send();
-        }
-    }
     public function index()
     {
         $model = new SettingsModel();
@@ -46,7 +40,7 @@ class ConfiguracioController extends BaseController
 
         foreach ($allKeys as $key) {
             $value = isset($configs[$key]) ? 1 : 0;
-            
+
             $existing = $model->where('clau', $key)->first();
             if ($existing) {
                 $model->where('clau', $key)->set(['valor' => $value])->update();
