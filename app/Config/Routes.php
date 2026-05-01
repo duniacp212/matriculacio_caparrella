@@ -28,6 +28,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('alumnes/eliminar-observacio/(:any)/(:any)', 'AlumnesController::eliminarObservacio/$1/$2');
     $routes->get('alumnes/pdf-expedient/(:any)', 'AlumnesController::pdfExpedient/$1');
     $routes->get('alumnes/pdf-matricula/(:any)', 'AlumnesController::pdfMatricula/$1');
+    $routes->get('alumnes/document/(:num)', 'AlumnesController::veureDocument/$1');
 
     $routes->get('inici', 'IniciController::index');
 
@@ -40,18 +41,6 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
 
     // CERCA
     $routes->get('cerca', 'AlumnesController::cercaGlobal');
-
-    /* ALUMNES / EXPEDIENTS
-    $routes->get('alumnes', 'AlumnesController::index');
-    $routes->get('alumnes/expedient/(:num)', 'AlumnesController::expedient/$1');
-    $routes->get('alumnes/contacte', 'AlumnesController::contacte');
-
-    // PAGAMENTS --> DE MOMENT NO
-    $routes->get('pagaments/pagats', 'PagamentsController::pagats');
-    $routes->get('pagaments/no-pagats', 'PagamentsController::noPagats');
-    $routes->get('pagaments/bonificats', 'PagamentsController::bonificats');
-    $routes->get('pagaments/resum', 'PagamentsController::resum');
-    */
 
     // PERFIL
     $routes->get('perfil', 'PerfilController::index');

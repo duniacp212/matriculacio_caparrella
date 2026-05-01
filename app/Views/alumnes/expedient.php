@@ -333,12 +333,16 @@
                                             <tbody>
                                                 <?php foreach ($documents as $doc): ?>
                                                     <tr>
-                                                        <td><?= esc($doc['tipus'] ?? '—') ?></td>
-                                                        <td><?= esc($doc['nom_original']) ?></td>
-                                                        <td><?= esc($doc['any_academic']) ?></td>
-                                                        <td><?= esc(date('d/m/Y H:i', strtotime($doc['creat_el']))) ?></td>
-                                                        <td class="text-end">
-                                                            <a href="<?= base_url('alumnes/eliminar-document/' . $doc['id_document']) ?>"
+                                                        <td><?= esc($doc->tipus ?? '—') ?></td>
+                                                        <td><?= esc($doc->nom_original) ?></td>
+                                                        <td><?= esc($doc->any_academic) ?></td>
+                                                        <td><?= esc(date('d/m/Y H:i', strtotime($doc->creat_el))) ?></td>
+                                                        <td class="text-end d-flex gap-1 justify-content-end">
+                                                            <a href="<?= base_url('alumnes/document/' . $doc->id_document) ?>"
+                                                                target="_blank" class="btn btn-outline-primary btn-sm">
+                                                                Veure
+                                                            </a>
+                                                            <a href="<?= base_url('alumnes/eliminar-document/' . $doc->id_document) ?>"
                                                                 class="btn btn-outline-danger btn-sm"
                                                                 onclick="return confirm('Estàs segur que vols eliminar aquest document?')">
                                                                 Eliminar

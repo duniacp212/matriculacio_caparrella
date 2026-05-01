@@ -204,6 +204,28 @@ class AlumnesController extends BaseController
         return redirect()->to(base_url('alumnes/expedient/' . $document['id_alumne']))->with('exit', 'Document eliminat correctament.');
     }
 
+    public function veureDocument(int $id)
+    {
+        $model = new DocumentAlumneModel();
+        $document = $model->find($id);
+
+        if (!$document) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Document no trobat');
+        }
+
+        $ruta = WRITEPATH . 'uploads/' . $document->ruta;
+
+        if (!file_exists($ruta)) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Fitxer no trobat');
+        }
+
+        $mime = mime_content_type($ruta);
+
+        return $this->response
+            ->setHeader('Content-Type', $mime)
+            ->setBody(file_get_contents($ruta));
+    }
+
     public function resumMatriculats()
     {
         $request = service('request');
