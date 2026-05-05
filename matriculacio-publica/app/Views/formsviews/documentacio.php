@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="<?= base_url('favicon.svg') ?>">
+    <link rel="shortcut icon" href="<?= base_url('favicon.ico') ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DNI i Targeta Sanitària</title>
 
@@ -10,7 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=DM+Serif+Display&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Barlow+Condensed:wght@600;700&display=swap"
         rel="stylesheet">
 
     <!-- CSS personalitzat -->
@@ -39,14 +41,12 @@
 
             <?php
                 $sessionDni = strtoupper(trim(session()->get('dni') ?? ''));
-                $documentacioMeta = $inscripcio_meta['documentacio'] ?? [];
                 $computedDocTipus = 'DNI';
                 if ($sessionDni !== '' && preg_match('/^[XYZ][0-9]{7}[A-Z]$/', $sessionDni)) {
                     $computedDocTipus = 'NIE';
                 }
-                $selectedDocTipus = old('doc_tipus') ?? ($documentacioMeta['doc_tipus'] ?? $computedDocTipus);
-                $dniValue = old('dni') ?? ($documentacioMeta['dni'] ?? $sessionDni);
-                $targetaSanitariaValue = old('targeta_sanitaria') ?? ($documentacioMeta['targeta_sanitaria'] ?? '');
+                $selectedDocTipus = old('doc_tipus') ?? $computedDocTipus;
+                $dniValue = old('dni') ?? $sessionDni;
             ?>
 
             <form action="<?= base_url('forms/saveDocumentacio') ?>" method="post" enctype="multipart/form-data" id="documentacioForm">
@@ -102,7 +102,7 @@
                             </div>
                             <input type="file" class="file-upload-input" id="dniCaraA" name="dni_cara_a" accept=".pdf,.jpg,.jpeg,.png">
                         </label>
-                        <div class="file-name-display" id="dniCaraADisplay"><?= esc($documentacioMeta['dni_cara_a'] ?? '') ?></div>
+                        <div class="file-name-display" id="dniCaraADisplay"></div>
                     </div>
 
                     <div class="col-md-6">
@@ -124,7 +124,7 @@
                             </div>
                             <input type="file" class="file-upload-input" id="dniCaraB" name="dni_cara_b" accept=".pdf,.jpg,.jpeg,.png">
                         </label>
-                        <div class="file-name-display" id="dniCaraBDisplay"><?= esc($documentacioMeta['dni_cara_b'] ?? '') ?></div>
+                        <div class="file-name-display" id="dniCaraBDisplay"></div>
                     </div>
                 </div>
 
@@ -140,7 +140,7 @@
                             id="targetaSanitaria"
                             name="targeta_sanitaria"
                             placeholder="Targeta Sanitària"
-                            value="<?= esc($targetaSanitariaValue) ?>">
+                            value="<?= esc(old('targeta_sanitaria') ?? '') ?>">
                         <label for="targetaSanitaria">Número de Targeta Sanitària</label>
                     </div>
                 </div>
@@ -167,7 +167,7 @@
                                 name="targeta_cara_a"
                                 accept=".pdf,.jpg,.jpeg,.png">
                         </label>
-                        <div class="file-name-display" id="targetaCaraADisplay"><?= esc($documentacioMeta['targeta_cara_a'] ?? '') ?></div>
+                        <div class="file-name-display" id="targetaCaraADisplay"></div>
                     </div>
 
                     <div class="col-md-6">
@@ -191,7 +191,7 @@
                                 name="targeta_cara_b"
                                 accept=".pdf,.jpg,.jpeg,.png">
                         </label>
-                        <div class="file-name-display" id="targetaCaraBDisplay"><?= esc($documentacioMeta['targeta_cara_b'] ?? '') ?></div>
+                        <div class="file-name-display" id="targetaCaraBDisplay"></div>
                     </div>
                 </div>
 
@@ -208,24 +208,6 @@
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function bindFileName(inputId, displayId) {
-            const input = document.getElementById(inputId);
-            const display = document.getElementById(displayId);
-            if (!input || !display) {
-                return;
-            }
-
-            input.addEventListener('change', function () {
-                display.textContent = this.files[0] ? this.files[0].name : '';
-            });
-        }
-
-        bindFileName('dniCaraA', 'dniCaraADisplay');
-        bindFileName('dniCaraB', 'dniCaraBDisplay');
-        bindFileName('targetaCaraA', 'targetaCaraADisplay');
-        bindFileName('targetaCaraB', 'targetaCaraBDisplay');
-    </script>
 </body>
 
 </html>

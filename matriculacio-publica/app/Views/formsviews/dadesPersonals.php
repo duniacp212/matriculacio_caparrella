@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/svg+xml" href="<?= base_url('favicon.svg') ?>">
+    <link rel="shortcut icon" href="<?= base_url('favicon.ico') ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulari d'Inscripció d'Alumne</title>
 
@@ -10,7 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=DM+Serif+Display&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Barlow+Condensed:wght@600;700&display=swap"
         rel="stylesheet">
 
     <!-- CSS personalitzat -->
