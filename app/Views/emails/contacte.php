@@ -21,7 +21,7 @@
     <div class="caixa">
         <h2 class="capcalera">Nou missatge de l'Institut La Caparrella</h2>
         
-        <p>Hola <strong><?= esc($alumne['nom']) ?> <?= esc($alumne['cognom1']) ?></strong>,</p>
+        <p>Hola <strong><?= esc($alumne->nom) ?> <?= esc($alumne->cognom1) ?></strong>,</p>
         
         <p>Ens posem en contacte amb tu pel següent motiu: <span class="motiu"><?= esc($motiu) ?></span></p>
         

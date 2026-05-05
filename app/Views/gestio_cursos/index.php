@@ -57,8 +57,6 @@ elseif (strpos($urlActual, 'pfi') !== false)
                     <button type="submit" name="accio" value="editar" class="btn btn-outline-primary btn-sm action-btn">Editar</button>
 
                     <a href="<?= base_url('gestio/nou-curs/' . $segmentAuto) ?>" class="btn btn-outline-primary btn-sm">Afegir curs</a>
-
-                    <button type="submit" name="accio" value="afegir-assignatura" class="btn btn-success btn-sm action-btn">Afegir assignatura</button>
                 </div>
 
                 <?php if (empty($cursos)): ?>

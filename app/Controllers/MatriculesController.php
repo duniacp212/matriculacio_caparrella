@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\MatriculaModel;
 use App\Models\AlumneModel;
 use App\Models\AlumneTutorLegalModel;
+use App\Models\DocumentAlumneModel;
 
 class MatriculesController extends BaseController
 {
@@ -13,6 +14,7 @@ class MatriculesController extends BaseController
         $model = new MatriculaModel();
         $alumneModel = new AlumneModel();
         $tutorModel = new AlumneTutorLegalModel();
+        $documentModel = new DocumentAlumneModel();
 
         $matricula = $model->getMatriculaAmbDades($id);
 
@@ -22,12 +24,15 @@ class MatriculesController extends BaseController
 
         $alumne = $alumneModel->getExpedientPerId($matricula->id_alumne);
         $tutors = $tutorModel->getTutorsPerAlumne($matricula->id_alumne);
+        
+        $documents = $documentModel->getDocumentsPerAlumneIAny($matricula->id_alumne, $matricula->any_matricula);
 
         return view('matricules/matricula_alumne', [
             'title' => 'Dades de la matrícula',
             'matricula' => $matricula,
             'alumne' => $alumne,
-            'tutors' => $tutors
+            'tutors' => $tutors,
+            'documents' => $documents
         ]);
     }
 
@@ -66,8 +71,7 @@ class MatriculesController extends BaseController
         $alumneModel->update($id_alumne, $dadesAlumne);
 
         $dadesMatricula = [
-            'torn'        => $this->request->getPost('torn'),
-            'observacions' => $this->request->getPost('observacions_matricula') ?? '',
+            'torn' => $this->request->getPost('torn'),
         ];
 
         $model->update($binaryId, $dadesMatricula);
@@ -112,5 +116,25 @@ class MatriculesController extends BaseController
         $model->update($binaryId, ['estat' => 'Pendent']);
 
         return redirect()->back()->with('exit', 'Matrícula invalidada correctament.');
+    }
+
+    public function marcar_pagat($id)
+    {
+        $binaryId = hex2bin(str_replace('-', '', $id));
+        $model = new MatriculaModel();
+
+        $model->update($binaryId, ['data_pagament' => date('Y-m-d')]);
+
+        return redirect()->back()->with('exit', 'Pagament registrat correctament.');
+    }
+
+    public function marcar_pendent($id)
+    {
+        $binaryId = hex2bin(str_replace('-', '', $id));
+        $model = new MatriculaModel();
+
+        $model->update($binaryId, ['data_pagament' => null]);
+
+        return redirect()->back()->with('exit', 'Pagament marcat com a NO pagat.');
     }
 }

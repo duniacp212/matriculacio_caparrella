@@ -30,7 +30,8 @@ class AlumneModel extends Model
         'poblacio',
         'nacionalitat',
         'lloc_naixement',
-        'expedient'
+        'expedient',
+        'observacions'
     ];
 
     protected $beforeInsert = ['generateUuidV7'];
@@ -217,41 +218,38 @@ class AlumneModel extends Model
         $binaryId = hex2bin(str_replace('-', '', $id));
         return $this->db->table('alumne a')
             ->select('
-            a.id_alumne,
-            a.nom,
-            a.cognom1,
-            a.cognom2,
-            a.dni,
-            a.data_naixement,
-            a.email,
-            a.telefon,
-            a.telefon2,
-            a.carrer,
-            a.numero,
-            a.pis,
-            a.codi_postal,
-            a.poblacio,
-            a.nacionalitat,
-            a.lloc_naixement,
-            YEAR(m.data) as any_matricula,
-            m.data as data_matricula,
-            m.data_pagament,
-            e.tipus,
-            e.nivell,
-            m.id_matricula,
-            m.estat,
-            m.torn,
-            m.observacions,
-            COALESCE(b.percentatge, 0) as bonificats,
-            b.tipus as bonificacio_nom
-        ')
-            ->join('matricula m', 'm.id_alumne = a.id_alumne', 'left')
-            ->join('estudi e', 'e.id_estudi = m.id_estudi', 'left')
-            ->join('matricula_bonificacio mb', 'mb.id_matricula = m.id_matricula', 'left')
-            ->join('bonificacio b', 'b.id_bonificacio = mb.id_bonificacio', 'left')
+                a.*,
+                a.observacions as observacions_alumne
+            ')
             ->where('a.id_alumne', $binaryId)
             ->get()
             ->getFirstRow(Alumne::class);
+    }
+
+    public function getHistorialMatricules($idAlumne)
+    {
+        $binaryId = hex2bin(str_replace('-', '', $idAlumne));
+        return $this->db->table('matricula m')
+            ->select('
+                m.id_matricula,
+                m.data,
+                YEAR(m.data) as any_academic,
+                m.estat,
+                m.torn,
+                m.data_pagament,
+                m.observacions as observacions_matricula,
+                e.tipus as estudi,
+                e.nivell as curs,
+                COALESCE(b.percentatge, 0) as bonificacio_percentatge,
+                b.tipus as bonificacio_nom
+            ')
+            ->join('estudi e', 'e.id_estudi = m.id_estudi', 'left')
+            ->join('matricula_bonificacio mb', 'mb.id_matricula = m.id_matricula', 'left')
+            ->join('bonificacio b', 'b.id_bonificacio = mb.id_bonificacio', 'left')
+            ->where('m.id_alumne', $binaryId)
+            ->orderBy('m.data', 'DESC')
+            ->get()
+            ->getResultArray();
     }
 
     public function cercaGlobal($q)

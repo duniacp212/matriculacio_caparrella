@@ -135,7 +135,7 @@
         <table>
             <tr>
                 <th>Nom complet:</th>
-                <td><?= esc($alumne->nom) ?> <?= esc($alumne->cognom1) ?> <?= esc($alumne->cognom2 ?? '') ?></td>
+                <td><?= esc($alumne->nom) ?> <?= esc($alumne->cognom1) ?> <?= !empty($alumne->cognom2) ? esc($alumne->cognom2) : '—' ?></td>
             </tr>
             <tr>
                 <th>DNI / NIE:</th>
@@ -155,20 +155,20 @@
                 <td><?= esc($alumne->nacionalitat ?? '—') ?></td>
             </tr>
             <tr>
-                <th>Telèfon:</th>
-                <td><?= esc($alumne->telefon ?? '—') ?><?= !empty($alumne->telefon2) ? ' / ' . esc($alumne->telefon2) : '' ?>
+                <th>Telèfons:</th>
+                <td><?= !empty($alumne->telefon) ? esc($alumne->telefon) : '—' ?><?= !empty($alumne->telefon2) ? ' / ' . esc($alumne->telefon2) : '' ?>
                 </td>
             </tr>
             <tr>
                 <th>Correu electrònic:</th>
-                <td><?= esc($alumne->email ?? '—') ?></td>
+                <td><?= !empty($alumne->email) ? esc($alumne->email) : '—' ?></td>
             </tr>
             <tr>
                 <th>Adreça:</th>
                 <td>
                     <?php
-                    $adreca = trim(($alumne->carrer ?? '') . ', ' . ($alumne->numero ?? '') . ' ' . ($alumne->pis ?? ''));
-                    echo !empty(trim($adreca, ', ')) ? esc($adreca) : '—';
+                    $adreca = trim(($alumne->carrer ?? '') . ' ' . ($alumne->numero ?? '') . ' ' . ($alumne->pis ?? ''));
+                    echo !empty($adreca) ? esc($adreca) : '—';
                     ?>
                 </td>
             </tr>
@@ -183,102 +183,101 @@
         </table>
     </div>
 
-    <div class="section">
-        <div class="section-title">Dades acadèmiques i matrícula</div>
-        <table>
-            <tr>
-                <th>Estudi:</th>
-                <td><?= esc($alumne->tipus ?? '—') ?></td>
-            </tr>
-            <tr>
-                <th>Curs:</th>
-                <td><?= esc($alumne->nivell ?? '—') ?></td>
-            </tr>
-            <tr>
-                <th>Any acadèmic:</th>
-                <td><?= esc($alumne->any_matricula ?? '—') ?></td>
-            </tr>
-            <tr>
-                <th>Torn:</th>
-                <td><?= !empty($alumne->torn) ? 'Torn ' . esc($alumne->torn) : '—' ?></td>
-            </tr>
-            <tr>
-                <th>Estat de la matrícula:</th>
-                <td>
-                    <?php $estat = $alumne->estat ?? 'Pendent'; ?>
-                    <span
-                        class="badge <?= $estat === 'Validat' ? 'badge-success' : 'badge-warning' ?>"><?= esc($estat) ?></span>
-                </td>
-            </tr>
-            <tr>
-                <th>Data de matrícula:</th>
-                <td><?= !empty($alumne->data_matricula) ? date('d/m/Y', strtotime($alumne->data_matricula)) : '—' ?>
-                </td>
-            </tr>
-            <tr>
-                <th>Data de pagament:</th>
-                <td>
-                    <?php if (!empty($alumne->data_pagament)): ?>
-                        <span class="badge badge-success"><?= date('d/m/Y', strtotime($alumne->data_pagament)) ?></span>
-                    <?php else: ?>
-                        <span class="badge badge-warning">No pagat</span>
-                    <?php endif; ?>
-                </td>
-            </tr>
-            <tr>
-                <th>Bonificació:</th>
-                <td>
-                    <?php if (!empty($alumne->bonificacio_nom)): ?>
-                        <?= esc($alumne->bonificacio_nom) ?> (<?= esc($alumne->bonificats) ?>%)
-                    <?php elseif (!empty($alumne->bonificats) && $alumne->bonificats > 0): ?>
-                        <?= esc($alumne->bonificats) ?>%
-                    <?php else: ?>
-                        Sense bonificació
-                    <?php endif; ?>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-    <?php if (!empty($tutors)): ?>
-        <div class="section">
-            <div class="section-title">Tutors legals</div>
-                <?php foreach ($tutors as $tutor): ?>
-                <div class="tutor-row">
-                    <div class="tutor-nom"><?= esc($tutor->nom) ?>                 <?= esc($tutor->cognom1) ?> —
-                        <em><?= esc($tutor->rol) ?></em>
-                    </div>
-                    <div class="tutor-info">
-                        DNI: <?= esc($tutor->dni ?? '—') ?>
-                                <?= !empty($tutor->telefon) ? ' · Tel: ' . esc($tutor->telefon) : '' ?>
-                                <?= !empty($tutor->email) ? ' · ' . esc($tutor->email) : '' ?>
-                                <?php if (!empty($tutor->custodia_percentatge)): ?>
-                            · Custòdia: <?= esc($tutor->custodia_percentatge) ?>%
-                                <?php endif; ?>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-        </div>
+    <?php if (!empty($matricules)): ?>
+        <?php foreach ($matricules as $m): ?>
+            <div class="section">
+                <div class="section-title">Dades acadèmiques - <?= $m['any_academic'] ?></div>
+                <table>
+                    <tr>
+                        <th style="width: 35%">Estudi:</th>
+                        <td><?= esc($m['estudi']) ?></td>
+                    </tr>
+                    <tr>
+                        <th>Curs:</th>
+                        <td>
+                            <?php 
+                                $c = $m['curs'];
+                                $sufix = is_numeric($c) ? ($c == 1 ? 'r' : ($c == 2 ? 'n' : ($c == 3 ? 'r' : 't'))) : '';
+                                echo esc($c . $sufix) . ' curs';
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Torn:</th>
+                        <td>Torn <?= esc($m['torn']) ?></td>
+                    </tr>
+                    <tr>
+                        <th>Estat matrícula:</th>
+                        <td><?= esc($m['estat']) ?></td>
+                    </tr>
+                    <tr>
+                        <th>Data pagament:</th>
+                        <td><?= $m['data_pagament'] ? date('d/m/Y', strtotime($m['data_pagament'])) : 'Pendent' ?></td>
+                    </tr>
+                    <tr>
+                        <th>Bonificació:</th>
+                        <td><?= $m['bonificacio_nom'] ? esc($m['bonificacio_nom']) . ' (' . $m['bonificacio_percentatge'] . '%)' : 'Cap' ?></td>
+                    </tr>
+                    <tr>
+                        <th>Observacions alumne:</th>
+                        <td style="font-weight: normal; font-style: italic;">
+                            <?php 
+                            if (!empty($m['observacions_matricula'])) {
+                                $obsM = json_decode($m['observacions_matricula'], true);
+                                if (is_array($obsM)) {
+                                    foreach ($obsM as $o) {
+                                        echo "<div>[" . date('d/m/Y', strtotime($o['data'])) . "]: " . esc($o['text']) . "</div>";
+                                    }
+                                } else {
+                                    echo esc($m['observacions_matricula']);
+                                }
+                            } else {
+                                echo "—";
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        <?php endforeach; ?>
     <?php endif; ?>
 
     <div class="section">
-        <div class="section-title">Observacions</div>
+        <div class="section-title">Tutors legals</div>
+        <?php if (!empty($tutors)): ?>
+            <?php foreach ($tutors as $tutor): ?>
+            <div class="tutor-row">
+                <div class="tutor-nom"><?= esc($tutor->nom) ?> <?= esc($tutor->cognom1) ?> —
+                    <em><?= esc($tutor->rol) ?></em>
+                </div>
+                <div class="tutor-info">
+                    DNI: <?= !empty($tutor->dni) ? esc($tutor->dni) : '—' ?>
+                    · Tel: <?= !empty($tutor->telefon) ? esc($tutor->telefon) : '—' ?>
+                    · Email: <?= !empty($tutor->email) ? esc($tutor->email) : '—' ?>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="tutor-row">—</div>
+        <?php endif; ?>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Observacions de l'expedient (Secretaria)</div>
         <div style="padding: 8px 12px; min-height: 40px; font-style: italic; color: #444;">
             <?php
-            $historial = !empty($alumne->observacions) ? json_decode($alumne->observacions, true) : [];
-            if (empty($alumne->observacions)): ?>
-                Sense observacions registrades.
-            <?php elseif (is_array($historial) && !empty($historial)): ?>
+            $historial = !empty($alumne->observacions_alumne) ? json_decode($alumne->observacions_alumne, true) : [];
+            if (empty($historial)): ?>
+                —
+            <?php else: ?>
                 <ul style="margin: 0; padding-left: 15px;">
-                        <?php foreach ($historial as $obs): ?>
+                        <?php foreach (array_reverse($historial) as $obs): ?>
                         <li style="margin-bottom: 5px;">
-                            <strong>[<?= date('d/m/Y', strtotime($obs['data'])) ?>]:</strong>
+                            <strong>[<?= date('d/m/Y H:i', strtotime($obs['data'])) ?>]:</strong>
                                 <?= esc($obs['text']) ?>
                         </li>
                         <?php endforeach; ?>
                 </ul>
-            <?php else: ?>
-                <?= esc($alumne->observacions) ?>
             <?php endif; ?>
         </div>
     </div>

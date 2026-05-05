@@ -25,7 +25,9 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->post('alumnes/pujar-document/(:any)', 'AlumnesController::pujarDocument/$1');
     $routes->get('alumnes/eliminar-document/(:any)', 'AlumnesController::eliminarDocument/$1');
     $routes->post('alumnes/actualitzar-observacions/(:any)', 'AlumnesController::actualitzarObservacions/$1');
+    $routes->post('alumnes/actualitzar-observacions-alumne/(:any)', 'AlumnesController::actualitzarObservacionsAlumne/$1');
     $routes->get('alumnes/eliminar-observacio/(:any)/(:any)', 'AlumnesController::eliminarObservacio/$1/$2');
+    $routes->get('alumnes/eliminar-observacio-alumne/(:any)/(:any)', 'AlumnesController::eliminarObservacioAlumne/$1/$2');
     $routes->get('alumnes/pdf-expedient/(:any)', 'AlumnesController::pdfExpedient/$1');
     $routes->get('alumnes/pdf-matricula/(:any)', 'AlumnesController::pdfMatricula/$1');
     $routes->get('alumnes/document/(:num)', 'AlumnesController::veureDocument/$1');
@@ -37,6 +39,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->post('matricules/actualitzar/(:any)', 'MatriculesController::actualitzar/$1');
     $routes->get('matricules/validar/(:any)', 'MatriculesController::validar_matricula/$1');
     $routes->get('matricules/invalidar/(:any)', 'MatriculesController::invalidar_matricula/$1');
+    $routes->get('matricules/marcar-pagat/(:any)', 'MatriculesController::marcar_pagat/$1');
+    $routes->get('matricules/marcar-pendent/(:any)', 'MatriculesController::marcar_pendent/$1');
     //$routes->get('matricules/nova', 'MatriculesController::nova');
 
     // CERCA

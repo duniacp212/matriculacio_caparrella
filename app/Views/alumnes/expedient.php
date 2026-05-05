@@ -34,250 +34,241 @@
                     <?php if (session()->getFlashdata('error')): ?>
                         <div class="alert alert-danger py-2 text-center"><?= session()->getFlashdata('error') ?></div>
                     <?php endif; ?>
-
-                    <div class="accordion mb-4 card-lila" id="accordionExpedient">
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#dadesPersonals">
-                                    Dades personals
-                                </button>
-                            </h2>
-                            <div id="dadesPersonals" class="accordion-collapse collapse show">
-                                <div class="accordion-body">
-                                    <div class="row g-0">
-                                        <div class="col-md-6 pe-md-3">
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Nom</label>
-                                                <input class="form-control" value="<?= esc($alumne->nom) ?>" disabled>
+                        <div class="accordion mb-4 card-lila" id="accordionExpedient">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#dadesPersonals">
+                                        Dades personals i d'adreça
+                                    </button>
+                                </h2>
+                                <div id="dadesPersonals" class="accordion-collapse collapse show">
+                                    <div class="accordion-body">
+                                        <div class="row g-0">
+                                            <div class="col-md-6 pe-md-3">
+                                                <div class="mb-3">
+                                                    <label class="form-label text-muted small">Nom</label>
+                                                    <input class="form-control" value="<?= esc($alumne->nom) ?>" disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label text-muted small">Primer cognom</label>
+                                                    <input class="form-control" value="<?= esc($alumne->cognom1) ?>"
+                                                        disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label text-muted small">Segon cognom</label>
+                                                    <input class="form-control" value="<?= esc($alumne->cognom2 ?? '—') ?>"
+                                                        disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label text-muted small">DNI</label>
+                                                    <input class="form-control" value="<?= esc($alumne->dni) ?>" disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label text-muted small">Data de naixement</label>
+                                                    <input class="form-control"
+                                                        value="<?= esc($alumne->data_naixement) ?>" disabled>
+                                                </div>
                                             </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Primer cognom</label>
-                                                <input class="form-control" value="<?= esc($alumne->cognom1) ?>"
-                                                    disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Segon cognom</label>
-                                                <input class="form-control" value="<?= esc($alumne->cognom2 ?? '') ?>"
-                                                    disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">DNI / NIE</label>
-                                                <input class="form-control" value="<?= esc($alumne->dni) ?>" disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Data de naixement</label>
-                                                <input class="form-control"
-                                                    value="<?= esc($alumne->data_naixement ? date('d/m/Y', strtotime($alumne->data_naixement)) : '') ?>"
-                                                    disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Lloc de naixement</label>
-                                                <input class="form-control"
-                                                    value="<?= esc($alumne->lloc_naixement ?? '') ?>" disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Nacionalitat</label>
-                                                <input class="form-control"
-                                                    value="<?= esc($alumne->nacionalitat ?? '') ?>" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 ps-md-3 border-start">
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Telèfon</label>
-                                                <input class="form-control" value="<?= esc($alumne->telefon ?? '') ?>"
-                                                    disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Telèfon 2</label>
-                                                <input class="form-control" value="<?= esc($alumne->telefon2 ?? '') ?>"
-                                                    disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Correu electrònic</label>
-                                                <input class="form-control" value="<?= esc($alumne->email ?? '') ?>"
-                                                    disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Carrer</label>
-                                                <input class="form-control" value="<?= esc($alumne->carrer ?? '') ?>"
-                                                    disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Número</label>
-                                                <input class="form-control" value="<?= esc($alumne->numero ?? '') ?>"
-                                                    disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Pis</label>
-                                                <input class="form-control" value="<?= esc($alumne->pis ?? '') ?>"
-                                                    disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Codi postal</label>
-                                                <input class="form-control"
-                                                    value="<?= esc($alumne->codi_postal ?? '') ?>" disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Població</label>
-                                                <input class="form-control" value="<?= esc($alumne->poblacio ?? '') ?>"
-                                                    disabled>
+                                            <div class="col-md-6 ps-md-3 border-start">
+                                                <div class="mb-3">
+                                                    <label class="form-label text-muted small">Email</label>
+                                                    <input class="form-control" value="<?= !empty($alumne->email) ? esc($alumne->email) : '—' ?>" disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label text-muted small">Telèfon</label>
+                                                    <input class="form-control" value="<?= !empty($alumne->telefon) ? esc($alumne->telefon) : '—' ?>"
+                                                        disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label text-muted small">Telèfon 2</label>
+                                                    <input class="form-control" value="<?= esc($alumne->telefon2 ?? '—') ?>"
+                                                        disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label text-muted small">Adreça</label>
+                                                    <input class="form-control"
+                                                        value="<?= !empty($alumne->carrer) ? esc($alumne->carrer) . ' ' . esc($alumne->numero) . ', ' . esc($alumne->poblacio) : '—' ?>"
+                                                        disabled>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label text-muted small">Nacionalitat</label>
+                                                    <input class="form-control" value="<?= !empty($alumne->nacionalitat) ? esc($alumne->nacionalitat) : '—' ?>"
+                                                        disabled>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#historialAcademic">
+                                        Historial Acadèmic i Matrícules
+                                    </button>
+                                </h2>
+                                <div id="historialAcademic" class="accordion-collapse collapse">
+                                    <div class="accordion-body p-0">
+                                        <?php if (!empty($matricules)): ?>
+                                            <div class="accordion accordion-flush" id="accordionAnys">
+                                                <?php foreach ($matricules as $idx => $m): ?>
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header">
+                                                            <button class="accordion-button <?= $idx === 0 ? '' : 'collapsed' ?> bg-light" type="button" data-bs-toggle="collapse"
+                                                                data-bs-target="#any_<?= $m['any_academic'] ?>_<?= $idx ?>">
+                                                                <span class="fw-bold me-2"><?= $m['any_academic'] ?></span> - 
+                                                                <?= esc($m['estudi']) ?> 
+                                                                (<?php 
+                                                                    $c = $m['curs'];
+                                                                    $sufix = is_numeric($c) ? ($c == 1 ? 'r' : ($c == 2 ? 'n' : ($c == 3 ? 'r' : 't'))) : '';
+                                                                    echo esc($c . $sufix);
+                                                                ?> curs)
+                                                                <span class="badge ms-2 <?= $m['estat'] === 'Validat' ? 'bg-success' : 'bg-warning text-dark' ?>">
+                                                                    <?= esc($m['estat']) ?>
+                                                                </span>
+                                                            </button>
+                                                        </h2>
+                                                        <div id="any_<?= $m['any_academic'] ?>_<?= $idx ?>" class="accordion-collapse collapse <?= $idx === 0 ? 'show' : '' ?>">
+                                                            <div class="accordion-body">
+                                                                <div class="row g-0">
+                                                                    <div class="col-md-6 pe-md-3">
+                                                                        <label class="form-label text-muted small fw-semibold">Detalls de la matrícula</label>
+                                                                        <div class="mb-2">
+                                                                            <small class="text-muted">Estat pagament:</small>
+                                                                            <span class="<?= $m['data_pagament'] ? 'text-success' : 'text-danger' ?> fw-semibold">
+                                                                                <?= $m['data_pagament'] ? 'Pagat (' . date('d/m/Y', strtotime($m['data_pagament'])) . ')' : 'Pendent' ?>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <small class="text-muted">Torn:</small>
+                                                                            <span>Torn <?= $m['torn'] ?></span>
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <small class="text-muted">Bonificació:</small>
+                                                                            <span><?= $m['bonificacio_nom'] ? esc($m['bonificacio_nom']) . ' (' . $m['bonificacio_percentatge'] . '%)' : 'Cap' ?></span>
+                                                                        </div>
+                                                                        
+                                                                        <hr class="my-3">
+                                                                        <label class="form-label text-muted small fw-semibold">Tutors legals registrats</label>
+                                                                        <?php if (!empty($tutors)): ?>
+                                                                            <ul class="list-unstyled mb-0">
+                                                                                <?php foreach ($tutors as $t): ?>
+                                                                                    <li class="small mb-2 border-bottom pb-1">
+                                                                                        <div class="fw-bold"><?= esc($t->nom) ?> <?= esc($t->cognom1) ?> (<?= esc($t->rol) ?>)</div>
+                                                                                        <div class="text-muted"><?= esc($t->dni) ?> | <?= esc($t->telefon) ?> | <?= esc($t->email) ?></div>
+                                                                                    </li>
+                                                                                <?php endforeach; ?>
+                                                                            </ul>
+                                                                        <?php else: ?>
+                                                                            <p class="text-muted small">No hi ha tutors registrats.</p>
+                                                                        <?php endif; ?>
+                                                                    </div>
+                                                                    
+                                                                    <div class="col-md-6 ps-md-3 border-start">
+                                                                        <label class="form-label text-muted small fw-semibold">Observacions de l'alumne (Matrícula)</label>
+                                                                        <?php
+                                                                        $obsM = !empty($m['observacions_matricula']) ? json_decode($m['observacions_matricula'], true) : [];
+                                                                        if (!empty($m['observacions_matricula']) && !is_array($obsM)) {
+                                                                            $obsM = [['data' => $m['data'], 'text' => $m['observacions_matricula']]];
+                                                                        }
+                                                                        ?>
+                                                                        <?php if (!empty($obsM)): ?>
+                                                                            <div class="list-group list-group-flush border">
+                                                                                <?php foreach (array_reverse($obsM) as $o): ?>
+                                                                                    <div class="list-group-item py-2 bg-white">
+                                                                                        <?php if (isset($o['data'])): ?>
+                                                                                            <small class="text-secondary small d-block"><?= date('d/m/Y H:i', strtotime($o['data'])) ?></small>
+                                                                                        <?php endif; ?>
+                                                                                        <p class="mb-0 text-muted small" style="white-space: pre-line;"><?= esc($o['text'] ?? $o) ?></p>
+                                                                                    </div>
+                                                                                <?php endforeach; ?>
+                                                                            </div>
+                                                                        <?php else: ?>
+                                                                            <p class="text-muted small">L'alumne no va deixar observacions en aquest curs.</p>
+                                                                        <?php endif; ?>
 
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#dadesAcademiques">
-                                    Dades acadèmiques
-                                </button>
-                            </h2>
-                            <div id="dadesAcademiques" class="accordion-collapse collapse">
-                                <div class="accordion-body">
-                                    <div class="row g-0">
-                                        <div class="col-md-6 pe-md-3">
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Any acadèmic</label>
-                                                <input class="form-control"
-                                                    value="<?= esc($alumne->any_matricula ?? '') ?>" disabled>
+                                                                        <hr class="my-3">
+                                                                        <label class="form-label text-muted small fw-semibold">Documents adjunts a la matrícula</label>
+                                                                        <?php 
+                                                                        $docsAny = array_filter($documents, function($d) use ($m) {
+                                                                            return $d->any_academic == $m['any_academic'];
+                                                                        });
+                                                                        ?>
+                                                                        <?php if (!empty($docsAny)): ?>
+                                                                            <div class="list-group list-group-flush border">
+                                                                                <?php foreach ($docsAny as $d): ?>
+                                                                                    <div class="list-group-item py-1 bg-white d-flex justify-content-between align-items-center">
+                                                                                        <small class="text-muted"><?= esc($d->tipus ?? 'Altre') ?>: <?= esc($d->nom_original) ?></small>
+                                                                                        <a href="<?= base_url('alumnes/document/' . $d->id_document) ?>" target="_blank" class="btn btn-link btn-sm p-0 text-decoration-none">Veure</a>
+                                                                                    </div>
+                                                                                <?php endforeach; ?>
+                                                                            </div>
+                                                                        <?php else: ?>
+                                                                            <p class="text-muted small">No hi ha documents adjunts per aquest curs.</p>
+                                                                        <?php endif; ?>
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
                                             </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Estudi</label>
-                                                <input class="form-control" value="<?= esc($alumne->tipus ?? '') ?>"
-                                                    disabled>
+                                        <?php else: ?>
+                                            <div class="p-4 text-center text-muted">
+                                                No s'ha trobat cap matrícula registrada per aquest alumne.
                                             </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Curs</label>
-                                                <input class="form-control" value="<?= esc($alumne->nivell ?? '') ?>"
-                                                    disabled>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#observacionsExpedient">
+                                        Observacions de l'expedient (Secretaria)
+                                    </button>
+                                </h2>
+                                <div id="observacionsExpedient" class="accordion-collapse collapse">
+                                    <div class="accordion-body">
+                                        <div class="row g-0">
+                                            <div class="col-md-6 pe-md-3">
+                                                <form method="post" action="<?= base_url('alumnes/actualitzar-observacions-alumne/' . $alumne->id_alumne) ?>">
+                                                    <?= csrf_field() ?>
+                                                    <label class="form-label text-muted small fw-semibold">Nova observació de l'expedient</label>
+                                                    <textarea class="form-control mb-2" name="observacions" rows="4" required></textarea>
+                                                    <div class="text-end">
+                                                        <button type="submit" class="btn btn-primary btn-sm px-4">Afegir a l'expedient</button>
+                                                    </div>
+                                                </form>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6 ps-md-3 border-start">
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Torn</label>
-                                                <input class="form-control"
-                                                    value="<?= !empty($alumne->torn) ? 'Torn ' . esc($alumne->torn) : '' ?>"
-                                                    disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Estat</label>
-                                                <input class="form-control" value="<?= esc($alumne->estat ?? '') ?>"
-                                                    disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small">Bonificació</label>
-                                                <input class="form-control"
-                                                    value="<?= esc($alumne->bonificats ?? '0') ?>%" disabled>
+                                            <div class="col-md-6 ps-md-3 border-start">
+                                                <label class="form-label text-muted small fw-semibold">Historial de notes</label>
+                                                <?php
+                                                $historialA = !empty($alumne->observacions_alumne) ? json_decode($alumne->observacions_alumne, true) : [];
+                                                ?>
+                                                <?php if (!empty($historialA)): ?>
+                                                    <div class="list-group list-group-flush border mt-1">
+                                                        <?php foreach (array_reverse($historialA) as $obs): ?>
+                                                            <div class="list-group-item py-2 bg-light">
+                                                                <div class="d-flex justify-content-between">
+                                                                    <small class="text-secondary small"><?= date('d/m/Y H:i', strtotime($obs['data'])) ?></small>
+                                                                    <a href="<?= base_url('alumnes/eliminar-observacio-alumne/' . $alumne->id_alumne . '/' . $obs['id']) ?>" class="text-danger small text-decoration-none" onclick="return confirm('Eliminar?')">×</a>
+                                                                </div>
+                                                                <p class="mb-0 small"><?= esc($obs['text']) ?></p>
+                                                            </div>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                <?php else: ?>
+                                                    <p class="text-muted small">No hi ha notes en l'expedient.</p>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#tutors">
-                                    Tutors legals
-                                </button>
-                            </h2>
-                            <div id="tutors" class="accordion-collapse collapse">
-                                <div class="accordion-body">
-                                    <?php if (!empty($tutors)): ?>
-                                        <?php foreach ($tutors as $tutor): ?>
-                                            <div class="row g-0 mb-3 pb-3 border-bottom">
-                                                <div class="col-md-6 pe-md-3">
-                                                    <div class="mb-3">
-                                                        <label class="form-label text-muted small">Nom</label>
-                                                        <input class="form-control"
-                                                            value="<?= esc($tutor->nom) ?> <?= esc($tutor->cognom1) ?>"
-                                                            disabled>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label text-muted small">DNI</label>
-                                                        <input class="form-control" value="<?= esc($tutor->dni) ?>" disabled>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 ps-md-3 border-start">
-                                                    <div class="mb-3">
-                                                        <label class="form-label text-muted small">Rol</label>
-                                                        <input class="form-control" value="<?= esc($tutor->rol) ?>" disabled>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <p class="text-muted">No hi ha tutors registrats.</p>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#observacions">
-                                    Observacions
-                                </button>
-                            </h2>
-                            <div id="observacions" class="accordion-collapse collapse">
-                                <div class="accordion-body">
-                                    <form method="post"
-                                        action="<?= base_url('alumnes/actualitzar-observacions/' . $alumne->id_matricula) ?>">
-                                        <?= csrf_field() ?>
-                                        <label class="form-label text-muted small fw-semibold">Nova observació</label>
-                                        <textarea class="form-control mb-2" name="observacions" rows="2"
-                                            required></textarea>
-                                        <div class="text-end mb-4">
-                                            <button type="submit" class="btn btn-primary btn-sm px-4">Afegir
-                                                observació</button>
-                                        </div>
-                                    </form>
-
-                                    <?php
-                                    $historial = !empty($alumne->observacions) ? json_decode($alumne->observacions, true) : [];
-                                    if (!empty($alumne->observacions) && !is_array($historial)) {
-                                        $historial = [['id' => 'legacy', 'data' => date('Y-m-d H:i:s'), 'text' => $alumne->observacions]];
-                                    }
-                                    ?>
-
-                                    <?php if (!empty($historial)): ?>
-                                        <label class="form-label text-muted small fw-semibold mb-2">Històric
-                                            d'observacions</label>
-                                        <div class="list-group list-group-flush border">
-                                            <?php foreach (array_reverse($historial) as $obs): ?>
-                                                <div class="list-group-item py-3 bg-light">
-                                                    <div class="d-flex w-100 justify-content-between mb-1">
-                                                        <small
-                                                            class="text-secondary fw-semibold"><?= date('d/m/Y H:i', strtotime($obs['data'])) ?></small>
-                                                        <?php if (isset($obs['id']) && $obs['id'] !== 'legacy'): ?>
-                                                            <a href="<?= base_url('alumnes/eliminar-observacio/' . $alumne->id_matricula . '/' . $obs['id']) ?>"
-                                                                class="text-danger small fw-semibold text-decoration-none"
-                                                                onclick="return confirm('Segur que vols eliminar aquesta observació?')">
-                                                                Eliminar
-                                                            </a>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                    <p class="mb-0 text-dark"
-                                                        style="white-space: pre-line; font-size: 0.95rem;">
-                                                        <?= esc($obs['text']) ?>
-                                                    </p>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    <?php else: ?>
-                                        <p class="text-muted small text-center mb-0 mt-2">No hi ha cap observació registrada
-                                            encara.</p>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="accordion-item">
                             <h2 class="accordion-header">

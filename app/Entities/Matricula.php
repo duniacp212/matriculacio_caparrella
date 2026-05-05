@@ -9,7 +9,7 @@ class Matricula extends Entity
 {
     protected $casts = [
         'id_matricula' => 'uuid_v7',
-        'id_alumne'    => 'uuid_v7',
+        'id_alumne' => 'uuid_v7',
     ];
 
     protected $castHandlers = [

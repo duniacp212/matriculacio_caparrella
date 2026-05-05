@@ -72,14 +72,15 @@ class AlumnesController extends BaseController
         }
 
         $tutors = $tutorModel->getTutorsPerAlumne($id);
-
         $documents = $documentModel->getDocumentsPerAlumne($id);
+        $matricules = $alumneModel->getHistorialMatricules($id);
 
         return view('alumnes/expedient', [
             'title' => 'Expedient de l\'alumne',
             'alumne' => $alumne,
             'tutors' => $tutors,
             'documents' => $documents,
+            'matricules' => $matricules,
         ]);
     }
 
@@ -95,37 +96,49 @@ class AlumnesController extends BaseController
 
         $fitxer = $this->request->getFile('document');
 
-        if (!$fitxer->isValid() || $fitxer->hasMoved()) {
-            return redirect()->back()->with('error', 'Error en la pujada del fitxer.');
+        if (!$fitxer || !$fitxer->isValid()) {
+            $error = $fitxer ? $fitxer->getErrorString() . ' (' . $fitxer->getError() . ')' : 'No s\'ha rebut cap fitxer.';
+            return redirect()->back()->with('error', 'Error en la pujada: ' . $error);
+        }
+
+        if ($fitxer->hasMoved()) {
+            return redirect()->back()->with('error', 'El fitxer ja s\'ha processat.');
         }
 
         $extensionsPermeses = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
-        if (!in_array(strtolower($fitxer->getExtension()), $extensionsPermeses)) {
+        if (!in_array(strtolower($fitxer->getClientExtension()), $extensionsPermeses)) {
             return redirect()->back()->with('error', 'Tipus de fitxer no permès. Només PDF, imatges i documents Word.');
         }
 
         $any = date('Y');
-        $dni = $alumne->dni;
-        $carpeta = WRITEPATH . 'uploads/' . $any . '/' . $dni . '/';
+        $dni = trim($alumne->dni);
+        $carpeta = WRITEPATH . 'uploads/' . $any . '/' . $dni;
 
         if (!is_dir($carpeta)) {
-            mkdir($carpeta, 0755, true);
+            if (!mkdir($carpeta, 0755, true)) {
+                return redirect()->back()->with('error', 'No s\'ha pogut crear la carpeta de destí. Revisa els permisos de WRITEPATH.');
+            }
         }
 
         $nomOriginal = $fitxer->getClientName();
         $nomFitxer = $fitxer->getRandomName();
 
-        $fitxer->move($carpeta, $nomFitxer);
+        if (!$fitxer->move($carpeta, $nomFitxer)) {
+            return redirect()->back()->with('error', 'No s\'ha pogut moure el fitxer a la carpeta de destí.');
+        }
 
         $documentModel = new DocumentAlumneModel();
-        $documentModel->insert([
-            'id_alumne' => $binaryId,
-            'nom_original' => $nomOriginal,
-            'nom_fitxer' => $nomFitxer,
-            'ruta' => $any . '/' . $dni . '/' . $nomFitxer,
-            'tipus' => $this->request->getPost('tipus'),
-            'any_academic' => $any,
-        ]);
+        $nouDoc = new \App\Entities\DocumentAlumne();
+        $nouDoc->id_alumne = $id;
+        $nouDoc->nom_original = $nomOriginal;
+        $nouDoc->nom_fitxer = $nomFitxer;
+        $nouDoc->ruta = $any . '/' . $dni . '/' . $nomFitxer;
+        $nouDoc->tipus = $this->request->getPost('tipus');
+        $nouDoc->any_academic = $any;
+
+        if (!$documentModel->save($nouDoc)) {
+            return redirect()->back()->with('error', 'Error al guardar les dades del document a la base de dades.');
+        }
 
         return redirect()->to(base_url('alumnes/expedient/' . $id))->with('exit', 'Document pujat correctament.');
     }
@@ -143,9 +156,9 @@ class AlumnesController extends BaseController
         $nouText = trim((string) $this->request->getPost('observacions'));
 
         if (!empty($nouText)) {
-            $historial = json_decode($matricula->observacions, true);
+            $historial = json_decode($matricula->observacions ?? '', true);
             if (!is_array($historial)) {
-                $historial = empty(trim((string) $matricula->observacions)) ? [] : [
+                $historial = empty(trim((string) ($matricula->observacions ?? ''))) ? [] : [
                     ['id' => uniqid(), 'data' => date('Y-m-d H:i:s'), 'text' => $matricula->observacions]
                 ];
             }
@@ -160,7 +173,62 @@ class AlumnesController extends BaseController
             $matriculaModel->save($matricula);
         }
 
-        return redirect()->back()->with('exit', 'Observació afegida correctament.');
+        return redirect()->back()->with('exit', 'Observació de matrícula afegida correctament.');
+    }
+
+    public function actualitzarObservacionsAlumne($idAlumne)
+    {
+        $binaryId = hex2bin(str_replace('-', '', $idAlumne));
+        $alumneModel = new AlumneModel();
+
+        $alumne = $alumneModel->find($binaryId);
+        if (!$alumne) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
+        }
+
+        $nouText = trim((string) $this->request->getPost('observacions'));
+
+        if (!empty($nouText)) {
+            $historial = json_decode($alumne->observacions ?? '', true);
+            if (!is_array($historial)) {
+                $historial = empty(trim((string) ($alumne->observacions ?? ''))) ? [] : [
+                    ['id' => uniqid(), 'data' => date('Y-m-d H:i:s'), 'text' => $alumne->observacions]
+                ];
+            }
+
+            $historial[] = [
+                'id' => uniqid(),
+                'data' => date('Y-m-d H:i:s'),
+                'text' => $nouText
+            ];
+
+            $alumne->observacions = json_encode($historial);
+            $alumneModel->save($alumne);
+        }
+
+        return redirect()->back()->with('exit', 'Observació de l\'alumne afegida correctament.');
+    }
+
+    public function eliminarObservacioAlumne($idAlumne, $idObservacio)
+    {
+        $binaryId = hex2bin(str_replace('-', '', $idAlumne));
+        $alumneModel = new AlumneModel();
+
+        $alumne = $alumneModel->find($binaryId);
+        if ($alumne) {
+            $historial = json_decode($alumne->observacions ?? '', true);
+            if (is_array($historial)) {
+                foreach ($historial as $index => $obs) {
+                    if (isset($obs['id']) && $obs['id'] === $idObservacio) {
+                        unset($historial[$index]);
+                        break;
+                    }
+                }
+                $alumne->observacions = json_encode(array_values($historial));
+                $alumneModel->save($alumne);
+            }
+        }
+        return redirect()->back()->with('exit', 'Observació eliminada correctament.');
     }
 
     public function eliminarObservacio($idMatricula, $idObservacio)
@@ -194,14 +262,16 @@ class AlumnesController extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Document no trobat');
         }
 
-        $ruta = WRITEPATH . 'uploads/' . $document['ruta'];
+        $idAlumne = $document->id_alumne;
+        $ruta = WRITEPATH . 'uploads/' . $document->ruta;
+
         if (file_exists($ruta)) {
             unlink($ruta);
         }
 
         $documentModel->delete($idDocument);
 
-        return redirect()->to(base_url('alumnes/expedient/' . $document['id_alumne']))->with('exit', 'Document eliminat correctament.');
+        return redirect()->to(base_url('alumnes/expedient/' . $idAlumne))->with('exit', 'Document eliminat correctament.');
     }
 
     public function veureDocument(int $id)
@@ -292,11 +362,13 @@ class AlumnesController extends BaseController
 
         $tutorModel = new AlumneTutorLegalModel();
         $tutors = $tutorModel->getTutorsPerAlumne($id);
+        $matricules = $alumneModel->getHistorialMatricules($id);
 
         $html = view('alumnes/pdf_expedient', [
             'tipus' => 'Expedient complet',
             'alumne' => $alumne,
-            'tutors' => $tutors
+            'tutors' => $tutors,
+            'matricules' => $matricules
         ]);
 
         $dompdf = new \Dompdf\Dompdf();
@@ -312,16 +384,15 @@ class AlumnesController extends BaseController
 
     public function pdfMatricula($idMatricula)
     {
-        $binaryId = hex2bin(str_replace('-', '', $idMatricula));
         $matriculaModel = new MatriculaModel();
-        $matricula = $matriculaModel->find($binaryId);
+        $matricula = $matriculaModel->getMatriculaAmbDades($idMatricula);
 
         if (!$matricula) {
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Matrícula no trobada');
         }
 
         $alumneModel = new AlumneModel();
-        $alumne = $alumneModel->getExpedientPerId($matricula->id_alumne);
+        $alumne = $alumneModel->find(hex2bin(str_replace('-', '', $matricula->id_alumne)));
 
         $tutorModel = new AlumneTutorLegalModel();
         $tutors = $tutorModel->getTutorsPerAlumne($matricula->id_alumne);
@@ -457,7 +528,9 @@ class AlumnesController extends BaseController
         if ($email->send()) {
             return redirect()->to(base_url('alumnes/contacte/' . $id))->with('exit', 'El correu s\'ha enviat correctament.');
         } else {
-            return redirect()->to(base_url('alumnes/contacte/' . $id))->with('error', 'Hi ha hagut un error enviant el correu. Revisa la configuració (.env).');
+            $data = $email->printDebugger(['headers', 'subject', 'body']);
+            log_message('error', $data);
+            return redirect()->to(base_url('alumnes/contacte/' . $id))->with('error', 'Error SMTP. Revisa la configuració (.env).');
         }
     }
 }

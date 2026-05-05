@@ -89,6 +89,10 @@ class CreateAlumneTable extends Migration
                 'constraint' => 255,
                 'null' => true,
             ],
+            'observacions' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
         ]);
 
         $this->forge->addKey('id_alumne', true);

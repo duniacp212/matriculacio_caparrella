@@ -31,4 +31,13 @@ class DocumentAlumneModel extends Model
             ->orderBy('creat_el', 'DESC')
             ->findAll();
     }
+
+    public function getDocumentsPerAlumneIAny($idAlumne, $any)
+    {
+        $binaryId = hex2bin(str_replace('-', '', $idAlumne));
+        return $this->where('id_alumne', $binaryId)
+            ->where('any_academic', $any)
+            ->orderBy('creat_el', 'DESC')
+            ->findAll();
+    }
 }

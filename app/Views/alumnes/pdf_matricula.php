@@ -134,8 +134,8 @@
         <div class="section-title">Dades personals</div>
         <table>
             <tr>
-                <th>Nom complet:</th>
-                <td><?= esc($alumne->nom) ?> <?= esc($alumne->cognom1) ?> <?= esc($alumne->cognom2 ?? '') ?></td>
+                <th style="width: 35%">Nom complet:</th>
+                <td><?= esc($alumne->nom) ?> <?= esc($alumne->cognom1) ?> <?= !empty($alumne->cognom2) ? esc($alumne->cognom2) : '—' ?></td>
             </tr>
             <tr>
                 <th>DNI / NIE:</th>
@@ -155,30 +155,26 @@
                 <td><?= esc($alumne->nacionalitat ?? '—') ?></td>
             </tr>
             <tr>
-                <th>Telèfon:</th>
-                <td><?= esc($alumne->telefon ?? '—') ?><?= !empty($alumne->telefon2) ? ' / ' . esc($alumne->telefon2) : '' ?>
+                <th>Telèfons:</th>
+                <td><?= !empty($alumne->telefon) ? esc($alumne->telefon) : '—' ?><?= !empty($alumne->telefon2) ? ' / ' . esc($alumne->telefon2) : '' ?>
                 </td>
             </tr>
             <tr>
                 <th>Correu electrònic:</th>
-                <td><?= esc($alumne->email ?? '—') ?></td>
+                <td><?= !empty($alumne->email) ? esc($alumne->email) : '—' ?></td>
             </tr>
             <tr>
                 <th>Adreça:</th>
                 <td>
                     <?php
-                    $adreca = trim(($alumne->carrer ?? '') . ', ' . ($alumne->numero ?? '') . ' ' . ($alumne->pis ?? ''));
-                    echo !empty(trim($adreca, ', ')) ? esc($adreca) : '—';
+                    $adreca = trim(($alumne->carrer ?? '') . ' ' . ($alumne->numero ?? '') . ' ' . ($alumne->pis ?? ''));
+                    echo !empty($adreca) ? esc($adreca) : '—';
                     ?>
                 </td>
             </tr>
             <tr>
-                <th>Codi postal:</th>
-                <td><?= esc($alumne->codi_postal ?? '—') ?></td>
-            </tr>
-            <tr>
-                <th>Població:</th>
-                <td><?= esc($alumne->poblacio ?? '—') ?></td>
+                <th>Codi postal / Població:</th>
+                <td><?= esc($alumne->codi_postal ?? '—') ?> <?= esc($alumne->poblacio ?? '—') ?></td>
             </tr>
         </table>
     </div>
@@ -187,28 +183,30 @@
         <div class="section-title">Dades de la matrícula</div>
         <table>
             <tr>
-                <th>Estudi:</th>
-                <td><?= esc($alumne->tipus ?? '—') ?></td>
+                <th style="width: 35%">Estudi:</th>
+                <td><?= esc($matricula->tipus ?? '—') ?></td>
             </tr>
             <tr>
                 <th>Curs:</th>
-                <td><?= esc($alumne->nivell ?? '—') ?></td>
+                <td>
+                    <?php 
+                        $c = $matricula->nivell;
+                        $sufix = is_numeric($c) ? ($c == 1 ? 'r' : ($c == 2 ? 'n' : ($c == 3 ? 'r' : 't'))) : '';
+                        echo esc($c . $sufix) . ' curs';
+                    ?>
+                </td>
             </tr>
             <tr>
                 <th>Any acadèmic:</th>
-                <td><?= esc($alumne->any_matricula ?? '—') ?></td>
+                <td><?= esc($matricula->any_matricula ?? '—') ?></td>
             </tr>
             <tr>
                 <th>Torn:</th>
-                <td><?= !empty($matricula->torn) ? 'Torn ' . esc($matricula->torn) : '—' ?></td>
+                <td>Torn <?= esc($matricula->torn ?? '—') ?></td>
             </tr>
             <tr>
                 <th>Estat:</th>
-                <td>
-                    <?php $estat = $matricula->estat ?? 'Pendent'; ?>
-                    <span
-                        class="badge <?= $estat === 'Validat' ? 'badge-success' : 'badge-warning' ?>"><?= esc($estat) ?></span>
-                </td>
+                <td><?= esc($matricula->estat ?? 'Pendent') ?></td>
             </tr>
             <tr>
                 <th>Data de matrícula:</th>
@@ -216,13 +214,7 @@
             </tr>
             <tr>
                 <th>Data de pagament:</th>
-                <td>
-                    <?php if (!empty($matricula->data_pagament)): ?>
-                        <span class="badge badge-success"><?= date('d/m/Y', strtotime($matricula->data_pagament)) ?></span>
-                    <?php else: ?>
-                        <span class="badge badge-warning">No pagat</span>
-                    <?php endif; ?>
-                </td>
+                <td><?= !empty($matricula->data_pagament) ? date('d/m/Y', strtotime($matricula->data_pagament)) : 'No pagat' ?></td>
             </tr>
             <tr>
                 <th>Bonificació:</th>
@@ -230,42 +222,41 @@
                     <?php if (!empty($matricula->bonificacio_nom)): ?>
                         <?= esc($matricula->bonificacio_nom) ?> (<?= esc($matricula->bonificacio_percentatge) ?>%)
                     <?php else: ?>
-                        Sense bonificació
+                        —
                     <?php endif; ?>
                 </td>
             </tr>
         </table>
     </div>
 
-    <?php if (!empty($tutors)): ?>
-        <div class="section">
-            <div class="section-title">Tutors legals</div>
+    <div class="section">
+        <div class="section-title">Tutors legals</div>
+        <?php if (!empty($tutors)): ?>
             <?php foreach ($tutors as $tutor): ?>
                 <div class="tutor-row">
-                    <div class="tutor-nom"><?= esc($tutor->nom) ?>         <?= esc($tutor->cognom1) ?> —
+                    <div class="tutor-nom"><?= esc($tutor->nom) ?> <?= esc($tutor->cognom1) ?> —
                         <em><?= esc($tutor->rol) ?></em>
                     </div>
                     <div class="tutor-info">
-                        DNI: <?= esc($tutor->dni ?? '—') ?>
-                        <?= !empty($tutor->telefon) ? ' · Tel: ' . esc($tutor->telefon) : '' ?>
-                        <?= !empty($tutor->email) ? ' · ' . esc($tutor->email) : '' ?>
-                        <?php if (!empty($tutor->custodia_percentatge)): ?>
-                            · Custòdia: <?= esc($tutor->custodia_percentatge) ?>%
-                        <?php endif; ?>
+                        DNI: <?= !empty($tutor->dni) ? esc($tutor->dni) : '—' ?>
+                        · Tel: <?= !empty($tutor->telefon) ? esc($tutor->telefon) : '—' ?>
+                        · Email: <?= !empty($tutor->email) ? esc($tutor->email) : '—' ?>
                     </div>
                 </div>
             <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
+        <?php else: ?>
+            <div class="tutor-row">—</div>
+        <?php endif; ?>
+    </div>
 
-    <?php if (!empty($matricula->observacions)): ?>
-        <div class="section">
-            <div class="section-title">Observacions</div>
-            <div style="padding: 8px 12px; min-height: 40px; font-style: italic; color: #444;">
-                <?php
+    <div class="section">
+        <div class="section-title">Observacions</div>
+        <div style="padding: 8px 12px; min-height: 40px; color: #444;">
+            <?php
+            if (!empty($matricula->observacions)) {
                 $historial = json_decode($matricula->observacions, true);
                 if (is_array($historial) && !empty($historial)): ?>
-                    <ul style="margin: 0; padding-left: 15px;">
+                    <ul style="margin: 0; padding-left: 15px; font-style: italic;">
                         <?php foreach ($historial as $obs): ?>
                             <li style="margin-bottom: 5px;">
                                 <strong>[<?= date('d/m/Y', strtotime($obs['data'])) ?>]:</strong>
@@ -274,11 +265,13 @@
                         <?php endforeach; ?>
                     </ul>
                 <?php else: ?>
-                    <?= nl2br(esc($matricula->observacions)) ?>
-                <?php endif; ?>
-            </div>
+                    <span style="font-style: italic;"><?= nl2br(esc($matricula->observacions)) ?></span>
+                <?php endif;
+            } else {
+                echo "—";
+            } ?>
         </div>
-    <?php endif; ?>
+    </div>
 
     <div class="footer">
         Document generat automàticament per l'Institut Caparrella · <?= date('Y') ?>
