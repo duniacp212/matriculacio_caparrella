@@ -21,7 +21,15 @@ class CsvDataService
 
     public function __construct(?string $csvPath = null)
     {
-        $this->csvPath = $csvPath ?? APPPATH . 'Data/alumnes.csv';
+        if ($csvPath !== null) {
+            $this->csvPath = $csvPath;
+        } else {
+            // Compatibilitat: al projecte hi ha `alumne.csv` (singular),
+            // però el constructor feia servir `alumnes.csv` (plural).
+            $singular = APPPATH . 'Data/alumne.csv';
+            $plural   = APPPATH . 'Data/alumnes.csv';
+            $this->csvPath = file_exists($singular) ? $singular : $plural;
+        }
         $this->load();
     }
 

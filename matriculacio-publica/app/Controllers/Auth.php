@@ -55,13 +55,10 @@ class Auth extends BaseController
         $alumneCSV = $this->csvData->getAlumneByDniAndEmail($dni, $email);
         if (!$alumneCSV) {
             return redirect()->back()->withInput()
-                ->with('error', 'El DNI i el correu no coincideixen amb cap alumne del sistema. Contacta amb la secretaria.');
-        }
-
-        $existing = $this->alumneModel->where('dni', $dni)->first();
-        if ($existing) {
-            return redirect()->back()->withInput()
-                ->with('error', 'Aquest DNI ja té un compte. Utilitza l\'opció "Ja tinc compte".');
+                ->with('error', 'El DNI que has introduït no es valid en aquest process de matriculació. 
+                                 Esperi el seu torn per a poder matricular-se. 
+                                 Si tens qualsevol dubte truqui a secretaria.
+                                ');
         }
 
         // Crear registre a la BDD amb les dades del CSV

@@ -27,17 +27,58 @@
                 <p class="form-subtitle">DNI i Targeta Sanitària</p>
             </div>
 
-            <form id="documentacioForm">
+            <?php if (session()->getFlashdata('errors')): ?>
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        <?php foreach (session()->getFlashdata('errors') as $err): ?>
+                            <li><?= esc($err) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
 
-                <!-- DNI -->
+            <?php
+                $sessionDni = strtoupper(trim(session()->get('dni') ?? ''));
+                $documentacioMeta = $inscripcio_meta['documentacio'] ?? [];
+                $computedDocTipus = 'DNI';
+                if ($sessionDni !== '' && preg_match('/^[XYZ][0-9]{7}[A-Z]$/', $sessionDni)) {
+                    $computedDocTipus = 'NIE';
+                }
+                $selectedDocTipus = old('doc_tipus') ?? ($documentacioMeta['doc_tipus'] ?? $computedDocTipus);
+                $dniValue = old('dni') ?? ($documentacioMeta['dni'] ?? $sessionDni);
+                $targetaSanitariaValue = old('targeta_sanitaria') ?? ($documentacioMeta['targeta_sanitaria'] ?? '');
+            ?>
+
+            <form action="<?= base_url('forms/saveDocumentacio') ?>" method="post" enctype="multipart/form-data" id="documentacioForm">
+                <?= csrf_field() ?>
+
+                <!-- Document d'identitat -->
                 <div class="section-divider">
-                    <span class="section-title">DNI</span>
+                    <span class="section-title">Document d'identitat</span>
                 </div>
 
-                <div class="mb-4">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="dni" placeholder="DNI">
-                        <label for="dni">Número de DNI</label>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <select class="form-select" id="docTipus" name="doc_tipus" aria-label="Tipus de document">
+                                <option value="DNI" <?= $selectedDocTipus === 'DNI' ? 'selected' : '' ?>>DNI</option>
+                                <option value="NIE" <?= $selectedDocTipus === 'NIE' ? 'selected' : '' ?>>NIE</option>
+                                <option value="PASSAPORT" <?= $selectedDocTipus === 'PASSAPORT' ? 'selected' : '' ?>>Passaport</option>
+                            </select>
+                            <label for="docTipus">Tipus de document</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text"
+                                class="form-control"
+                                id="dni"
+                                name="dni"
+                                placeholder="Número del document"
+                                maxlength="20"
+                                value="<?= esc($dniValue) ?>">
+                            <label for="dni">Número del document</label>
+                        </div>
                     </div>
                 </div>
 
@@ -55,13 +96,13 @@
                                     </svg>
                                 </div>
                                 <div class="file-upload-text-compact">
-                                    <strong>DNI - Cara A</strong>
+                                    <strong>Document - Cara A</strong>
                                     <span>Penja la part frontal</span>
                                 </div>
                             </div>
-                            <input type="file" class="file-upload-input" id="dniCaraA" accept=".pdf,.jpg,.jpeg,.png">
+                            <input type="file" class="file-upload-input" id="dniCaraA" name="dni_cara_a" accept=".pdf,.jpg,.jpeg,.png">
                         </label>
-                        <div class="file-name-display" id="dniCaraADisplay"></div>
+                        <div class="file-name-display" id="dniCaraADisplay"><?= esc($documentacioMeta['dni_cara_a'] ?? '') ?></div>
                     </div>
 
                     <div class="col-md-6">
@@ -77,13 +118,13 @@
                                     </svg>
                                 </div>
                                 <div class="file-upload-text-compact">
-                                    <strong>DNI - Cara B</strong>
+                                    <strong>Document - Cara B</strong>
                                     <span>Penja la part posterior</span>
                                 </div>
                             </div>
-                            <input type="file" class="file-upload-input" id="dniCaraB" accept=".pdf,.jpg,.jpeg,.png">
+                            <input type="file" class="file-upload-input" id="dniCaraB" name="dni_cara_b" accept=".pdf,.jpg,.jpeg,.png">
                         </label>
-                        <div class="file-name-display" id="dniCaraBDisplay"></div>
+                        <div class="file-name-display" id="dniCaraBDisplay"><?= esc($documentacioMeta['dni_cara_b'] ?? '') ?></div>
                     </div>
                 </div>
 
@@ -94,7 +135,12 @@
 
                 <div class="mb-4">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="targetaSanitaria" placeholder="Targeta Sanitària">
+                        <input type="text"
+                            class="form-control"
+                            id="targetaSanitaria"
+                            name="targeta_sanitaria"
+                            placeholder="Targeta Sanitària"
+                            value="<?= esc($targetaSanitariaValue) ?>">
                         <label for="targetaSanitaria">Número de Targeta Sanitària</label>
                     </div>
                 </div>
@@ -118,9 +164,10 @@
                                 </div>
                             </div>
                             <input type="file" class="file-upload-input" id="targetaCaraA"
+                                name="targeta_cara_a"
                                 accept=".pdf,.jpg,.jpeg,.png">
                         </label>
-                        <div class="file-name-display" id="targetaCaraADisplay"></div>
+                        <div class="file-name-display" id="targetaCaraADisplay"><?= esc($documentacioMeta['targeta_cara_a'] ?? '') ?></div>
                     </div>
 
                     <div class="col-md-6">
@@ -141,17 +188,18 @@
                                 </div>
                             </div>
                             <input type="file" class="file-upload-input" id="targetaCaraB"
+                                name="targeta_cara_b"
                                 accept=".pdf,.jpg,.jpeg,.png">
                         </label>
-                        <div class="file-name-display" id="targetaCaraBDisplay"></div>
+                        <div class="file-name-display" id="targetaCaraBDisplay"><?= esc($documentacioMeta['targeta_cara_b'] ?? '') ?></div>
                     </div>
                 </div>
 
                 <!-- Botons -->
                 <div class="form-actions">
                 <a href="<?= base_url('forms/dadesCicle') ?>" class="btn btn-anterior btn-lg">Anterior</a>
-                <button type="button" class="btn btn-outline-secondary btn-lg">Guardar</button>
-                    <a href="<?= base_url('forms/bonificacions') ?>" class="btn btn-primary btn-lg">Següent</a>
+                <button type="submit" name="save_draft" value="1" class="btn btn-outline-secondary btn-lg">Guardar</button>
+                    <button type="submit" class="btn btn-primary btn-lg">Següent</button>
                 </div>
 
             </form>
@@ -160,6 +208,24 @@
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function bindFileName(inputId, displayId) {
+            const input = document.getElementById(inputId);
+            const display = document.getElementById(displayId);
+            if (!input || !display) {
+                return;
+            }
+
+            input.addEventListener('change', function () {
+                display.textContent = this.files[0] ? this.files[0].name : '';
+            });
+        }
+
+        bindFileName('dniCaraA', 'dniCaraADisplay');
+        bindFileName('dniCaraB', 'dniCaraBDisplay');
+        bindFileName('targetaCaraA', 'targetaCaraADisplay');
+        bindFileName('targetaCaraB', 'targetaCaraBDisplay');
+    </script>
 </body>
 
 </html>

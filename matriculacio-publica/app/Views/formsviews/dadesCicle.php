@@ -12,6 +12,18 @@
 
 <body>
     <div class="background-decoration"></div>
+    <?php
+        $cicleMeta = $inscripcio_meta['cicle'] ?? [];
+        $selectedOptatives = [
+            old('optativa_1') ?? ($cicleMeta['optativa_1'] ?? ''),
+            old('optativa_2') ?? ($cicleMeta['optativa_2'] ?? ''),
+            old('optativa_3') ?? ($cicleMeta['optativa_3'] ?? ''),
+        ];
+        $matriculacioModuls = old('matriculacio_moduls') !== null
+            ? (bool) old('matriculacio_moduls')
+            : !empty($cicleMeta['matriculacio_moduls']);
+        $resguardNotes = $cicleMeta['resguard_notes'] ?? null;
+    ?>
     <div class="container">
         <div class="form-wrapper">
             <div class="form-header">
@@ -73,30 +85,54 @@
                 </div>
                 <?php endif; ?>
 
-                <!-- Opcions addicionals -->
+                <?php if (!empty($optatives)): ?>
                 <div class="section-divider">
-                    <span class="section-title">Requisits i Observacions</span>
-                </div>
-
-                <div class="mb-4">
-                    <div class="form-check checkbox-custom">
-                        <input class="form-check-input" type="checkbox" name="acceptacio_matricula" id="acceptacioMatricula"
-                            <?= !empty($inscripcio['acceptacio_matricula']) ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="acceptacioMatricula">
-                            Accepto matricular-me als mòduls suspessos de primer
-                        </label>
-                    </div>
+                    <span class="section-title">Optatives</span>
                 </div>
 
                 <div class="mb-5">
-                    <div class="form-check checkbox-custom">
-                        <input class="form-check-input" type="checkbox" name="matriculacio_moduls" id="matriculacioModuls"
-                            <?= !empty($inscripcio['matriculacio_moduls']) ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="matriculacioModuls">
-                            Matricular-se mòduls solts
-                        </label>
+                    <p class="text-muted small mb-3">Selecciona tres optatives diferents per ordre de prioritat, de l'1 al 3.</p>
+                    <div class="row g-3">
+                        <?php for ($i = 0; $i < 3; $i++): ?>
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <select class="form-select optativa-select" id="optativa<?= $i + 1 ?>" name="optativa_<?= $i + 1 ?>">
+                                        <option value="">Tria una optativa</option>
+                                        <?php foreach ($optatives as $optativa): ?>
+                                            <option value="<?= esc($optativa) ?>" <?= $selectedOptatives[$i] === $optativa ? 'selected' : '' ?>>
+                                                <?= esc($optativa) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <label for="optativa<?= $i + 1 ?>">Prioritat <?= $i + 1 ?></label>
+                                </div>
+                            </div>
+                        <?php endfor; ?>
                     </div>
                 </div>
+                <?php endif; ?>
+
+                
+
+                <?php if ($is_cicle): ?>
+                    <!-- Opcions addicionals -->
+                <div class="section-divider">
+                    <span class="section-title">Requisits i Observacions</span>
+                </div>
+                    <div class="alert alert-info mb-4">
+                        Tingues en compte que, en el procés de matrícula, se t'assignaran també els mòduls pendents de primer curs que encara no hagis superat.
+                    </div>
+
+                    <div class="mb-5">
+                        <div class="form-check checkbox-custom">
+                            <input class="form-check-input" type="checkbox" name="matriculacio_moduls" id="matriculacioModuls"
+                                <?= $matriculacioModuls ? 'checked' : '' ?>>
+                            <label class="form-check-label" for="matriculacioModuls">
+                                Vull matricular-me de mòduls solts
+                            </label>
+                        </div>
+                    </div>
+                <?php endif; ?>
 
                 <!-- Resguard de Notes -->
                 <div class="section-divider">
@@ -115,13 +151,13 @@
                             </div>
                             <div class="file-upload-text">
                                 <strong>Resguard de Notes</strong>
-                                <span>Clica per penjar el fitxer o arrossega'l aquí</span>
+                                <span>Selecciona el resguard de notes del curs anterior</span>
                                 <small>PDF, JPG, PNG (màx. 5MB)</small>
                             </div>
                         </div>
                         <input type="file" class="file-upload-input" id="resguardNotes" name="resguard_notes" accept=".pdf,.jpg,.jpeg,.png">
                     </label>
-                    <div class="file-name-display" id="fileNameDisplay"></div>
+                    <div class="file-name-display" id="fileNameDisplay"><?= esc($resguardNotes ?? '') ?></div>
                 </div>
 
                 <!-- Botons -->
@@ -142,6 +178,20 @@
         document.getElementById('resguardNotes').addEventListener('change', function () {
             const display = document.getElementById('fileNameDisplay');
             display.textContent = this.files[0] ? this.files[0].name : '';
+        });
+
+        // Evita repetir la mateixa optativa en diferents prioritats.
+        document.querySelectorAll('.optativa-select').forEach((select) => {
+            select.addEventListener('change', function () {
+                const values = Array.from(document.querySelectorAll('.optativa-select'))
+                    .map(item => item.value)
+                    .filter(Boolean);
+
+                if (values.length !== new Set(values).size) {
+                    alert('No pots repetir una mateixa optativa en més d\'una prioritat.');
+                    this.value = '';
+                }
+            });
         });
     </script>
 </body>
