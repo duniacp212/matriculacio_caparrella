@@ -1,0 +1,44 @@
+Canvis fets
+
+1. Formulari de tutors
+- S'ha convertit `app/Views/formsviews/dadesTutors.php` en un formulari funcional amb `POST` a `Forms::saveDadesTutors`.
+- Ara només és obligatori informar un tutor.
+- S'ha afegit un botó `Afegir tutor` per mostrar fins a 3 tutors.
+- Cada tutor té selector de rol: `Pare`, `Mare` o `Tutor legal`.
+- S'ha eliminat el camp `Situacions singulars`.
+- Ara es demana també:
+  - el `prefix` del telèfon i el `número` (validació de format),
+  - el `DNI/NIE` del tutor (validació amb la mateixa lògica que `DNIValidator`).
+- El controlador ara desa els tutors com a registres separats a la taula `alumne_tutor_legal`.
+
+2. Formulari de dades del cicle
+- S'han afegit tres desplegables de prioritat per a optatives a `app/Views/formsviews/dadesCicle.php`.
+- Les optatives es carreguen des de la taula `optativa` segons l'estudi del alumne.
+- El controlador valida que:
+  - hi hagi 3 optatives si n'hi ha de configurades,
+  - no es repeteixin,
+  - siguin vàlides per a l'estudi.
+- La part de `mòduls solts` només es mostra per a cicles formatius.
+- S'ha eliminat la checkbox dels mòduls suspesos de primer i s'ha substituït per un text informatiu més formal.
+- El resguard de notes continua amb `input type="file"` i ara el nom del fitxer queda reflectit i es guarda al metadata de la matrícula.
+
+3. Formulari de documentació
+- S'ha corregit l'error `There is no data to update.` de `saveDocumentacio()`.
+- El problema venia de fer `update()` amb camps que no existeixen a `allowedFields` del model.
+- Ara la documentació es desa dins de `observacions` en format JSON, mantenint compatibilitat amb l'esquema actual.
+- També es preserven els noms dels fitxers pujats i es tornen a mostrar al formulari.
+
+4. Controlador Forms
+- S'han afegit funcions auxiliars comentades per:
+  - separar cognoms dels tutors,
+  - detectar si un estudi és cicle formatiu,
+  - resoldre l'`id_estudi`,
+  - obtenir optatives,
+  - extreure i serialitzar metadata a `observacions`.
+- S'han afegit comentaris a la lògica nova perquè sigui més fàcil de seguir.
+
+5. CSV
+- `CsvDataService` ara detecta correctament `app/Data/alumne.csv` encara que abans esperava `alumnes.csv`.
+
+Nota
+- Les optatives només es mostraran si hi ha registres a la taula `optativa` per a l'estudi corresponent.

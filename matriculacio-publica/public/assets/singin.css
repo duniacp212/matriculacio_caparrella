@@ -1,0 +1,219 @@
+/* ===================================================
+   IES CAPARRELLA - Sign-in / Register Page
+   =================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Barlow+Condensed:wght@600;700&display=swap');
+
+:root {
+    --cap-blue-dark:   #0d2b5e;
+    --cap-blue:        #1a4a8f;
+    --cap-blue-mid:    #2a5caa;
+    --cap-blue-light:  #3a74c8;
+    --cap-orange:      #f5a200;
+    --cap-orange-dark: #d48900;
+    --cap-orange-soft: #ffd270;
+    --cap-white:       #ffffff;
+    --cap-grey-light:  #f0f4fb;
+    --cap-text:        #1c2b45;
+    --cap-text-muted:  #5a6f8a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: var(--cap-blue-dark);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Nunito', sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--cap-blue-mid) 0%, transparent 70%);
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    bottom: -80px; left: -80px;
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, var(--cap-orange) 0%, transparent 65%);
+    opacity: 0.12;
+    pointer-events: none;
+}
+
+.singIn-container {
+    background: var(--cap-white);
+    border-radius: 20px;
+    box-shadow: 0 24px 60px rgba(13,43,94,0.5);
+    max-width: 460px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    animation: slideUp 0.65s cubic-bezier(0.16,1,0.3,1);
+}
+
+.singIn-container::before {
+    content: '';
+    display: block;
+    height: 6px;
+    background: linear-gradient(90deg, var(--cap-blue) 0%, var(--cap-blue-light) 55%, var(--cap-orange) 100%);
+}
+
+.singIn-header-band {
+    background: linear-gradient(135deg, var(--cap-blue-dark) 0%, var(--cap-blue) 100%);
+    padding: 24px 36px 20px;
+    text-align: center;
+}
+
+.singIn-header-band .school-logo-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.singIn-header-band .school-logo-area svg {
+    width: 38px; height: 38px;
+}
+
+.school-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--cap-white);
+    text-align: left;
+    line-height: 1.2;
+}
+
+.school-name span {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--cap-orange-soft);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.body-content {
+    padding: 26px 36px 34px;
+}
+
+.singIn-title {
+    text-align: center;
+    margin-bottom: 22px;
+    color: var(--cap-text);
+    font-weight: 800;
+    font-size: 1.35rem;
+}
+
+.form-label {
+    font-weight: 700;
+    color: var(--cap-text);
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.form-text { font-size: 0.8rem; color: var(--cap-text-muted); margin-top: 4px; }
+
+.form-control {
+    border: 2px solid #e0e8f0;
+    border-radius: 10px;
+    padding: 0.65rem 0.9rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    color: var(--cap-text);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: var(--cap-grey-light);
+}
+
+.form-control:focus {
+    border-color: var(--cap-blue-mid);
+    box-shadow: 0 0 0 3px rgba(42,92,170,0.18);
+    background: var(--cap-white);
+    outline: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--cap-blue) 0%, var(--cap-blue-dark) 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 0.75rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 14px rgba(26,74,143,0.35);
+    color: white;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--cap-blue-mid) 0%, var(--cap-blue) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(26,74,143,0.45);
+    color: white;
+}
+
+.btn-next {
+    background: var(--cap-blue-mid);
+    border: none;
+    border-radius: 8px;
+    margin-top: 0.75rem;
+    padding: 0.5rem 1.5rem;
+    float: right;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-next:hover { background: var(--cap-blue); }
+
+.mb-3 { margin-bottom: 1.4rem !important; }
+
+.is-invalid { border-color: #dc3545 !important; }
+.is-valid { border-color: #198754 !important; }
+
+.invalid-feedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.8em;
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.form-control.is-invalid ~ .invalid-feedback { display: block; }
+
+a.text-decoration-none {
+    color: var(--cap-blue-mid);
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+a.text-decoration-none:hover { color: var(--cap-orange-dark); text-decoration: underline !important; }
+
+.alert { border-radius: 10px; margin-bottom: 1.2rem; font-size: 0.9rem; border-left: 4px solid transparent; }
+.alert-success { border-left-color: #198754; }
+.alert-danger { border-left-color: #dc3545; }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(40px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
