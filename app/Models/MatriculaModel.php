@@ -109,6 +109,7 @@ class MatriculaModel extends Model
             e.tipus,
             e.nivell,
             YEAR(m.data) as any_matricula,
+            b.id_bonificacio,
             b.tipus as bonificacio_nom,
             b.percentatge as bonificacio_percentatge
         ')
@@ -119,5 +120,75 @@ class MatriculaModel extends Model
             ->where('m.id_matricula', $binaryId)
             ->get()
             ->getFirstRow(Matricula::class);
+    }
+
+    public function comprovarPlacesLliures($idEstudi)
+    {
+        $estudiModel = new \App\Models\EstudiModel();
+        $estudi = $estudiModel->find($idEstudi);
+
+        if ($estudi['places'] === null) {
+            return true;
+        }
+
+        $query = $this->where('id_estudi', $idEstudi);
+        if ($estudi['data_viva'] !== null) {
+            $query->where('data >=', $estudi['data_viva']);
+        }
+
+        $matriculats = $query->countAllResults();
+
+        if ($matriculats >= $estudi['places']) {
+            return "Curs complet, adreça't personalment a secretaria.";
+        }
+
+        return true;
+    }
+
+    public function getServeisContractats($idMatricula)
+    {
+        if (is_string($idMatricula) && strlen($idMatricula) === 36) {
+            $idMatricula = hex2bin(str_replace('-', '', $idMatricula));
+        }
+
+        return $this->db->table('serveis_contractats sc')
+            ->select('sc.id_servei, s.tipus, s.preu')
+            ->join('serveis_complementaris s', 's.id_servei = sc.id_servei')
+            ->where('sc.id_matricula', $idMatricula)
+            ->get()
+            ->getResultArray();
+    }
+    public function actualitzarBonificacio($idMatricula, $idBonificacio)
+    {
+        if (is_string($idMatricula) && strlen($idMatricula) === 36) {
+            $idMatricula = hex2bin(str_replace('-', '', $idMatricula));
+        }
+
+        $this->db->table('matricula_bonificacio')->where('id_matricula', $idMatricula)->delete();
+        if (!empty($idBonificacio)) {
+            $this->db->table('matricula_bonificacio')->insert([
+                'id_matricula' => $idMatricula,
+                'id_bonificacio' => $idBonificacio,
+                'estat' => 'Validat'
+            ]);
+        }
+    }
+
+    public function actualitzarServeisContractats($idMatricula, $serveisIds)
+    {
+        if (is_string($idMatricula) && strlen($idMatricula) === 36) {
+            $idMatricula = hex2bin(str_replace('-', '', $idMatricula));
+        }
+
+        $this->db->table('serveis_contractats')->where('id_matricula', $idMatricula)->delete();
+        if (!empty($serveisIds) && is_array($serveisIds)) {
+            foreach ($serveisIds as $idS) {
+                $this->db->table('serveis_contractats')->insert([
+                    'id_matricula' => $idMatricula,
+                    'id_servei' => $idS,
+                    'data_alta' => date('Y-m-d H:i:s')
+                ]);
+            }
+        }
     }
 }

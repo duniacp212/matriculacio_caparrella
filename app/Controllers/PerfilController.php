@@ -36,59 +36,58 @@ class PerfilController extends BaseController
     public function actualitzar()
     {
         $idUsuari = session()->get('id_usuari');
-        if (!$idUsuari) return redirect()->to('/login');
+        if (!$idUsuari) return redirect()->to(base_url('login'));
 
         try {
             $binaryId = (strlen($idUsuari) === 16) ? $idUsuari : hex2bin(str_replace('-', '', $idUsuari));
         } catch (\Exception $e) {
-            return redirect()->to('/login');
+            return redirect()->to(base_url('login'));
         }
 
         $model  = new UsuariModel();
         $usuari = $model->find($binaryId);
 
         if (!$usuari) {
-            return redirect()->to('/login');
+            return redirect()->to(base_url('login'));
         }
 
-        $email    = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
-        $repetir  = $this->request->getPost('repetir_password');
+        $contrasenya = $this->request->getPost('contrasenya');
+        $repetir     = $this->request->getPost('repetir_contrasenya');
 
-        
+        if (empty($contrasenya)) {
+            return redirect()->to(base_url('perfil'));
+        }
 
         $rules = [
-            'email'   => 'required|valid_email',
-            'telefon' => 'permit_empty|max_length[20]',
+            'contrasenya' => 'min_length[8]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).+$/]'
         ];
 
-        if (! $this->validate($rules)) {
+        $missatges = [
+            'contrasenya' => [
+                'regex_match' => 'La contrasenya ha de contenir almenys una majúscula, un número i un símbol.',
+                'min_length'  => 'La contrasenya ha de tenir almenys 8 caràcters.'
+            ]
+        ];
+
+        if (! $this->validate($rules, $missatges)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        if ($email !== $usuari->email) {
-            $existent = $model->where('email', $email)->first();
-            if ($existent) {
-                return redirect()->back()->withInput()->with('error', 'Aquest correu electrònic ja està en ús.');
-            }
-        }
-
-        if (!empty($password) && $password !== $repetir) {
+        if ($contrasenya !== $repetir) {
             return redirect()->back()->withInput()->with('error', 'Les contrasenyes no coincideixen.');
         }
 
-        $usuari->email   = $email;
-        $usuari->usuari  = $email;
-        $usuari->telefon = $this->request->getPost('telefon');
-
-        if (!empty($password)) {
-            $usuari->password = $password;
+        $antiga = $this->request->getPost('contrasenya_antiga');
+        if (empty($antiga) || !password_verify($antiga, $usuari->password)) {
+            return redirect()->back()->withInput()->with('error', 'La contrasenya antiga no és correcta.');
         }
+
+        $usuari->password = $contrasenya;
 
         if ($usuari->hasChanged()) {
             $model->save($usuari);
         }
         
-        return redirect()->to('/perfil')->with('exit', 'Perfil actualitzat correctament.');
+        return redirect()->to(base_url('perfil'))->with('exit', 'Contrasenya actualitzada correctament.');
     }
 }

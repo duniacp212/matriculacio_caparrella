@@ -87,7 +87,7 @@
                         </div>
                     </div>
 
-                    <?php if ($esMenor && !empty($tutors)): ?>
+                    <?php if (!empty($tutors)): ?>
                     <div class="card-header fw-semibold border-top">Tutors legals</div>
                     <div class="card-body">
                         <div class="row g-3">
@@ -111,7 +111,7 @@
 
                     <div class="card-body">
 
-                        <?php if ($esMenor && !empty($tutors)): ?>
+                        <?php if (!empty($tutors)): ?>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Destinatari del correu</label>
                             <select name="destinatari" id="destinatari" class="form-select form-select-sm">

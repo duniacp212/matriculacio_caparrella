@@ -7,9 +7,15 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 // PÚBLIQUES (sense autenticació)
-$routes->get('/login', 'AutenticacioController::login');
-$routes->post('/login', 'AutenticacioController::autenticacio');
-$routes->get('/logout', 'AutenticacioController::logout');
+$routes->get('login', 'AutenticacioController::login');
+$routes->post('login', 'AutenticacioController::autenticacio');
+$routes->get('logout', 'AutenticacioController::logout');
+
+// Rutes per al procés de Login amb 2FA (Públiques, però requereixen sessió temporal)
+$routes->get('2fa/verificar', 'AutenticacioController::verificar2fa');
+$routes->post('2fa/validar', 'AutenticacioController::validar2fa');
+$routes->get('2fa/configurar', 'AutenticacioController::configurar2fa');
+$routes->post('2fa/activar', 'AutenticacioController::activar2fa');
 
 // PRIVADES - TOTS ELS ROLS (auth)
 $routes->group('', ['filter' => 'auth'], function ($routes) {
@@ -25,6 +31,7 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->post('alumnes/pujar-document/(:any)', 'AlumnesController::pujarDocument/$1');
     $routes->get('alumnes/eliminar-document/(:any)', 'AlumnesController::eliminarDocument/$1');
     $routes->post('alumnes/actualitzar-observacions/(:any)', 'AlumnesController::actualitzarObservacions/$1');
+    $routes->post('alumnes/actualitzar-dades/(:any)', 'AlumnesController::actualitzarDadesAlumne/$1');
     $routes->post('alumnes/actualitzar-observacions-alumne/(:any)', 'AlumnesController::actualitzarObservacionsAlumne/$1');
     $routes->get('alumnes/eliminar-observacio/(:any)/(:any)', 'AlumnesController::eliminarObservacio/$1/$2');
     $routes->get('alumnes/eliminar-observacio-alumne/(:any)/(:any)', 'AlumnesController::eliminarObservacioAlumne/$1/$2');
@@ -93,11 +100,6 @@ $routes->group('', ['filter' => ['auth', 'rolAdmin']], function ($routes) {
     $routes->post('bonificacions/guardar', 'BonificacionsController::guardar');
     $routes->get('bonificacions/eliminar/(:num)', 'BonificacionsController::eliminar/$1');
 
-});
-
-// PRIVADES - NOMÉS SUPER ADMIN (rolSuperAdmin)
-$routes->group('', ['filter' => ['auth', 'rolSuperAdmin']], function ($routes) {
-
     // USUARIS ADMINISTRATIUS
     $routes->get('usuaris', 'UsuarisController::index');
     $routes->get('usuaris/nou', 'UsuarisController::nou');
@@ -105,6 +107,11 @@ $routes->group('', ['filter' => ['auth', 'rolSuperAdmin']], function ($routes) {
     $routes->get('usuaris/editar/(:any)', 'UsuarisController::editar/$1');
     $routes->post('usuaris/actualitzar/(:any)', 'UsuarisController::actualitzar/$1');
     $routes->get('usuaris/eliminar/(:any)', 'UsuarisController::eliminar/$1');
+
+});
+
+// PRIVADES - NOMÉS SUPER ADMIN (rolSuperAdmin)
+$routes->group('', ['filter' => ['auth', 'rolSuperAdmin']], function ($routes) {
 
     // CONFIGURACIÓ
     $routes->get('configuracio', 'ConfiguracioController::index');

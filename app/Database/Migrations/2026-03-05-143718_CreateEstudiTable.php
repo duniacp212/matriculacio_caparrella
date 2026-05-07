@@ -44,6 +44,11 @@ class CreateEstudiTable extends Migration
                 'null'       => true,
                 'default'    => null,
             ],
+            'data_viva' => [
+                'type' => 'DATE',
+                'null' => true,
+                'default' => null,
+            ],
         ]);
 
         $this->forge->addKey('id_estudi', true);

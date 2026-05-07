@@ -219,6 +219,16 @@
                         <td><?= $m['bonificacio_nom'] ? esc($m['bonificacio_nom']) . ' (' . $m['bonificacio_percentatge'] . '%)' : 'Cap' ?></td>
                     </tr>
                     <tr>
+                        <th>Serveis contractats:</th>
+                        <td>
+                            <?php if (!empty($m['serveis'])): ?>
+                                <?= implode(', ', array_map(function($s) { return esc($s['tipus']); }, $m['serveis'])) ?>
+                            <?php else: ?>
+                                Cap
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
                         <th>Observacions alumne:</th>
                         <td style="font-weight: normal; font-style: italic;">
                             <?php 

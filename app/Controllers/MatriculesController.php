@@ -6,6 +6,8 @@ use App\Models\MatriculaModel;
 use App\Models\AlumneModel;
 use App\Models\AlumneTutorLegalModel;
 use App\Models\DocumentAlumneModel;
+use App\Models\BonificacioModel;
+use App\Models\ServeiComplementariModel;
 
 class MatriculesController extends BaseController
 {
@@ -24,15 +26,25 @@ class MatriculesController extends BaseController
 
         $alumne = $alumneModel->getExpedientPerId($matricula->id_alumne);
         $tutors = $tutorModel->getTutorsPerAlumne($matricula->id_alumne);
-        
+
         $documents = $documentModel->getDocumentsPerAlumneIAny($matricula->id_alumne, $matricula->any_matricula);
+
+        $bonificacioModel = new BonificacioModel();
+        $bonificacions = $bonificacioModel->findAll();
+
+        $serveiModel = new ServeiComplementariModel();
+        $serveis = $serveiModel->findAll();
+        $serveisContractats = $model->getServeisContractats($matricula->id_matricula);
 
         return view('matricules/matricula_alumne', [
             'title' => 'Dades de la matrícula',
             'matricula' => $matricula,
             'alumne' => $alumne,
             'tutors' => $tutors,
-            'documents' => $documents
+            'documents' => $documents,
+            'bonificacions' => $bonificacions,
+            'serveis' => $serveis,
+            'serveisContractats' => $serveisContractats
         ]);
     }
 
@@ -49,6 +61,32 @@ class MatriculesController extends BaseController
         }
 
         $id_alumne = $matricula->id_alumne;
+
+        $rules = [
+            'nom'             => 'permit_empty|regex_match[/^[a-zA-ZáéíóúàèìòùäëïöüñçÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑÇ\·\-\'\s]+$/u]',
+            'cognom1'         => 'permit_empty|regex_match[/^[a-zA-ZáéíóúàèìòùäëïöüñçÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑÇ\·\-\'\s]+$/u]',
+            'cognom2'         => 'permit_empty|regex_match[/^[a-zA-ZáéíóúàèìòùäëïöüñçÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑÇ\·\-\'\s]+$/u]',
+            'telefon'         => 'permit_empty|regex_match[/^(\+?[0-9]{9,15})$/]',
+            'telefon2'        => 'permit_empty|regex_match[/^(\+?[0-9]{9,15})$/]',
+            'tutor_nom.*'     => 'permit_empty|regex_match[/^[a-zA-ZáéíóúàèìòùäëïöüñçÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑÇ\·\-\'\s]+$/u]',
+            'tutor_cognom1.*' => 'permit_empty|regex_match[/^[a-zA-ZáéíóúàèìòùäëïöüñçÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑÇ\·\-\'\s]+$/u]',
+            'tutor_telefon.*' => 'permit_empty|regex_match[/^(\+?[0-9]{9,15})$/]',
+        ];
+
+        $missatges = [
+            'nom'             => ['regex_match' => 'El nom de l\'alumne només pot contenir lletres, espais, guions o apòstrofs.'],
+            'cognom1'         => ['regex_match' => 'El primer cognom de l\'alumne només pot contenir lletres, espais, guions o apòstrofs.'],
+            'cognom2'         => ['regex_match' => 'El segon cognom de l\'alumne només pot contenir lletres, espais, guions o apòstrofs.'],
+            'telefon'         => ['regex_match' => 'El format del telèfon de l\'alumne no és vàlid (mínim 9 números).'],
+            'telefon2'        => ['regex_match' => 'El format del telèfon 2 de l\'alumne no és vàlid (mínim 9 números).'],
+            'tutor_nom.*'     => ['regex_match' => 'El nom d\'un dels tutors només pot contenir lletres, espais, guions o apòstrofs.'],
+            'tutor_cognom1.*' => ['regex_match' => 'El cognom d\'un dels tutors només pot contenir lletres, espais, guions o apòstrofs.'],
+            'tutor_telefon.*' => ['regex_match' => 'El format del telèfon d\'un dels tutors no és vàlid (mínim 9 números).'],
+        ];
+
+        if (!$this->validate($rules, $missatges)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
 
         $dadesAlumne = [
             'nom' => $this->request->getPost('nom'),
@@ -75,6 +113,12 @@ class MatriculesController extends BaseController
         ];
 
         $model->update($binaryId, $dadesMatricula);
+
+        $idBonificacio = $this->request->getPost('id_bonificacio');
+        $model->actualitzarBonificacio($binaryId, $idBonificacio);
+
+        $serveisSels = $this->request->getPost('serveis') ?? [];
+        $model->actualitzarServeisContractats($binaryId, $serveisSels);
 
         $tutorsIds = $this->request->getPost('tutor_id') ?? [];
         $tutorsNoms = $this->request->getPost('tutor_nom') ?? [];

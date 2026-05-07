@@ -18,6 +18,10 @@
             <div class="d-flex justify-content-end gap-2 mb-3">
                 <a href="<?= base_url('alumnes') ?>" class="btn btn-outline-secondary btn-sm px-4 me-auto">Tornar</a>
                 
+                <button type="button" id="btnSeleccionarTots" class="btn btn-outline-dark btn-sm px-4">
+                    Seleccionar tots
+                </button>
+
                 <button type="button" id="btnAlternar" class="btn btn-outline-primary btn-sm px-4">
                     Activar / Desactivar seleccionats
                 </button>
@@ -112,9 +116,26 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let canvisPendents = false;
+    const botoSeleccionarTots = document.getElementById('btnSeleccionarTots');
     const botoAlternar = document.getElementById('btnAlternar');
     const botoGuardar = document.querySelector('button[value="guardar"]');
     const files = document.querySelectorAll('tbody tr');
+
+    botoSeleccionarTots.addEventListener('click', function() {
+        const checkboxes = document.querySelectorAll('.curso-check');
+        const totsMarcats = Array.from(checkboxes).every(cb => cb.checked);
+        
+        checkboxes.forEach(cb => cb.checked = !totsMarcats);
+        this.textContent = totsMarcats ? 'Seleccionar tots' : 'Desmarcar tots';
+    });
+
+    const checks = document.querySelectorAll('.curso-check');
+    checks.forEach(cb => {
+        cb.addEventListener('change', function() {
+            const totsMarcats = Array.from(checks).every(cb => cb.checked);
+            botoSeleccionarTots.textContent = totsMarcats ? 'Desmarcar tots' : 'Seleccionar tots';
+        });
+    });
 
     botoAlternar.addEventListener('click', function() {
         const seleccionats = document.querySelectorAll('.curso-check:checked');
@@ -147,6 +168,8 @@ document.addEventListener('DOMContentLoaded', function() {
             checkbox.checked = false;
             canvisPendents = true;
         });
+
+        botoSeleccionarTots.textContent = 'Seleccionar tots';
     });
 
     botoGuardar.addEventListener('click', function() {

@@ -139,13 +139,13 @@
         </div>
     </form>
 
-    <div class="row flex-grow-1 g-0 mt-3">
+    <div class="row flex-grow-1 g-0 mt-1">
 
         <?= view('layouts/aside') ?>
 
         <main class="col-10 pt-0 px-3 overflow-auto">
 
-            <table class="table table-bordered table-hover bg-white">
+            <table class="table table-bordered table-hover table-sm bg-white">
 
                 <thead class="table-light">
                     <tr>
@@ -171,17 +171,11 @@
                                 <input type="radio" name="matricula_id" value="<?= esc($alumne->id_matricula) ?>"
                                     data-alumne-id="<?= esc($alumne->id_alumne) ?>">
                             </td>
-
                             <td><?= esc($alumne->nom) ?></td>
-
-                            <td><?= esc($alumne->cognom1) ?><?= esc($alumne->cognom2) ?></td>
-
+                            <td><?= esc($alumne->cognom1) ?> <?= esc($alumne->cognom2) ?></td>
                             <td><?= esc($alumne->dni) ?></td>
-
                             <td><?= esc($alumne->estudi ?? '') ?></td>
-
                             <td><?= esc($alumne->curs ?? '') ?></td>
-
                             <td><?= !empty($alumne->torn) ? 'Torn ' . esc($alumne->torn) : '' ?></td>
 
                             <td><?= esc($alumne->estat) ?></td>
@@ -189,7 +183,6 @@
                             <td class="<?= !empty($alumne->data_pagament) ? 'text-success' : 'text-danger' ?>">
                                 <?= !empty($alumne->data_pagament) ? 'Pagat' : 'No pagat' ?>
                             </td>
-
                             <td>
                                 <?php if ($alumne->bonificats == 50): ?>
                                     <span class="badge bg-warning text-dark">50%</span>
@@ -199,12 +192,9 @@
                                     <span class="badge bg-secondary">0%</span>
                                 <?php endif; ?>
                             </td>
-
                         </tr>
-
                     <?php endforeach; ?>
                 </tbody>
-
             </table>
 
             <div class="d-flex justify-content-between align-items-center mt-3">

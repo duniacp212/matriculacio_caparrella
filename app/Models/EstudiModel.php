@@ -14,7 +14,8 @@ class EstudiModel extends Model
         'nivell',
         'id_familia',
         'matricula_viva',
-        'places'
+        'places',
+        'data_viva'
     ];
 
     public function duplicarComplet(int $idEstudi)

@@ -24,10 +24,21 @@ class MatriculaVivaController extends BaseController
         $places = $this->request->getPost('places') ?? [];
 
         foreach ($estats as $id => $valor) {
-            $model->update($id, [
+            $estudiActual = $model->find($id);
+            $novesPlaces = ($places[$id] !== '' && $places[$id] !== null) ? $places[$id] : null;
+
+            $dades = [
                 'matricula_viva' => $valor,
-                'places' => $places[$id] ?? null,
-            ]);
+                'places' => $novesPlaces,
+            ];
+
+            if ($novesPlaces !== null && $estudiActual['data_viva'] === null) {
+                $dades['data_viva'] = date('Y-m-d');
+            } elseif ($novesPlaces === null) {
+                $dades['data_viva'] = null;
+            }
+
+            $model->update($id, $dades);
         }
 
         return redirect()->to(base_url('matricula-viva'))

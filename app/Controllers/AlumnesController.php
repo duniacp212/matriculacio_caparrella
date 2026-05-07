@@ -75,6 +75,11 @@ class AlumnesController extends BaseController
         $documents = $documentModel->getDocumentsPerAlumne($id);
         $matricules = $alumneModel->getHistorialMatricules($id);
 
+        $matriculaModel = new MatriculaModel();
+        foreach ($matricules as &$mat) {
+            $mat['serveis'] = $matriculaModel->getServeisContractats($mat['id_matricula']);
+        }
+
         return view('alumnes/expedient', [
             'title' => 'Expedient de l\'alumne',
             'alumne' => $alumne,
@@ -111,8 +116,9 @@ class AlumnesController extends BaseController
         }
 
         $any = date('Y');
+        $mes = date('m');
         $dni = trim($alumne->dni);
-        $carpeta = WRITEPATH . 'uploads/' . $any . '/' . $dni;
+        $carpeta = WRITEPATH . 'uploads/' . $any . '/' . $mes . '/' . $dni;
 
         if (!is_dir($carpeta)) {
             if (!mkdir($carpeta, 0755, true)) {
@@ -132,7 +138,7 @@ class AlumnesController extends BaseController
         $nouDoc->id_alumne = $id;
         $nouDoc->nom_original = $nomOriginal;
         $nouDoc->nom_fitxer = $nomFitxer;
-        $nouDoc->ruta = $any . '/' . $dni . '/' . $nomFitxer;
+        $nouDoc->ruta = $any . '/' . $mes . '/' . $dni . '/' . $nomFitxer;
         $nouDoc->tipus = $this->request->getPost('tipus');
         $nouDoc->any_academic = $any;
 
@@ -364,6 +370,11 @@ class AlumnesController extends BaseController
         $tutors = $tutorModel->getTutorsPerAlumne($id);
         $matricules = $alumneModel->getHistorialMatricules($id);
 
+        $matriculaModel = new MatriculaModel();
+        foreach ($matricules as &$mat) {
+            $mat['serveis'] = $matriculaModel->getServeisContractats($mat['id_matricula']);
+        }
+
         $html = view('alumnes/pdf_expedient', [
             'tipus' => 'Expedient complet',
             'alumne' => $alumne,
@@ -396,12 +407,14 @@ class AlumnesController extends BaseController
 
         $tutorModel = new AlumneTutorLegalModel();
         $tutors = $tutorModel->getTutorsPerAlumne($matricula->id_alumne);
+        $serveis = $matriculaModel->getServeisContractats($idMatricula);
 
         $html = view('alumnes/pdf_matricula', [
             'tipus' => 'Resguard de Matrícula',
             'alumne' => $alumne,
             'matricula' => $matricula,
-            'tutors' => $tutors
+            'tutors' => $tutors,
+            'serveis' => $serveis
         ]);
 
         $dompdf = new \Dompdf\Dompdf();
@@ -484,7 +497,7 @@ class AlumnesController extends BaseController
         }
 
         $adreces = [];
-        if ($esMenor && !empty($tutors)) {
+        if (!empty($tutors)) {
             if ($dest === 'alumne') {
                 if (!empty($alumne->email))
                     $adreces[] = $alumne->email;
@@ -532,5 +545,55 @@ class AlumnesController extends BaseController
             log_message('error', $data);
             return redirect()->to(base_url('alumnes/contacte/' . $id))->with('error', 'Error SMTP. Revisa la configuració (.env).');
         }
+    }
+
+    public function actualitzarDadesAlumne($id)
+    {
+        $binaryId = hex2bin(str_replace('-', '', $id));
+        $alumneModel = new AlumneModel();
+        $alumne = $alumneModel->find($binaryId);
+
+        if (!$alumne) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Alumne no trobat');
+        }
+
+        $rules = [
+            'nom'      => 'permit_empty|regex_match[/^[a-zA-ZáéíóúàèìòùäëïöüñçÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑÇ\·\-\'\s]+$/u]',
+            'cognom1'  => 'permit_empty|regex_match[/^[a-zA-ZáéíóúàèìòùäëïöüñçÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑÇ\·\-\'\s]+$/u]',
+            'cognom2'  => 'permit_empty|regex_match[/^[a-zA-ZáéíóúàèìòùäëïöüñçÁÉÍÓÚÀÈÌÒÙÄËÏÖÜÑÇ\·\-\'\s]+$/u]',
+            'telefon'  => 'permit_empty|regex_match[/^(\+?[0-9]{9,15})$/]',
+            'telefon2' => 'permit_empty|regex_match[/^(\+?[0-9]{9,15})$/]',
+        ];
+
+        $missatges = [
+            'nom'      => ['regex_match' => 'El nom només pot contenir lletres, espais, guions o apòstrofs.'],
+            'cognom1'  => ['regex_match' => 'El primer cognom només pot contenir lletres, espais, guions o apòstrofs.'],
+            'cognom2'  => ['regex_match' => 'El segon cognom només pot contenir lletres, espais, guions o apòstrofs.'],
+            'telefon'  => ['regex_match' => 'El format del telèfon de l\'alumne no és vàlid (mínim 9 números).'],
+            'telefon2' => ['regex_match' => 'El format del telèfon 2 de l\'alumne no és vàlid (mínim 9 números).'],
+        ];
+
+        if (!$this->validate($rules, $missatges)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $dades = [
+            'nom' => $this->request->getPost('nom'),
+            'cognom1' => $this->request->getPost('cognom1'),
+            'cognom2' => $this->request->getPost('cognom2'),
+            'dni' => $this->request->getPost('dni'),
+            'data_naixement' => $this->request->getPost('data_naixement'),
+            'email' => $this->request->getPost('email'),
+            'telefon' => $this->request->getPost('telefon'),
+            'telefon2' => $this->request->getPost('telefon2'),
+            'carrer' => $this->request->getPost('carrer'),
+            'numero' => $this->request->getPost('numero'),
+            'poblacio' => $this->request->getPost('poblacio'),
+            'nacionalitat' => $this->request->getPost('nacionalitat'),
+        ];
+
+        $alumneModel->update($binaryId, $dades);
+
+        return redirect()->to(base_url('alumnes/expedient/' . $id))->with('exit', 'Dades de l\'alumne actualitzades correctament.');
     }
 }

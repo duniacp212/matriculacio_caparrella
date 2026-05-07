@@ -8,7 +8,8 @@ use App\Entities\Casts\UuidV7Cast;
 class DocumentAlumne extends Entity
 {
     protected $casts = [
-        'id_alumne' => 'uuid_v7',
+        'id_document' => 'uuid_v7',
+        'id_alumne'   => 'uuid_v7',
     ];
 
     protected $castHandlers = [

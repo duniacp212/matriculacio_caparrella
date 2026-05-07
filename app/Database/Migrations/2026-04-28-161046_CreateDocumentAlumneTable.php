@@ -8,10 +8,9 @@ class CreateDocumentAlumneTable extends Migration
     {
         $this->forge->addField([
             'id_document' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+                'type'       => 'BINARY',
+                'constraint' => 16,
+                'null'       => false,
             ],
             'id_alumne' => [
                 'type'       => 'BINARY',

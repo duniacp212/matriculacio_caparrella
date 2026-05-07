@@ -44,57 +44,68 @@
                                 </h2>
                                 <div id="dadesPersonals" class="accordion-collapse collapse show">
                                     <div class="accordion-body">
+                                        <form id="formExpedient" action="<?= base_url('alumnes/actualitzar-dades/' . $alumne->id_alumne) ?>" method="post">
+                                            <?= csrf_field() ?>
+                                        </form>
                                         <div class="row g-0">
                                             <div class="col-md-6 pe-md-3">
                                                 <div class="mb-3">
                                                     <label class="form-label text-muted small">Nom</label>
-                                                    <input class="form-control" value="<?= esc($alumne->nom) ?>" disabled>
+                                                    <input name="nom" class="form-control" value="<?= esc($alumne->nom) ?>" form="formExpedient" disabled>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label text-muted small">Primer cognom</label>
-                                                    <input class="form-control" value="<?= esc($alumne->cognom1) ?>"
-                                                        disabled>
+                                                    <input name="cognom1" class="form-control" value="<?= esc($alumne->cognom1) ?>" form="formExpedient" disabled>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label text-muted small">Segon cognom</label>
-                                                    <input class="form-control" value="<?= esc($alumne->cognom2 ?? '—') ?>"
-                                                        disabled>
+                                                    <input name="cognom2" class="form-control" value="<?= esc($alumne->cognom2 ?? '') ?>" form="formExpedient" disabled>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label text-muted small">DNI</label>
-                                                    <input class="form-control" value="<?= esc($alumne->dni) ?>" disabled>
+                                                    <input name="dni" class="form-control" value="<?= esc($alumne->dni) ?>" form="formExpedient" disabled>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label text-muted small">Data de naixement</label>
-                                                    <input class="form-control"
-                                                        value="<?= esc($alumne->data_naixement) ?>" disabled>
+                                                    <input name="data_naixement" type="date" class="form-control"
+                                                        value="<?= esc($alumne->data_naixement) ?>" form="formExpedient" disabled>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 ps-md-3 border-start">
                                                 <div class="mb-3">
                                                     <label class="form-label text-muted small">Email</label>
-                                                    <input class="form-control" value="<?= !empty($alumne->email) ? esc($alumne->email) : '—' ?>" disabled>
+                                                    <input name="email" class="form-control" value="<?= esc($alumne->email ?? '') ?>" form="formExpedient" disabled>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label text-muted small">Telèfon</label>
-                                                    <input class="form-control" value="<?= !empty($alumne->telefon) ? esc($alumne->telefon) : '—' ?>"
-                                                        disabled>
+                                                    <input name="telefon" class="form-control" value="<?= esc($alumne->telefon ?? '') ?>" form="formExpedient" disabled>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label text-muted small">Telèfon 2</label>
-                                                    <input class="form-control" value="<?= esc($alumne->telefon2 ?? '—') ?>"
-                                                        disabled>
+                                                    <input name="telefon2" class="form-control" value="<?= esc($alumne->telefon2 ?? '') ?>" form="formExpedient" disabled>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label text-muted small">Adreça</label>
-                                                    <input class="form-control"
-                                                        value="<?= !empty($alumne->carrer) ? esc($alumne->carrer) . ' ' . esc($alumne->numero) . ', ' . esc($alumne->poblacio) : '—' ?>"
-                                                        disabled>
+                                                    <label class="form-label text-muted small">Adreça (Carrer, Número, Població)</label>
+                                                    <div class="row g-2">
+                                                        <div class="col-6">
+                                                            <input name="carrer" class="form-control" placeholder="Carrer" value="<?= esc($alumne->carrer ?? '') ?>" form="formExpedient" disabled>
+                                                        </div>
+                                                        <div class="col-2">
+                                                            <input name="numero" class="form-control" placeholder="Núm." value="<?= esc($alumne->numero ?? '') ?>" form="formExpedient" disabled>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <input name="poblacio" class="form-control" placeholder="Població" value="<?= esc($alumne->poblacio ?? '') ?>" form="formExpedient" disabled>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label text-muted small">Nacionalitat</label>
-                                                    <input class="form-control" value="<?= !empty($alumne->nacionalitat) ? esc($alumne->nacionalitat) : '—' ?>"
-                                                        disabled>
+                                                    <input name="nacionalitat" class="form-control" value="<?= esc($alumne->nacionalitat ?? '') ?>" form="formExpedient" disabled>
+                                                </div>
+                                                <div class="text-end mt-4">
+                                                    <button type="button" id="btnEditar" class="btn btn-outline-primary btn-sm px-4">Editar dades</button>
+                                                    <button type="submit" id="btnGuardar" form="formExpedient" class="btn btn-primary btn-sm px-4 d-none">Guardar canvis</button>
+                                                    <button type="button" id="btnCancel·lar" class="btn btn-outline-secondary btn-sm px-4 d-none">Cancel·lar</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -148,7 +159,18 @@
                                                                             <small class="text-muted">Bonificació:</small>
                                                                             <span><?= $m['bonificacio_nom'] ? esc($m['bonificacio_nom']) . ' (' . $m['bonificacio_percentatge'] . '%)' : 'Cap' ?></span>
                                                                         </div>
-                                                                        
+                                                                        <div class="mb-3">
+                                                                            <small class="text-muted">Serveis contractats:</small>
+                                                                            <ul class="list-unstyled mb-0">
+                                                                                <?php if (!empty($m['serveis'])): ?>
+                                                                                    <?php foreach ($m['serveis'] as $s): ?>
+                                                                                        <li><span class="badge bg-secondary"><?= esc($s['tipus']) ?></span></li>
+                                                                                    <?php endforeach; ?>
+                                                                                <?php else: ?>
+                                                                                    <li><span>Cap</span></li>
+                                                                                <?php endif; ?>
+                                                                            </ul>
+                                                                        </div>
                                                                         <hr class="my-3">
                                                                         <label class="form-label text-muted small fw-semibold">Tutors legals registrats</label>
                                                                         <?php if (!empty($tutors)): ?>
@@ -366,5 +388,36 @@
         </main>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnEditar = document.getElementById('btnEditar');
+        const btnGuardar = document.getElementById('btnGuardar');
+        const btnCancellar = document.getElementById('btnCancel·lar');
+        const form = document.getElementById('formExpedient');
+        const inputs = document.querySelectorAll('[form="formExpedient"]');
+
+        btnEditar.addEventListener('click', function () {
+            inputs.forEach(input => {
+                input.disabled = false;
+            });
+            btnEditar.classList.add('d-none');
+            btnGuardar.classList.remove('d-none');
+            btnCancellar.classList.remove('d-none');
+        });
+
+        btnCancellar.addEventListener('click', function () {
+            if (confirm('Estàs segur que vols cancel·lar els canvis?')) {
+                window.location.reload();
+            }
+        });
+
+        form.addEventListener('submit', function (e) {
+            if (!confirm('Estàs segur que vols guardar aquests canvis?')) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
 
 <?= view('layouts/footer') ?>

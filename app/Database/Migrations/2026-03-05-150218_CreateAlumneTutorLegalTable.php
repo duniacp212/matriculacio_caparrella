@@ -7,10 +7,9 @@ class CreateAlumneTutorLegalTable extends Migration
     {
         $this->forge->addField([
             'id_tutor' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
-                'auto_increment' => true,
+                'type'       => 'BINARY',
+                'constraint' => 16,
+                'null'       => false,
             ],
             'nom' => [
                 'type'       => 'VARCHAR',

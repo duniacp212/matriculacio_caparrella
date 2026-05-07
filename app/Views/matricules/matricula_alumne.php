@@ -208,12 +208,35 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label text-muted small">Bonificació</label>
-                                                <div class="fw-semibold">
-                                                    <?php if (!empty($matricula->bonificacio_nom)): ?>
-                                                        <?= esc($matricula->bonificacio_nom) ?>
-                                                        (<?= esc($matricula->bonificacio_percentatge) ?>%)
-                                                    <?php else: ?>
-                                                        <span class="text-muted small">Sense bonificació</span>
+                                                <select name="id_bonificacio" class="form-select fw-semibold" form="formMatricula" disabled>
+                                                    <option value="">Sense bonificació</option>
+                                                    <?php foreach ($bonificacions as $boni): ?>
+                                                        <option value="<?= esc($boni['id_bonificacio']) ?>" <?= ($matricula->id_bonificacio == $boni['id_bonificacio']) ? 'selected' : '' ?>>
+                                                            <?= esc($boni['tipus']) ?> (<?= esc($boni['percentatge']) ?>%)
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label text-muted small">Serveis contractats</label>
+                                                <div class="mt-1">
+                                                    <?php
+                                                    $idsContractats = array_column($serveisContractats, 'id_servei');
+                                                    if (!empty($serveis)):
+                                                        foreach ($serveis as $servei): ?>
+                                                            <div class="form-check mb-1">
+                                                                <input class="form-check-input" type="checkbox" name="serveis[]"
+                                                                    value="<?= esc($servei['id_servei']) ?>"
+                                                                    id="servei_<?= esc($servei['id_servei']) ?>" form="formMatricula"
+                                                                    <?= in_array($servei['id_servei'], $idsContractats) ? 'checked' : '' ?> disabled>
+                                                                <label class="form-check-label text-dark small"
+                                                                    for="servei_<?= esc($servei['id_servei']) ?>">
+                                                                    <?= esc($servei['tipus']) ?> (<?= esc($servei['preu']) ?>€)
+                                                                </label>
+                                                            </div>
+                                                        <?php endforeach;
+                                                    else: ?>
+                                                        <span class="text-muted small">No hi ha serveis disponibles.</span>
                                                     <?php endif; ?>
                                                 </div>
                                             </div>

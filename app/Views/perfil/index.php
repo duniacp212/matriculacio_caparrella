@@ -67,14 +67,19 @@
                         <?= csrf_field() ?>
 
                         <div class="mb-3">
+                            <label class="form-label fw-semibold">Contrasenya antiga <span class="text-muted small">(només si vols canviar-la)</span></label>
+                            <input type="password" name="contrasenya_antiga" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
                             <label class="form-label fw-semibold">Nova contrasenya <span class="text-muted small">(buida
                                     per no canviar)</span></label>
-                            <input type="password" name="password" class="form-control">
+                            <input type="password" name="contrasenya" class="form-control">
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Repeteix la contrasenya</label>
-                            <input type="password" name="repetir_password" class="form-control">
+                            <input type="password" name="repetir_contrasenya" class="form-control">
                         </div>
 
                         <div class="text-end border-top pt-3">
@@ -82,6 +87,24 @@
                         </div>
 
                     </form>
+
+                    <h5 class="pb-2 mt-4">Seguretat: Doble Factor (2FA)</h5>
+                    <div class="border rounded p-3 bg-light">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge <?= $usuari->te_2fa ? 'bg-success' : 'bg-secondary' ?> mb-1">
+                                    <?= $usuari->te_2fa ? 'Activat' : 'Desactivat' ?>
+                                </span>
+                                <p class="mb-0 small text-muted">L'autenticació de dos factors afegeix una capa extra de seguretat al teu compte.</p>
+                            </div>
+                            <?php if (!$usuari->te_2fa): ?>
+                                <a href="<?= base_url('2fa/configurar') ?>" class="btn btn-dark btn-sm">Configurar 2FA</a>
+                            <?php else: ?>
+                                <span class="text-success"><i class="bi bi-check-circle-fill"></i> Protegit</span>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
 
                 </div>
             </div>

@@ -226,6 +226,16 @@
                     <?php endif; ?>
                 </td>
             </tr>
+            <tr>
+                <th>Serveis contractats:</th>
+                <td>
+                    <?php if (!empty($serveis)): ?>
+                        <?= implode(', ', array_map(function($s) { return esc($s['tipus']); }, $serveis)) ?>
+                    <?php else: ?>
+                        —
+                    <?php endif; ?>
+                </td>
+            </tr>
         </table>
     </div>
 

@@ -11,7 +11,7 @@ class RolAdmin implements FilterInterface
     public function before(RequestInterface $request, $arguments = null)
     {
         if (!in_array(session()->get('rol'), ['super admin', 'administracio'])) {
-            return redirect()->to('/alumnes')->with('error', 'No tens permisos per accedir a aquesta secció.');
+            return redirect()->to(base_url('alumnes'))->with('error', 'No tens permisos per accedir a aquesta secció.');
         }
     }
 

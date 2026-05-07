@@ -8,6 +8,7 @@ use App\Entities\Casts\UuidV7Cast;
 class AlumneTutorLegal extends Entity
 {
     protected $casts = [
+        'id_tutor'  => 'uuid_v7',
         'id_alumne' => 'uuid_v7',
     ];
 

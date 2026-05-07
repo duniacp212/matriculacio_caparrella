@@ -63,6 +63,16 @@ class CreateUsuariTable extends Migration
                 'type' => 'DATETIME',
                 'null' => true,
             ],
+            'secret_2fa' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+                'null'       => true,
+            ],
+            'te_2fa' => [
+                'type'       => 'TINYINT',
+                'constraint' => 1,
+                'default'    => 0,
+            ],
         ]);
 
         $this->forge->addKey('id_usuari', true);

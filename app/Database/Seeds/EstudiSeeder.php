@@ -20,7 +20,7 @@ class EstudiSeeder extends Seeder
                 'tipus' => 'ESO',
                 'nivell' => $i,
                 'estat' => 'actiu',
-                'matricula_viva' => 0
+                'matricula_viva' => 1
             ]);
         }
 
@@ -44,7 +44,7 @@ class EstudiSeeder extends Seeder
                     'tipus' => $cicle,
                     'nivell' => $i,
                     'estat' => 'actiu',
-                    'matricula_viva' => 0
+                    'matricula_viva' => 1
                 ]);
             }
         }
@@ -67,7 +67,7 @@ class EstudiSeeder extends Seeder
                     'tipus' => $cicle,
                     'nivell' => $i,
                     'estat' => 'actiu',
-                    'matricula_viva' => 0
+                    'matricula_viva' => 1
                 ]);
             }
         }
@@ -83,7 +83,7 @@ class EstudiSeeder extends Seeder
                 'tipus' => $cicle,
                 'nivell' => 1,
                 'estat' => 'actiu',
-                'matricula_viva' => 0
+                'matricula_viva' => 1
             ]);
         }
 
@@ -93,7 +93,7 @@ class EstudiSeeder extends Seeder
                 'tipus' => 'FP Bàsica Informàtica d’Oficina',
                 'nivell' => $i,
                 'estat' => 'actiu',
-                'matricula_viva' => 0
+                'matricula_viva' => 1
             ]);
         }
 
@@ -109,7 +109,7 @@ class EstudiSeeder extends Seeder
                     'tipus' => $cicle,
                     'nivell' => $i,
                     'estat' => 'actiu',
-                    'matricula_viva' => 0
+                    'matricula_viva' => 1
                 ]);
             }
         }
