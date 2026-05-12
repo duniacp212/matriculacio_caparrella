@@ -91,7 +91,7 @@ $rol = session()->get('rol');
       </li>
     <?php endif; ?>
 
-    <?php if (($config_ui['menu_usuaris'] ?? true) && $rol === 'super admin'): ?>
+    <?php if (($config_ui['menu_usuaris'] ?? true) && in_array($rol, ['super admin', 'administracio'])): ?>
       <li>
         <a class="fw-semibold text-dark text-decoration-none py-1 d-block"
           href="<?= base_url('usuaris') ?>">

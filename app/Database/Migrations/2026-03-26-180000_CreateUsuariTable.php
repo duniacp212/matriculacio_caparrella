@@ -10,50 +10,50 @@ class CreateUsuariTable extends Migration
 
         $this->forge->addField([
             'id_usuari' => [
-                'type'       => 'BINARY',
+                'type' => 'BINARY',
                 'constraint' => 16,
             ],
             'nom' => [
-                'type'       => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => '100',
             ],
             'cognom1' => [
-                'type'       => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => '100',
             ],
             'cognom2' => [
-                'type'       => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => '100',
-                'null'       => true,
+                'null' => true,
             ],
             'dni_nie' => [
-                'type'       => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => '20',
-                'unique'     => true,
+                'unique' => true,
             ],
             'usuari' => [
-                'type'       => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => '100',
-                'unique'     => true,
+                'unique' => true,
             ],
             'password' => [
-                'type'       => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => '255',
             ],
             'email' => [
-                'type'       => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => '150',
-                'unique'     => true,
+                'unique' => true,
             ],
             'telefon' => [
-                'type'       => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => '20',
-                'null'       => true,
+                'null' => true,
             ],
             'rol' => [
-                'type'       => 'ENUM',
+                'type' => 'ENUM',
                 'constraint' => ['super admin', 'administracio', 'secretaria'],
-                'default'    => 'secretaria',
+                'default' => 'secretaria',
             ],
             'creat_el' => [
                 'type' => 'DATETIME',
@@ -64,14 +64,14 @@ class CreateUsuariTable extends Migration
                 'null' => true,
             ],
             'secret_2fa' => [
-                'type'       => 'VARCHAR',
+                'type' => 'VARCHAR',
                 'constraint' => '255',
-                'null'       => true,
+                'null' => true,
             ],
             'te_2fa' => [
-                'type'       => 'TINYINT',
+                'type' => 'TINYINT',
                 'constraint' => 1,
-                'default'    => 0,
+                'default' => 0,
             ],
         ]);
 
